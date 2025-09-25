@@ -51,6 +51,22 @@
         <item>Maand</item>
     </string-array>
 
+    <!-- Event/Task type spinner -->
+    <string-array name="event_type_array">
+        <item>Gebeure</item>
+        <item>Take</item>
+    </string-array>
+
+    <!-- Time frame spinner -->
+    <string-array name="time_frame_array">
+        <item>Dag</item>
+        <item>Week</item>
+        <item>Maand</item>
+    </string-array>
+
+    <string name="events_header">Gebeure</string>
+    <string name="new_event">Nuwe gebeure</string>
+
     <string name="bottom_nav_dashboard">Kontroleskerm</string>
     <string name="bottom_nav_tasks">Take</string>
     <string name="bottom_nav_calendar">Kalender</string>
