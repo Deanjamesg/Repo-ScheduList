@@ -12,4 +12,20 @@
     <string name="login_button_text">Meld aan</string>
     <string name="login_no_account">Het jy nie \'n rekening nie?</string>
     <string name="login_google_button_text">Meld aan met Google</string>
+
+    <!-- // Get Started Screen -->
+    <string name="get_started_title">Begin Nou!</string>
+    <string name="get_started_subtitle">Welkom by Schedulist! Volg asseblief die instruksies hieronder.</string>
+    <string name="get_started_continue_button">Gaan voort na die Kontroleskerm!</string>
+    <!-- Get Started - Feature Cards -->
+    <string name="get_started_card_1_title">Vereenvoudig Jou Skedule</string>
+    <string name="get_started_card_1_desc">Schedulist sinkroniseer met jou Google-rekening om \'n toegewyde "Schedulist" Google Kalender te skep. Geniet \'n skoon, minimalistiese oorsig van jou take en gebeure, wat jou help om georganiseerd en gefokus te bly.</string>
+    <string name="get_started_card_2_title">Voeg Take &amp; Gebeure Maklik By</string>
+    <string name="get_started_card_2_desc">Skep, wysig en bestuur jou take en gebeure direk in Schedulist. Ons vaartbelynde koppelvlak laat jou vinnig jou dag organiseer, sonder die rompslomp van tradisionele kalender-apps.</string>
+    <string name="get_started_card_3_title">Slim Kennisgewings</string>
+    <string name="get_started_card_3_desc">Ontvang tydige stootkennisgewings om jou op koers te hou. Schedulist herinner jou aan opkomende take en gebeure, en verseker dat jy altyd voorbereid en stiptelik is.</string>
+    <string name="get_started_card_4_title">Reistydwaarskuwings</string>
+    <string name="get_started_card_4_desc">Deur die Google Maps Routes API te gebruik, bereken Schedulist reistyd na jou gebeurtenisplekke. Word in kennis gestel wanneer om te vertrek op grond van jou huidige ligging, sodat jy nooit weer laat is nie.</string>
+    <string name="get_started_card_5_title">Naatlose Google-integrasie</string>
+    <string name="get_started_card_5_desc">Schedulist werk direk met jou Google Kalender en skep \'n "Schedulist"-lys om jou skedule georganiseerd te hou. Alle veranderinge word onmiddellik gesinkroniseer, wat jou planne op datum hou oor alle toestelle.</string>
 </resources>
