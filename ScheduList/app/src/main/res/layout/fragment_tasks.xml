@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_gray_background">
@@ -28,19 +29,21 @@
     <Spinner
         android:id="@+id/spinnerTaskList"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_margin="16dp"
         android:entries="@array/task_list_options"
         app:layout_constraintEnd_toStartOf="@id/spinnerViewType"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
+
     <Spinner
         android:id="@+id/spinnerViewType"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:entries="@array/task_view_options" app:layout_constraintEnd_toEndOf="parent"
+        android:entries="@array/task_view_options"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/spinnerTaskList"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 
@@ -62,32 +65,24 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="@string/tasks_new_task_button"
         android:backgroundTint="@color/black"
+        android:text="@string/tasks_new_task_button"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btnAction1" />
+        app:layout_constraintStart_toEndOf="@id/btnAction1"
+        tools:layout_editor_absoluteY="667dp" />
+
     <Button
         android:id="@+id/btnAction1"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
         android:text="@string/tasks_new_list_button"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         app:layout_constraintEnd_toStartOf="@id/btnAction2"
         app:layout_constraintStart_toStartOf="parent"
-        app:strokeColor="@color/medium_gray_border" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:strokeColor="@color/medium_gray_border"
+        tools:layout_editor_absoluteY="667dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

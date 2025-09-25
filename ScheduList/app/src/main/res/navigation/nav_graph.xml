@@ -8,26 +8,39 @@
     <fragment
         android:id="@+id/dashboardFragment"
         android:name="com.varsitycollege.schedulist.ui.main.dashboard.DashboardFragment"
-        android:label="fragment_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_dashboard" >
+        <action
+            android:id="@+id/action_dashboardFragment_to_tasksFragment"
+            app:destination="@id/tasksFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_eventsFragment"
+            app:destination="@id/eventsFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_simpleListFragment"
+            app:destination="@id/simpleListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/eventsFragment"
         android:name="com.varsitycollege.schedulist.ui.main.events.EventsFragment"
-        android:label="fragment_events"
+        android:label="Events"
         tools:layout="@layout/fragment_events" />
     <fragment
         android:id="@+id/tasksFragment"
         android:name="com.varsitycollege.schedulist.ui.main.tasks.TasksFragment"
-        android:label="fragment_tasks"
+        android:label="Tasks"
         tools:layout="@layout/fragment_tasks" />
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.varsitycollege.schedulist.ui.main.settings.SettingsFragment"
-        android:label="fragment_settings"
+        android:label="Settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/simpleListFragment"
         android:name="com.varsitycollege.schedulist.ui.main.simplelist.SimpleListFragment"
-        android:label="fragment_simple_list"
+        android:label="Simple List"
         tools:layout="@layout/fragment_simple_list" />
 </navigation>

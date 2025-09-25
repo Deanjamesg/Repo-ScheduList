@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     kotlin("plugin.serialization") version "2.0.21"
+    id("androidx.navigation.safeargs")
 }
 
 android {
@@ -16,6 +17,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 
     buildTypes {
@@ -54,6 +59,9 @@ dependencies {
 
     val nav_version = "2.9.4"
 
+
+//    https://developer.android.com/guide/navigation#kts
+//    https://developer.android.com/guide/navigation/use-graph/safe-args
     // Jetpack Compose integration
     implementation(libs.androidx.navigation.compose)
 
@@ -69,4 +77,6 @@ dependencies {
 
     // JSON serialization library, works with the Kotlin serialization plugin
     implementation(libs.kotlinx.serialization.json)
+
+
 }
