@@ -49,6 +49,22 @@
         <item>Month</item>
     </string-array>
 
+    <!-- Event/Task type spinner -->
+    <string-array name="event_type_array">
+        <item>Events</item>
+        <item>Tasks</item>
+    </string-array>
+
+    <!-- Time frame spinner -->
+    <string-array name="time_frame_array">
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+    </string-array>
+
+    <string name="events_header">Events</string>
+    <string name="new_event">New Event</string>
+
     <string name="bottom_nav_dashboard">Dashboard</string>
     <string name="bottom_nav_tasks">Tasks</string>
     <string name="bottom_nav_calendar">Calendar</string>
