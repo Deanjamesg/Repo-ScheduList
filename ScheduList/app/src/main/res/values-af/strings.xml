@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- // Universal -->
+    <string name="app_name">ScheduList</string>
+
+    <!-- // Login Screen -->
+    <string name="login_welcome_title">Welkom by Schedulist!</string>
+    <string name="login_welcome_subtitle">Jou slim pad na produktiwiteit!</string>
+    <string name="login_email_hint">E-pos</string>
+    <string name="login_password_hint">Wagwoord</string>
+    <string name="login_remember_me">Onthou my</string>
+    <string name="login_button_text">Meld aan</string>
+    <string name="login_no_account">Het jy nie \'n rekening nie?</string>
+    <string name="login_google_button_text">Meld aan met Google</string>
+</resources>
