@@ -27,4 +27,30 @@
     <string name="get_started_card_5_title">Seamless Google Integration</string>
     <string name="get_started_card_5_desc">Schedulist works directly with your Google Calendar, creating a "Schedulist" list to keep your schedule organized. All changes sync instantly, keeping your plans up to date across devices.</string>
 
+    <!-- // Task Screen -->
+    <string name="tasks_title">Tasks</string>
+    <string name="tasks_new_list_button">New List</string>
+    <string name="tasks_new_task_button">New Task</string>
+    <string name="tasks_new_event_button">Event</string>
+    <string name="task_card_title_placeholder">Title of Task</string>
+    <string name="task_card_description_placeholder">This is a description of the task and should be kept brief.</string>
+    <string name="task_card_time_any">Any</string>
+
+    <!-- // Spinner Arrays -->
+    <string-array name="task_list_options">
+        <item>Task List</item>
+        <item>Personal</item>
+        <item>Work</item>
+    </string-array>
+
+    <string-array name="task_view_options">
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+    </string-array>
+
+    <string name="bottom_nav_dashboard">Dashboard</string>
+    <string name="bottom_nav_tasks">Tasks</string>
+    <string name="bottom_nav_calendar">Calendar</string>
+    <string name="bottom_nav_edit">Edit</string>
 </resources>
