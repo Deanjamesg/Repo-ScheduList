@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:title="Tasks"
+        android:id="@+id/tasks"
+        app:showAsAction="never"/>
+
+    <item android:title="Events"
+        android:id="@+id/events"
+        app:showAsAction="never"/>
+
+    <item android:title="Simple List"
+        android:id="@+id/simpleList"
+        app:showAsAction="never"/>
+
+    <item android:title="Calendar"
+        android:id="@+id/calendar"
+        app:showAsAction="never"/>
+
+    <item android:title="Settings"
+        android:id="@+id/settings"
+        app:showAsAction="never"/>
+
+    <item android:title="Account"
+        android:id="@+id/account"
+        app:showAsAction="never"/>
+</menu>
