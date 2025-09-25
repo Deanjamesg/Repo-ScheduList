@@ -28,4 +28,31 @@
     <string name="get_started_card_4_desc">Deur die Google Maps Routes API te gebruik, bereken Schedulist reistyd na jou gebeurtenisplekke. Word in kennis gestel wanneer om te vertrek op grond van jou huidige ligging, sodat jy nooit weer laat is nie.</string>
     <string name="get_started_card_5_title">Naatlose Google-integrasie</string>
     <string name="get_started_card_5_desc">Schedulist werk direk met jou Google Kalender en skep \'n "Schedulist"-lys om jou skedule georganiseerd te hou. Alle veranderinge word onmiddellik gesinkroniseer, wat jou planne op datum hou oor alle toestelle.</string>
+
+    <!-- // Task Screen -->
+    <string name="tasks_title">Take</string>
+    <string name="tasks_new_list_button">Nuwe Lys</string>
+    <string name="tasks_new_task_button">Nuwe Taak</string>
+    <string name="tasks_new_event_button">Gebeurtenis</string>
+    <string name="task_card_title_placeholder">Titel van Taak</string>
+    <string name="task_card_description_placeholder">Hierdie is \'n beskrywing van die taak en moet kort gehou word.</string>
+    <string name="task_card_time_any">Enige</string>
+
+    <!-- // Spinner Arrays -->
+    <string-array name="task_list_options">
+        <item>Taaklys</item>
+        <item>Persoonlik</item>
+        <item>Werk</item>
+    </string-array>
+
+    <string-array name="task_view_options">
+        <item>Dag</item>
+        <item>Week</item>
+        <item>Maand</item>
+    </string-array>
+
+    <string name="bottom_nav_dashboard">Kontroleskerm</string>
+    <string name="bottom_nav_tasks">Take</string>
+    <string name="bottom_nav_calendar">Kalender</string>
+    <string name="bottom_nav_edit">Wysig</string>
 </resources>
