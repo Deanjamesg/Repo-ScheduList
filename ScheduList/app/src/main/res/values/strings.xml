@@ -11,5 +11,20 @@
     <string name="login_no_account">Don\'t have an account?</string>
     <string name="login_google_button_text">Sign in with Google</string>
 
+    <!-- // Get Started Screen -->
+    <string name="get_started_title">Get Started!</string>
+    <string name="get_started_subtitle">Welcome to Schedulist! Please follow the instructions below.</string>
+    <string name="get_started_continue_button">Continue to Dashboard!</string>
+    <!-- Get Started - Feature Cards -->
+    <string name="get_started_card_1_title">Simplify Your Schedule</string>
+    <string name="get_started_card_1_desc">Schedulist syncs with your Google account to create a dedicated "Schedulist" Google Calendar. Enjoy a clean, minimalist view of your tasks and events, helping you stay organized and focused on what matters.</string>
+    <string name="get_started_card_2_title">Add Tasks &amp; Events with Ease</string>
+    <string name="get_started_card_2_desc">Create, edit, and manage your tasks and events directly in Schedulist. Our streamlined interface lets you organize your day quickly, without the clutter of traditional calendar apps.</string>
+    <string name="get_started_card_3_title">Smart Notifications</string>
+    <string name="get_started_card_3_desc">Get timely push notifications to keep you on track. Schedulist reminds you of upcoming tasks and events, ensuring you\'re always prepared and punctual.</string>
+    <string name="get_started_card_4_title">Travel Time Alerts</string>
+    <string name="get_started_card_4_desc">Using the Google Maps Routes API, Schedulist calculates travel time to your event locations. Get notified when to leave based on your current location, so you\'re never late again.</string>
+    <string name="get_started_card_5_title">Seamless Google Integration</string>
+    <string name="get_started_card_5_desc">Schedulist works directly with your Google Calendar, creating a "Schedulist" list to keep your schedule organized. All changes sync instantly, keeping your plans up to date across devices.</string>
 
 </resources>
