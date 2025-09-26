@@ -1,4 +1,4 @@
 package com.varsitycollege.schedulist.ui.adapter
 
-class TaskAdapter {
+class SimpleListAdapter {
 }

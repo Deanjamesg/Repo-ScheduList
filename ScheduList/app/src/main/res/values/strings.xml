@@ -36,13 +36,6 @@
     <string name="task_card_description_placeholder">This is a description of the task and should be kept brief.</string>
     <string name="task_card_time_any">Any</string>
 
-    <!-- // Spinner Arrays -->
-    <string-array name="task_list_options">
-        <item>Task List</item>
-        <item>Personal</item>
-        <item>Work</item>
-    </string-array>
-
     <string-array name="task_view_options">
         <item>Day</item>
         <item>Week</item>
@@ -53,13 +46,6 @@
     <string-array name="event_type_array">
         <item>Events</item>
         <item>Tasks</item>
-    </string-array>
-
-    <!-- Time frame spinner -->
-    <string-array name="time_frame_array">
-        <item>Day</item>
-        <item>Week</item>
-        <item>Month</item>
     </string-array>
 
     <string name="events_header">Events</string>

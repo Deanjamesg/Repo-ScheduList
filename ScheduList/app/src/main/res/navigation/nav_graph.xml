@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/dashboardFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/dashboardFragment"
@@ -43,4 +43,22 @@
         android:name="com.varsitycollege.schedulist.ui.main.simplelist.SimpleListFragment"
         android:label="Simple List"
         tools:layout="@layout/fragment_simple_list" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.varsitycollege.schedulist.ui.auth.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_getStartFragment"
+            app:destination="@id/getStartFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/getStartFragment"
+        android:name="com.varsitycollege.schedulist.ui.main.GetStartFragment"
+        android:label="Get Started"
+        tools:layout="@layout/fragment_get_started" >
+        <action
+            android:id="@+id/action_getStartFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment" />
+    </fragment>
 </navigation>
