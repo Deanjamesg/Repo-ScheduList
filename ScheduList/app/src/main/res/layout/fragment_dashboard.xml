@@ -31,6 +31,7 @@
                 android:gravity="center"
                 android:text="Tasks"
                 android:textSize="24sp"
+                android:textColor="@color/dark_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +46,8 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvTasks"
-                app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+                app:srcCompat="@drawable/ic_tasks"
+                app:tint="@color/dark_gray" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
@@ -73,7 +75,8 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvCalendar"
-                app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+                app:srcCompat="@drawable/ic_calendar"
+                app:tint="@color/dark_gray"/>
 
             <TextView
                 android:id="@+id/tvCalendar"
@@ -83,6 +86,7 @@
                 android:gravity="center"
                 android:text="Calendar"
                 android:textSize="24sp"
+                android:textColor="@color/dark_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -114,7 +118,8 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvEvents"
-                app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+                app:srcCompat="@drawable/ic_events"
+                app:tint="@color/dark_gray"/>
 
             <TextView
                 android:id="@+id/tvEvents"
@@ -124,6 +129,7 @@
                 android:gravity="center"
                 android:text="Events"
                 android:textSize="24sp"
+                android:textColor="@color/dark_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -156,7 +162,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvSimpleList"
                 app:layout_constraintVertical_bias="0.5"
-                app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+                app:srcCompat="@drawable/ic_list"
+                app:tint="@color/dark_gray"/>
 
             <TextView
                 android:id="@+id/tvSimpleList"
@@ -166,6 +173,7 @@
                 android:gravity="center"
                 android:text="Simple List"
                 android:textSize="24sp"
+                android:textColor="@color/dark_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -198,7 +206,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvAccount"
                 app:layout_constraintVertical_bias="0.5"
-                app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+                app:srcCompat="@drawable/ic_user"
+                app:tint="@color/dark_gray"/>
 
             <TextView
                 android:id="@+id/tvAccount"
@@ -208,6 +217,7 @@
                 android:gravity="center"
                 android:text="Account"
                 android:textSize="24sp"
+                android:textColor="@color/dark_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -240,7 +250,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvSettings"
                 app:layout_constraintVertical_bias="0.5"
-                app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+                app:srcCompat="@drawable/ic_settings"
+                app:tint="@color/dark_gray"/>
 
             <TextView
                 android:id="@+id/tvSettings"
@@ -250,6 +261,7 @@
                 android:gravity="center"
                 android:text="Settings"
                 android:textSize="24sp"
+                android:textColor="@color/dark_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -267,16 +279,16 @@
         android:backgroundTint="@color/white"
         android:gravity="center"
         android:padding="15dp"
-        android:text="Need help? Click here for instructions"
+        android:text="Instructions"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:cornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cvAccount"
-        app:strokeColor="#353535"
+        app:strokeColor="@color/dark_gray"
         app:strokeWidth="3dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
