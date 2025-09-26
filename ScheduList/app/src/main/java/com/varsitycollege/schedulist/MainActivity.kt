@@ -49,6 +49,8 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
 
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        binding.bottomNavBar.isItemActiveIndicatorEnabled = false
     }
 
     override fun onSupportNavigateUp(): Boolean {

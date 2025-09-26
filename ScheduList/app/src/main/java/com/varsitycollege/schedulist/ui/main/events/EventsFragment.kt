@@ -10,18 +10,6 @@ import com.varsitycollege.schedulist.R
 
 class EventsFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = EventsFragment()
-    }
-
-    private val viewModel: EventsViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // TODO: Use the ViewModel
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
