@@ -5,7 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_gray_background"
     tools:context=".ui.main.dashboard.DashboardFragment">
 
     <androidx.cardview.widget.CardView
@@ -30,7 +29,6 @@
                 android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:text="Tasks"
-                android:textColor="@color/dark_gray"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -47,7 +45,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvTasks"
                 app:srcCompat="@drawable/ic_tasks"
-                app:tint="@color/dark_gray" />
+                app:tint="@color/primary" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
@@ -76,7 +74,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvCalendar"
                 app:srcCompat="@drawable/ic_calendar"
-                app:tint="@color/dark_gray" />
+                app:tint="@color/primary" />
 
             <TextView
                 android:id="@+id/tvCalendar"
@@ -119,7 +117,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvEvents"
                 app:srcCompat="@drawable/ic_events"
-                app:tint="@color/dark_gray" />
+                app:tint="@color/primary" />
 
             <TextView
                 android:id="@+id/tvEvents"
@@ -128,7 +126,6 @@
                 android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:text="Events"
-                android:textColor="@color/dark_gray"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -162,7 +159,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvSimpleList"
                 app:srcCompat="@drawable/ic_list"
-                app:tint="@color/dark_gray" />
+                app:tint="@color/primary" />
 
             <TextView
                 android:id="@+id/tvSimpleList"
@@ -171,7 +168,6 @@
                 android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:text="Simple List"
-                android:textColor="@color/dark_gray"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -205,7 +201,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvAccount"
                 app:srcCompat="@drawable/ic_user"
-                app:tint="@color/dark_gray" />
+                app:tint="@color/primary" />
 
             <TextView
                 android:id="@+id/tvAccount"
@@ -214,7 +210,6 @@
                 android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:text="Account"
-                android:textColor="@color/dark_gray"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -248,7 +243,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvSettings"
                 app:srcCompat="@drawable/ic_settings"
-                app:tint="@color/dark_gray" />
+                app:tint="@color/primary" />
 
             <TextView
                 android:id="@+id/tvSettings"
@@ -257,7 +252,6 @@
                 android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:text="Settings"
-                android:textColor="@color/dark_gray"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
