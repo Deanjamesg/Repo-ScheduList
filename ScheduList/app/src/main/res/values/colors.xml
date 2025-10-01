@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+    <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="light_gray_background">#E5E5E5</color>
     <color name="dark_gray">#353535</color>
     <color name="dark_gray_text">#616161</color>
-    <color name="button_background_default">#2196F3</color>
-    <color name="button_text_default">#FFFFFF</color>
     <color name="medium_gray_border">#D3D3D3</color>
+
+    <color name="primary">#353535</color>
+    <color name="onPrimary">#FFFFFF</color>
+    <color name="primaryContainer">#FFFFFF</color>
+    <color name="onPrimaryContainer">#353535</color>
+
+    <color name="secondary">#646464</color>
+    <color name="onSecondary">#FFFFFF</color>
+    <color name="secondaryContainer">#FFFFFF</color>
+    <color name="onSecondaryContainer">#646464</color>
+
+    <color name="tertiary">#D3D3D3</color>
+    <color name="onTertiary">#353535</color>
+    <color name="tertiaryContainer">#D3D3D3</color>
+    <color name="onTertiaryContainer">#353535</color>
+
+    <color name="error">#FF6464</color>
+    <color name="onError">#FFFFFF</color>
+
+    <color name="background">#E5E5E5</color>
+    <color name="onBackground">#353535</color>
+    <color name="surface">#000000</color>
+    <color name="onSurface">#191C1E</color>
+    <color name="surfaceVariant">#0DFFEC</color>
+    <color name="onSurfaceVariant">#41484D</color>
+
+
 </resources>

@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_gray_background"
     tools:context=".ui.main.tasks.TasksFragment">
 
     <Spinner
@@ -45,7 +44,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinnerTaskList"
         tools:itemCount="4"
-        tools:listitem="@layout/item_task_week" />
+        tools:listitem="@layout/item_task_day" />
 
     <Button
         android:id="@+id/btnNewTask"
@@ -54,7 +53,6 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="@color/dark_gray_text"
         android:text="@string/tasks_new_task_button"
         app:cornerRadius="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -67,7 +65,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:backgroundTint="@color/dark_gray"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="20dp"
         android:text="@string/tasks_new_list_button"
