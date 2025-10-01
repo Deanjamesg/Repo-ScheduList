@@ -27,11 +27,11 @@
                 android:id="@+id/tvTasks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:text="Tasks"
-                android:textSize="24sp"
                 android:textColor="@color/dark_gray"
+                android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -39,9 +39,9 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -68,25 +68,25 @@
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvCalendar"
                 app:srcCompat="@drawable/ic_calendar"
-                app:tint="@color/dark_gray"/>
+                app:tint="@color/dark_gray" />
 
             <TextView
                 android:id="@+id/tvCalendar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:text="Calendar"
-                android:textSize="24sp"
                 android:textColor="@color/dark_gray"
+                android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -111,25 +111,25 @@
 
             <ImageView
                 android:id="@+id/imageView5"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvEvents"
                 app:srcCompat="@drawable/ic_events"
-                app:tint="@color/dark_gray"/>
+                app:tint="@color/dark_gray" />
 
             <TextView
                 android:id="@+id/tvEvents"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:text="Events"
-                android:textSize="24sp"
                 android:textColor="@color/dark_gray"
+                android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -154,26 +154,25 @@
 
             <ImageView
                 android:id="@+id/imageView6"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvSimpleList"
-                app:layout_constraintVertical_bias="0.5"
                 app:srcCompat="@drawable/ic_list"
-                app:tint="@color/dark_gray"/>
+                app:tint="@color/dark_gray" />
 
             <TextView
                 android:id="@+id/tvSimpleList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:text="Simple List"
-                android:textSize="24sp"
                 android:textColor="@color/dark_gray"
+                android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -198,26 +197,25 @@
 
             <ImageView
                 android:id="@+id/imageView7"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvAccount"
-                app:layout_constraintVertical_bias="0.5"
                 app:srcCompat="@drawable/ic_user"
-                app:tint="@color/dark_gray"/>
+                app:tint="@color/dark_gray" />
 
             <TextView
                 android:id="@+id/tvAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:text="Account"
-                android:textSize="24sp"
                 android:textColor="@color/dark_gray"
+                android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -242,26 +240,25 @@
 
             <ImageView
                 android:id="@+id/imageView8"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvSettings"
-                app:layout_constraintVertical_bias="0.5"
                 app:srcCompat="@drawable/ic_settings"
-                app:tint="@color/dark_gray"/>
+                app:tint="@color/dark_gray" />
 
             <TextView
                 android:id="@+id/tvSettings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:text="Settings"
-                android:textSize="24sp"
                 android:textColor="@color/dark_gray"
+                android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -274,7 +271,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="20dp"
         android:backgroundTint="@color/white"
         android:gravity="center"
