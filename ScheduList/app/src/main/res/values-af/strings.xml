@@ -71,4 +71,15 @@
     <string name="bottom_nav_tasks">Take</string>
     <string name="bottom_nav_calendar">Kalender</string>
     <string name="bottom_nav_edit">Wysig</string>
+
+    <string name="events_title">Gebeure</string>
+    <string name="events_new_event_button">Nuwe Gebeurtenis</string>
+    <string name="event_card_title_placeholder">Titel van Gebeurtenis</string>
+    <string name="event_card_description_placeholder">Hierdie is \'n beskrywing van die gebeurtenis en kan langer as \'n taak wees.</string>
+    <string name="event_view_button">Besigtig</string>
+    <string-array name="event_list_options">
+        <item>Gebeure</item>
+        <item>Verjaarsdae</item>
+        <item>Vakansiedae</item>
+    </string-array>
 </resources>
