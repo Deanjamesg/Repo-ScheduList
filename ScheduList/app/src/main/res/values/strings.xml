@@ -48,6 +48,14 @@
         <item>Tasks</item>
     </string-array>
 
+    <!--Profile -->
+    <string name="profile_title">Profile</string>
+    <string name="profile_sign_out">Sign Out</string>
+    <string name="profile_first_name">First name</string>
+    <string name="profile_last_name">Surname</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_DOB">Date of Birth</string>
+
     <string name="events_header">Events</string>
     <string name="new_event">New Event</string>
 

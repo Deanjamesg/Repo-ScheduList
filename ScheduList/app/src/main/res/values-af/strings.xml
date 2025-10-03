@@ -64,6 +64,16 @@
         <item>Maand</item>
     </string-array>
 
+    <!--Profile -->
+    <string name="profile_title">Profiel</string>
+    <string name="profile_sign_out">Teken uit</string>
+    <string name="profile_first_name">Eerste Naam</string>
+    <string name="profile_last_name">Van</string>
+    <string name="profile_email">E-pos</string>
+    <string name="profile_DOB">Geboortedatum</string>
+
+
+
     <string name="events_header">Gebeure</string>
     <string name="new_event">Nuwe gebeure</string>
 
