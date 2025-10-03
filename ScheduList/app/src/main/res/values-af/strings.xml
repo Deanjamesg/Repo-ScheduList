@@ -82,4 +82,26 @@
         <item>Verjaarsdae</item>
         <item>Vakansiedae</item>
     </string-array>
+
+    <!-- addNewTask, addNewEvent, createNewTaskList -->
+    <string name="add_task_title">Voeg Nuwe Taak By</string>
+    <string name="add_task_repeat">Herhaal Daagliks</string>
+    <string name="add_task_title_hint">Titel</string>
+    <string name="add_task_description_hint">Voer \'n beskrywing vir die taak in.</string>
+    <string name="add_task_energy_low">Lae Energie</string>
+    <string name="add_task_energy_medium">Medium Energie</string>
+    <string name="add_task_energy_high">Hoë Energie</string>
+    <string name="button_save_task">Stoor Taak</string>
+
+    <string name="add_event_title">Voeg Nuwe Gebeurtenis By</string>
+    <string name="add_event_description_hint">Voer \'n beskrywing vir die gebeurtenis in.</string>
+    <string name="add_event_add_location">Voeg Ligging By</string>
+    <string name="add_event_attach_document">Heg \'n Google-dokument Aan</string>
+    <string name="button_save_event">Stoor Gebeurtenis</string>
+
+    <string name="create_list_title">Skep Nuwe Taaklys</string>
+    <string name="create_list_name_hint">Taaklys Naam</string>
+    <string name="button_save_list">Stoor Lys</string>
+
+    <string name="button_cancel">Kanselleer</string>
 </resources>
