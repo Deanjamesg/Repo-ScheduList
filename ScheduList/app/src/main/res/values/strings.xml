@@ -74,5 +74,27 @@
         <item>Birthdays</item>
         <item>Holidays</item>
     </string-array>
+
+    <!-- addNewTask, addNewEvent, createNewTaskList -->
+    <string name="add_task_title">Add New Task</string>
+    <string name="add_task_repeat">Repeat Daily</string>
+    <string name="add_task_title_hint">Title</string>
+    <string name="add_task_description_hint">Enter a description for the task.</string>
+    <string name="add_task_energy_low">Low Energy</string>
+    <string name="add_task_energy_medium">Medium Energy</string>
+    <string name="add_task_energy_high">High Energy</string>
+    <string name="button_save_task">Save Task</string>
+
+    <string name="add_event_title">Add New Event</string>
+    <string name="add_event_description_hint">Enter a description for the event.</string>
+    <string name="add_event_add_location">Add Location</string>
+    <string name="add_event_attach_document">Attach a Google Document</string>
+    <string name="button_save_event">Save Event</string>
+
+    <string name="create_list_title">Create New Task List</string>
+    <string name="create_list_name_hint">Task List Name</string>
+    <string name="button_save_list">Save List</string>
+
+    <string name="button_cancel">Cancel</string>
 </resources>
 

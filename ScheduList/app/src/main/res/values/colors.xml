@@ -32,5 +32,8 @@
     <color name="surfaceVariant">#0DFFEC</color>
     <color name="onSurfaceVariant">#41484D</color>
 
+    <color name="energy_low">#FFE969</color>
+    <color name="energy_medium">#FFBB6E</color>
+    <color name="energy_high">#FF8989</color>
 
 </resources>
