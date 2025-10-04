@@ -114,4 +114,13 @@
     <string name="button_save_list">Stoor Lys</string>
 
     <string name="button_cancel">Kanselleer</string>
+
+    <!-- Event View Strings -->
+    <string name="event_view_title">Gebeurtenisbesigtiging</string>
+    <string name="event_view_label_description">Beskrywing:</string>
+    <string name="event_view_label_attachment">Aanhegsel:</string>
+    <string name="event_view_label_location">Ligging:</string>
+    <string name="event_view_label_date_time">Datum &amp; Tyd:</string>
+    <string name="event_view_label_leave_time">Aanbevole Vertrektyd:</string>
+    <string name="event_view_button_edit">Wysig</string>
 </resources>

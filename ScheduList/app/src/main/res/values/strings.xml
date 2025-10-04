@@ -84,5 +84,14 @@
     <string name="button_save_list">Save List</string>
 
     <string name="button_cancel">Cancel</string>
+
+    <!-- Event View Strings -->
+    <string name="event_view_title">Event View</string>
+    <string name="event_view_label_description">Description:</string>
+    <string name="event_view_label_attachment">Attachment:</string>
+    <string name="event_view_label_location">Location:</string>
+    <string name="event_view_label_date_time">Date &amp; Time:</string>
+    <string name="event_view_label_leave_time">Recommended Leave Time:</string>
+    <string name="event_view_button_edit">Edit</string>
 </resources>
 
