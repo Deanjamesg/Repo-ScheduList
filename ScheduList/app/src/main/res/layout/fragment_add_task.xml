@@ -31,14 +31,36 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <Spinner
+                android:id="@+id/spinnerTaskList"
+                style="@style/Widget.App.Spinner"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:entries="@array/task_list_options"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+            <Spinner
+                android:id="@+id/spinnerRepeat"
+                style="@style/Widget.App.Spinner"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="12dp"
+                android:entries="@array/repeat_options"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spinnerTaskList" />
+
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroupEnergy"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvTitle"
+                app:layout_constraintTop_toBottomOf="@id/spinnerRepeat"
                 app:singleSelection="true">
 
                 <com.google.android.material.chip.Chip
@@ -48,21 +70,50 @@
                     android:layout_height="wrap_content"
                     android:text="@string/add_task_energy_low"
                     android:textColor="@color/white"
-                    app:chipBackgroundColor="@color/energy_low" /> <com.google.android.material.chip.Chip
-                android:id="@+id/chipMedium"
-                style="@style/Widget.Material3.Chip.Filter"
+                    app:chipBackgroundColor="@color/energy_low" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipMedium"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_task_energy_medium"
+                    android:textColor="@color/white"
+                    app:chipBackgroundColor="@color/energy_medium" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipHigh"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_task_energy_high"
+                    android:textColor="@color/white"
+                    app:chipBackgroundColor="@color/energy_high" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDatePicker"
+                style="@style/Widget.Material3.Button.TextButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/add_task_energy_medium"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/energy_medium" /> <com.google.android.material.chip.Chip
-                android:id="@+id/chipHigh"
-                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_marginTop="16dp"
+                android:text="Apr 1, 2025"
+                app:icon="@drawable/ic_calendar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/chipGroupEnergy" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTimePicker"
+                style="@style/Widget.Material3.Button.TextButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/add_task_energy_high"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/energy_high" /> </com.google.android.material.chip.ChipGroup>
+                android:layout_marginStart="8dp"
+                android:text="9:41 AM"
+                app:icon="@drawable/ic_time"
+                app:layout_constraintStart_toEndOf="@id/btnDatePicker"
+                app:layout_constraintTop_toTopOf="@id/btnDatePicker" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilTitle"
@@ -72,8 +123,7 @@
                 android:hint="@string/add_task_title_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/chipGroupEnergy">
-
+                app:layout_constraintTop_toBottomOf="@id/btnDatePicker">
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -88,7 +138,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tilTitle">
-
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
