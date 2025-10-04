@@ -36,18 +36,6 @@
     <string name="task_card_description_placeholder">This is a description of the task and should be kept brief.</string>
     <string name="task_card_time_any">Any</string>
 
-    <string-array name="task_view_options">
-        <item>Day</item>
-        <item>Week</item>
-        <item>Month</item>
-    </string-array>
-
-    <!-- Event/Task type spinner -->
-    <string-array name="event_type_array">
-        <item>Events</item>
-        <item>Tasks</item>
-    </string-array>
-
     <!--Profile -->
     <string name="profile_title">Profile</string>
     <string name="profile_sign_out">Sign Out</string>
