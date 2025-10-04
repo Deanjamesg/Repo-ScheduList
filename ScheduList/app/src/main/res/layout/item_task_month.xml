@@ -1,47 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="120dp"
     app:cardBackgroundColor="@color/white"
-    app:strokeColor="@color/medium_gray_border"
-    app:strokeWidth="1dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="4dp">
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/tvDayNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="1"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textAppearance="?attr/textAppearanceTitleSmall"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
 
         <TextView
-            android:id="@+id/tvTask1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:id="@+id/tvTasks"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="4dp"
             android:ellipsize="end"
-            android:maxLines="1"
-            android:text="• Group Meeting"
-            android:textColor="@color/dark_gray_text"
-            android:textSize="10sp" />
+            android:lineSpacingExtra="4dp"
+            android:text="• Group Meeting\n• Study for Exam\n• Blood Tests"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDayNumber" />
 
-        <TextView
-            android:id="@+id/tvTask2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="• Study for Exam"
-            android:textColor="@color/dark_gray_text"
-            android:textSize="10sp" />
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
