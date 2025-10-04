@@ -44,6 +44,8 @@ class DashboardFragment : Fragment() {
         }
 
         binding.cvAccount.setOnClickListener {
+            val direction = DashboardFragmentDirections.actionDashboardFragmentToAccountFragment()
+            this.findNavController().navigate(direction)
         }
 
         return binding.root
