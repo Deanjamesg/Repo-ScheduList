@@ -24,7 +24,9 @@ class AccountFragment : Fragment() {
         binding = FragmentAccountBinding.inflate(inflater, container, false)
 
         binding.btnSignOut.setOnClickListener {
+
             Firebase.auth.signOut()
+
             val intent = Intent(requireContext(), AuthActivity::class.java)
             startActivity(intent)
             requireActivity().finish()
