@@ -2,36 +2,28 @@ package com.varsitycollege.schedulist.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.credentials.GetCredentialRequest
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.varsitycollege.schedulist.MainActivity
 import com.varsitycollege.schedulist.R
 import com.varsitycollege.schedulist.databinding.ActivityAuthBinding
+import kotlinx.coroutines.launch
 
 class AuthActivity : AppCompatActivity() {
     lateinit var binding : ActivityAuthBinding
-
     private lateinit var auth: FirebaseAuth
 
     override fun onStart() {
         super.onStart()
-
         val currentUser = auth.currentUser
-
-        if (currentUser != null) {
-            val intent = Intent(this@AuthActivity, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+        if (currentUser != null) continueToMain()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +41,8 @@ class AuthActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
+        val googleAuthClient = GoogleAuthClient(applicationContext)
+
         binding.btnLogin.setOnClickListener {
             val userEmail = binding.etEmail.text.toString()
             val userPassword = binding.etPassword.text.toString()
@@ -57,42 +51,42 @@ class AuthActivity : AppCompatActivity() {
         }
 
         binding.btnSignInWithGoogle.setOnClickListener {
-
+            lifecycleScope.launch {
+                googleAuthClient.signIn()
+                if (googleAuthClient.isSignedIn()) continueToMain()
+            }
         }
-
     }
 
-    fun signInWithFirebase(email : String, password : String) {
+    private fun signInWithFirebase(email : String, password : String) {
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
-
                 if (task.isSuccessful) {
                     Toast.makeText(baseContext,"Authentication Success!.",Toast.LENGTH_SHORT).show()
-
                     val user = auth.currentUser
-
                     if (user != null) {
-                        val intent = Intent(this@AuthActivity, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                        continueToMain()
                     }
                 } else {
                     Toast.makeText(baseContext,"Authentication failed.",Toast.LENGTH_SHORT).show()
-//                    updateUI(null)
                 }
             }
     }
 
-    fun signupWithFirebase(email : String, password : String) {
-
+    private fun signupWithFirebase(email : String, password : String) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-
             if (task.isSuccessful) {
                 Toast.makeText(applicationContext, "Successfully created a user!", Toast.LENGTH_LONG).show()
             } else {
                 Toast.makeText(applicationContext, task.exception?.toString(), Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun continueToMain() {
+        val intent = Intent(this@AuthActivity, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

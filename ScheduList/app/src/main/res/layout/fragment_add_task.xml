@@ -33,22 +33,18 @@
 
             <Spinner
                 android:id="@+id/spinnerTaskList"
-                style="@style/Widget.App.Spinner"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"
-                android:entries="@array/task_list_options"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
             <Spinner
                 android:id="@+id/spinnerRepeat"
-                style="@style/Widget.App.Spinner"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="12dp"
-                android:entries="@array/repeat_options"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/spinnerTaskList" />

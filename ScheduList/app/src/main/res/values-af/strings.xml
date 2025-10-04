@@ -38,25 +38,6 @@
     <string name="task_card_description_placeholder">Hierdie is \'n beskrywing van die taak en moet kort gehou word.</string>
     <string name="task_card_time_any">Enige</string>
 
-    <!-- // Spinner Arrays -->
-    <string-array name="task_list_options">
-        <item>Taaklys</item>
-        <item>Persoonlik</item>
-        <item>Werk</item>
-    </string-array>
-
-    <string-array name="task_view_options">
-        <item>Dag</item>
-        <item>Week</item>
-        <item>Maand</item>
-    </string-array>
-
-    <!-- Event/Task type spinner -->
-    <string-array name="event_type_array">
-        <item>Gebeure</item>
-        <item>Take</item>
-    </string-array>
-
     <!-- Time frame spinner -->
     <string-array name="time_frame_array">
         <item>Dag</item>
@@ -72,8 +53,6 @@
     <string name="profile_email">E-pos</string>
     <string name="profile_DOB">Geboortedatum</string>
 
-
-
     <string name="events_header">Gebeure</string>
     <string name="new_event">Nuwe gebeure</string>
 
@@ -87,11 +66,6 @@
     <string name="event_card_title_placeholder">Titel van Gebeurtenis</string>
     <string name="event_card_description_placeholder">Hierdie is \'n beskrywing van die gebeurtenis en kan langer as \'n taak wees.</string>
     <string name="event_view_button">Besigtig</string>
-    <string-array name="event_list_options">
-        <item>Gebeure</item>
-        <item>Verjaarsdae</item>
-        <item>Vakansiedae</item>
-    </string-array>
 
     <!-- addNewTask, addNewEvent, createNewTaskList -->
     <string name="add_task_title">Voeg Nuwe Taak By</string>
