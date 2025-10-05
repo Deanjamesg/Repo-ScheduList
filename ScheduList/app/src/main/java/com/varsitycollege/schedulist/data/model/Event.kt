@@ -3,7 +3,7 @@ package com.varsitycollege.schedulist.data.model
 import java.util.Date
 
 // Represents a calendar, compatible with Google Calendar API
-data class CalendarModel(
+data class Event(
     var id: String? = null,
     val title: String = "",
     val description: String? = null,
