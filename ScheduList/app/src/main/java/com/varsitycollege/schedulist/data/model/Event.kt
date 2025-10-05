@@ -1,14 +1,15 @@
 package com.varsitycollege.schedulist.data.model
 
-import java.time.OffsetDateTime
+import java.util.Date
 
-// Represents a calendar event, compatible with Google Calendar API and app UI
-data class Event(
-    val id: String = "",
+// Represents a calendar, compatible with Google Calendar API
+data class CalendarModel(
+    var id: String? = null,
     val title: String = "",
-    val description: String = "",
-    val startDateTime: OffsetDateTime? = null, // RFC3339 format
-    val endDateTime: OffsetDateTime? = null,   // RFC3339 format
+    val description: String? = null,
+    val startTime: Date = Date(), // Combines the date and time from the pickers.
     val location: String? = null,
-    val attachments: List<String> = emptyList() // URIs or file names
+   // val attachmentUrl: String? = null,
+    val userId: String = "" // To know which user this event belongs to.
 )
+

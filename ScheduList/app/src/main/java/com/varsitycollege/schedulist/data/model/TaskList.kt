@@ -2,8 +2,8 @@ package com.varsitycollege.schedulist.data.model
 
 // Represents a list of tasks, with a relationship to Task
  data class TaskList(
-    val id: String = "",
+    var id: String? = null, // The unique ID from Firestore.
     val name: String = "",
-    val tasks: List<Task> = emptyList()
+    val userId: String = "" // To know which user created this list.
 )
 
