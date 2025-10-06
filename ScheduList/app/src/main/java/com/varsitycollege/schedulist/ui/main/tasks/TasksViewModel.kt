@@ -88,4 +88,16 @@ class TasksViewModel : ViewModel() {
         // The snapshot listener will automatically pick up the change and update the UI.
         tasksCollection.add(newTask)
     }
+
+//    // Update an existing task in Firestore
+//    fun updateTask(taskId: String, updatedTask: Task) {
+//        tasksCollection.document(taskId).set(updatedTask)
+//    }
+//
+//    // Delete a task from Firestore
+//    fun deleteTask(taskId: String) {
+//        tasksCollection.document(taskId).delete()
+//    }
+
+    // Note: For week view grouping, you should extract the date part from dueDate (e.g., using OffsetDateTime.toLocalDate())
 }
