@@ -2,91 +2,107 @@ package com.varsitycollege.schedulist.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.varsitycollege.schedulist.MainActivity
-import com.varsitycollege.schedulist.R
 import com.varsitycollege.schedulist.databinding.ActivityAuthBinding
+import com.varsitycollege.schedulist.services.CalendarApiClient
 import kotlinx.coroutines.launch
 
 class AuthActivity : AppCompatActivity() {
-    lateinit var binding : ActivityAuthBinding
+    private lateinit var binding: ActivityAuthBinding
+    private lateinit var googleAuthClient: GoogleAuthClient
+    private lateinit var authorizationClient: AuthorizationClient
+
     private lateinit var auth: FirebaseAuth
+    private val TAG = "AuthActivity: "
 
     override fun onStart() {
         super.onStart()
-        val currentUser = auth.currentUser
-        if (currentUser != null) continueToMain()
+        if (googleAuthClient.isSignedIn()) continueToMain()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, 0, systemBars.right, 0)
-            insets
-        }
-
+        googleAuthClient = GoogleAuthClient(this)
+        authorizationClient = AuthorizationClient(this)
         auth = Firebase.auth
-
-        val googleAuthClient = GoogleAuthClient(applicationContext)
-
-        binding.btnLogin.setOnClickListener {
-            val userEmail = binding.etEmail.text.toString()
-            val userPassword = binding.etPassword.text.toString()
-
-            signInWithFirebase(userEmail, userPassword)
-        }
 
         binding.btnSignInWithGoogle.setOnClickListener {
             lifecycleScope.launch {
-                googleAuthClient.signIn()
-                if (googleAuthClient.isSignedIn()) continueToMain()
+                startGoogleSignInFlow()
             }
         }
     }
 
-    private fun signInWithFirebase(email : String, password : String) {
+    private suspend fun startGoogleSignInFlow() {
 
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(baseContext,"Authentication Success!.",Toast.LENGTH_SHORT).show()
-                    val user = auth.currentUser
-                    if (user != null) {
-                        continueToMain()
-                    }
-                } else {
-                    Toast.makeText(baseContext,"Authentication failed.",Toast.LENGTH_SHORT).show()
+         binding.progressBar.visibility = View.VISIBLE
+
+        val signInSuccessful = googleAuthClient.signIn()
+
+        if (signInSuccessful) {
+            Log.d(TAG, "Step 1: Firebase Authentication successful.")
+            Toast.makeText(this, "Authentication Successful!", Toast.LENGTH_SHORT).show()
+            requestApiPermissions()
+        } else {
+            Log.e(TAG, "Step 1: Firebase Authentication failed")
+            Toast.makeText(this, "Authentication Failed. Please try again.", Toast.LENGTH_LONG).show()
+             binding.progressBar.visibility = View.GONE
+        }
+    }
+
+    private fun requestApiPermissions() {
+        Log.d(TAG, "Step 2: Requesting API permissions...")
+        Toast.makeText(this, "Requesting Authorization...", Toast.LENGTH_SHORT).show()
+
+        authorizationClient.requestAuthorization(
+            onAuthorizationSuccess = { authorizationResult ->
+                // Both steps are now complete!
+                Log.d(TAG, "Step 2: Authorization successful!")
+                Toast.makeText(this, "Authorization successful!", Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(this, "Trying to Create ScheduList Calendar", Toast.LENGTH_SHORT).show()
+
+                // Test API, insert a new calendar into user's Google Calendar, "ScheduList"
+                lifecycleScope.launch {
+                    val calendarApiClient = CalendarApiClient(this@AuthActivity, auth.currentUser!!.email.toString())
+                    calendarApiClient.insertScheduListCalendar()
                 }
-            }
-    }
 
-    private fun signupWithFirebase(email : String, password : String) {
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Toast.makeText(applicationContext, "Successfully created a user!", Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(applicationContext, task.exception?.toString(), Toast.LENGTH_LONG).show()
+                // Navigate to the main part of the application
+                continueToMain()
+            },
+            onAuthorizationFailure = { exception ->
+                Log.e(TAG, "Step 2: Authorization failed", exception)
+                // Explain to the user why the permissions are needed
+                Toast.makeText(
+                    this,
+                    "Permissions are required to access calendar and task features. You can grant them later in settings.",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                // Even if they deny, we can still let them into the app,
+                // but the features just won't work.
+//                continueToMain()
             }
-        }
+        )
     }
 
     private fun continueToMain() {
-        val intent = Intent(this@AuthActivity, MainActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
 }
+

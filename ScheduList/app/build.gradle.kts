@@ -56,6 +56,10 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    packaging {
+        resources.excludes.add("META-INF/DEPENDENCIES")
+    }
 }
 
 dependencies {
@@ -70,42 +74,39 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.fragment)
+    implementation(libs.play.services.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-//    https://developer.android.com/guide/navigation#kts
-//    https://developer.android.com/guide/navigation/use-graph/safe-args
-    // Jetpack Compose integration
     implementation(libs.androidx.navigation.compose)
-
-    // Views/Fragments integration
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
-
-    // Feature module support for Fragments
     implementation(libs.androidx.navigation.dynamic.features.fragment)
-
-    // Testing Navigation
     androidTestImplementation(libs.androidx.navigation.testing)
-
-    // JSON serialization library, works with the Kotlin serialization plugin
     implementation(libs.kotlinx.serialization.json)
 
-    // Firebase
+    // KEEP: Firebase for authentication and database
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
     implementation("com.google.firebase:firebase-analytics")
-    implementation ("com.google.firebase:firebase-auth")
-    implementation ("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
 
-    // https://firebase.google.com/docs/android/learn-more#bom
-
-    // Add the dependencies for any other desired Firebase products
-    // https://firebase.google.com/docs/android/setup#available-libraries
-
-    // Also add the dependencies for the Credential Manager libraries and specify their versions
-    implementation("androidx.credentials:credentials:1.3.0")
-    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+    // KEEP: Credential Manager for modern Google Sign-In
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 
+    // ------------------  ADD / REPLACE WITH THESE ------------------ //
+
+    // 1. The modern Identity Services (GIS) library FOR AUTHORIZATION
+    implementation("com.google.android.gms:play-services-identity:18.0.1")
+
+    // 2. The Google API Client for Android (handles HTTP and JSON)
+    // Using a recent, stable version that manages dependencies well
+    implementation("com.google.api-client:google-api-client-android:2.4.0")
+
+    // 3. The specific API services you need (Calendar and Tasks)
+    // Using recent versions
+    implementation("com.google.apis:google-api-services-calendar:v3-rev20220715-2.0.0")
+    implementation("com.google.apis:google-api-services-tasks:v1-rev20210709-2.0.0")
 }
