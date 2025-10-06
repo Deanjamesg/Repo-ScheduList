@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 
 class AccountFragment : Fragment() {
     lateinit var binding : FragmentAccountBinding
+    lateinit var accountViewModel: AccountViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
