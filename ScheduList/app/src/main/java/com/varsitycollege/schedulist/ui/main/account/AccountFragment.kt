@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.varsitycollege.schedulist.R
@@ -16,6 +17,7 @@ import com.varsitycollege.schedulist.ui.auth.AuthActivity
 class AccountFragment : Fragment() {
 
     lateinit var binding : FragmentAccountBinding
+    lateinit var accountViewModel: AccountViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,11 +27,6 @@ class AccountFragment : Fragment() {
 
         binding.btnSignOut.setOnClickListener {
 
-            Firebase.auth.signOut()
-
-            val intent = Intent(requireContext(), AuthActivity::class.java)
-            startActivity(intent)
-            requireActivity().finish()
         }
 
         return binding.root

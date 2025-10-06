@@ -12,4 +12,3 @@ data class Event(
    // val attachmentUrl: String? = null,
     val userId: String = "" // To know which user this event belongs to.
 )
-
