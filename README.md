@@ -98,6 +98,17 @@ Options for:
 ## ⚙️ Setup
 
 1. Clone the repo:
-   ```bash
-   git clone 
-   cd schedulist
+   git clone https://github.com/Deanjamesg/Repo-ScheduList.git
+   cd Repo-ScheduList
+
+2. Launch Android Studio.
+
+   Choose “Open an existing project” and select the cloned Repo-ScheduList directory.
+   Wait for Gradle sync and dependency resolution.
+
+3. Run the App
+
+   Connect an Android device or start an emulator (minimum API level 26+).
+   Build & run the app module.
+   On first launch, you’ll be prompted to log in (Google sign-in or email/password), after which you’ll be taken to the dashboard.
+
