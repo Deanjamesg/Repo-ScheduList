@@ -67,4 +67,21 @@ class EventsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val spinnerEventList = view.findViewById<android.widget.Spinner>(R.id.spinnerEventList)
+        val spinnerViewType = view.findViewById<android.widget.Spinner>(R.id.spinnerViewType)
+
+        val eventListItems = listOf("All Events", "Birthdays", "Meetings", "Reminders")
+        val viewTypeItems = listOf("List View", "Calendar View")
+
+        val eventListAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, eventListItems)
+        eventListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerEventList.adapter = eventListAdapter
+
+        val viewTypeAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, viewTypeItems)
+        viewTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerViewType.adapter = viewTypeAdapter
+    }
 }
