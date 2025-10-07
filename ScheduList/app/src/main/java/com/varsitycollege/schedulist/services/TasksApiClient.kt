@@ -21,17 +21,13 @@ class TasksApiClient(
     private var tasksService: Tasks
 
     init {
-        // Create an Account object for the user's email
         val account = Account(userEmail, "com.google")
-
-        // Build the credential object for Google Tasks API
         val credential = GoogleAccountCredential.usingOAuth2(
             context, listOf(TasksScopes.TASKS)
         ).apply {
             selectedAccount = account
         }
 
-        // Build the Google Tasks service object
         tasksService = Tasks.Builder(
             NetHttpTransport(),
             GsonFactory.getDefaultInstance(),
@@ -43,33 +39,45 @@ class TasksApiClient(
         Log.d(TAG, "Google Tasks API client for account $userEmail initialized successfully.")
     }
 
-    suspend fun CreateScheduListTaskList(): TaskList? {
+    suspend fun getAllTaskLists(): List<TaskList> {
         return withContext(Dispatchers.IO) {
             try {
-                // First, try to find the task list by its title
-                val taskList = findTaskListByTitle("ScheduList")
-                if (taskList != null) {
-                    Log.d(TAG, "Found existing 'ScheduList' task list.")
-                    return@withContext taskList // Return the existing list
-                }
-                // If not found, create a new one
-                Log.d(TAG, "Creating new 'ScheduList' task list.")
-                val newTaskList = TaskList().apply {
-                    title = "ScheduList"
-                }
-                val createdTaskList = tasksService.tasklists().insert(newTaskList).execute()
-                Log.d(TAG, "Successfully created task list: ${createdTaskList.title} (ID: ${createdTaskList.id})")
-                return@withContext createdTaskList
-
+                tasksService.tasklists().list().execute().items ?: emptyList()
             } catch (e: Exception) {
-                Log.e(TAG, "Error getting or creating ScheduList task list", e)
-                return@withContext null
+                Log.e(TAG, "Error fetching task lists", e)
+                emptyList()
             }
         }
     }
 
-    suspend fun insertTask(taskListId: String, title: String, notes: String? = null) {
-        withContext(Dispatchers.IO) {
+    suspend fun insertTaskList(title: String): TaskList? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val newTaskList = TaskList().apply {
+                    this.title = title
+                }
+                tasksService.tasklists().insert(newTaskList).execute()
+            } catch (e: Exception) {
+                Log.e(TAG, "Error inserting new task list", e)
+                null
+            }
+        }
+    }
+
+    suspend fun getAllTasksFromList(taskListId: String): List<Task> {
+        return withContext(Dispatchers.IO) {
+            try {
+                // Set showCompleted to true to get both completed and incomplete tasks
+                tasksService.tasks().list(taskListId).setShowCompleted(true).execute().items ?: emptyList()
+            } catch (e: Exception) {
+                Log.e(TAG, "Error fetching tasks from list $taskListId", e)
+                emptyList()
+            }
+        }
+    }
+
+    suspend fun insertTask(taskListId: String, title: String, notes: String? = null): Task? {
+        return withContext(Dispatchers.IO) {
             try {
                 val task = Task().apply {
                     this.title = title
@@ -77,23 +85,35 @@ class TasksApiClient(
                         this.notes = notes
                     }
                 }
-                val createdTask = tasksService.tasks().insert(taskListId, task).execute()
-                Log.d(TAG, "Successfully created task: ${createdTask.title}")
+                tasksService.tasks().insert(taskListId, task).execute()
             } catch (e: Exception) {
                 Log.e(TAG, "Error inserting task", e)
+                null
             }
         }
     }
 
-    private fun findTaskListByTitle(title: String): TaskList? {
-        return try {
-            // Retrieve all task lists and find the one with the matching title
-            tasksService.tasklists().list().execute().items?.find {
-                it.title == title
+    suspend fun updateTask(taskListId: String, taskId: String, updatedTask: Task): Task? {
+        return withContext(Dispatchers.IO) {
+            try {
+                tasksService.tasks().update(taskListId, taskId, updatedTask).execute()
+            } catch (e: Exception) {
+                Log.e(TAG, "Error updating task $taskId", e)
+                null
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error finding task list by title", e)
-            null
+        }
+    }
+
+    suspend fun deleteTask(taskListId: String, taskId: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                tasksService.tasks().delete(taskListId, taskId).execute()
+                true
+            } catch (e: Exception) {
+                Log.e(TAG, "Error deleting task $taskId", e)
+                false
+            }
         }
     }
 }
+

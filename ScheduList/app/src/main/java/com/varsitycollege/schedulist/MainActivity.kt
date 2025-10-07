@@ -73,6 +73,8 @@ class MainActivity : AppCompatActivity() {
 
 //        lifecycleScope.launch {
 //            testTaskListInsert()
+//            testEventInsert()
+//            testGetAllTaskLists()
 //        }
 
     }
@@ -81,8 +83,24 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(TAG, "Step 1: Launched Lifecycle Scope")
         Log.d(TAG, "Step 2: Calling Tasks API Client")
-        tasksApi.CreateScheduListTaskList()
+        val taskList = tasksApi.insertTaskList("ScheduList Tasks")
         Log.d(TAG, "Step 3: After Insert Called")
+
+        testInsertTaskIntoList(taskList!!)
+
+    }
+
+    private suspend fun testGetAllTaskLists() {
+        val list = tasksApi.getAllTaskLists()
+        list.forEach { item ->
+            Log.d(TAG, "${item.title}")
+            var tasks = tasksApi.getAllTasksFromList(item.id)
+            tasks.forEach { task ->
+                Log.d(TAG, "${task.title}")
+                Log.d(TAG, "${task.status}")
+                tasksApi.deleteTask(item.id, task.id )
+            }
+        }
 
     }
 
@@ -92,18 +110,20 @@ class MainActivity : AppCompatActivity() {
             title = "Complete ScheduList setup",
             notes = "This is a sample task added during initial sign-in."
         )
-
     }
 
     private suspend fun testEventInsert() {
 
-        Log.d(TAG, "Step 1: Launched Lifecycle Scope")
-        Log.d(TAG, "Step 2: Creating Event")
+        Log.d(TAG, "Step 1: Insert Event Function Called")
+        val calendarId = calendarApi.getOrInsertScheduListCalendar()
         val now = System.currentTimeMillis()
         val startDateTime = DateTime(now)
         val endDateTime = DateTime(now + 3600000)
-        Log.d(TAG, "Step 3: Calling Insert Event")
+
+        Log.d(TAG, "Step 2: Calling Insert Event via Api Client")
+
         calendarApi.insertEvent(
+            calendarId = calendarId?.id.toString(),
             summary = "My First ScheduList Event",
             description = "This is a test event created automatically from the app.",
             location = "V&A Waterfront, Cape Town",
