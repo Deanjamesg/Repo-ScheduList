@@ -23,7 +23,9 @@ sealed class EventListItem {
 private val dateFormatter = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
 private val timeFormatter = SimpleDateFormat("h:mm a", Locale.getDefault())
 
-class EventsAdapter : ListAdapter<EventListItem, RecyclerView.ViewHolder>(EventDiffCallback()) {
+class EventsAdapter(
+    private val onDayEventClick: ((Event) -> Unit)? = null
+) : ListAdapter<EventListItem, RecyclerView.ViewHolder>(EventDiffCallback()) {
 
     companion object {
         private const val ITEM_VIEW_TYPE_DAY = 1
@@ -39,6 +41,9 @@ class EventsAdapter : ListAdapter<EventListItem, RecyclerView.ViewHolder>(EventD
             binding.tvEventLocation.text = event.location
             binding.chipDate.text = dateFormatter.format(event.startTime)
             binding.chipTime.text = timeFormatter.format(event.startTime)
+            binding.btnViewEventDay.setOnClickListener {
+                onDayEventClick?.invoke(event)
+            }
         }
     }
 

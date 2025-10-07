@@ -98,6 +98,10 @@
     <string name="event_view_label_leave_time">Aanbevole Vertrektyd:</string>
     <string name="event_view_button_edit">Wysig</string>
 
+    <string name="event_view_button_cancel">Cancel</string>
+    <string name="event_view_button_save">Save changes</string>
+    <string name="save">Save</string>
+
     <!-- Calendar Screen -->
-    <string name="calendar_title">Kalender</string>
+    <string name="calendar_title">Calendar</string>
 </resources>

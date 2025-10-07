@@ -16,12 +16,22 @@ class EventsViewModel(private val repository: EventsRepository) : ViewModel() {
     private val _displayList = MutableLiveData<List<EventListItem>>()
     val displayList: LiveData<List<EventListItem>> = _displayList
 
+    // Store the current list of events in memory
+    private val currentEvents = mutableListOf<Event>()
+
     // This function tells the repository to start loading data.
     fun loadEvents(userId: String) {
         repository.getEvents(userId).observeForever { rawEventList ->
-            // Once we get the raw data, we format it for our adapter.
-            formatListForDayView(rawEventList)
+            currentEvents.clear()
+            currentEvents.addAll(rawEventList)
+            formatListForDayView(currentEvents)
         }
+    }
+
+    // Add a new event and update the display list
+    fun addEvent(event: Event) {
+        currentEvents.add(event)
+        formatListForDayView(currentEvents)
     }
 
     // This takes the raw list and wraps each item in a 'DayEventItem'
@@ -31,5 +41,10 @@ class EventsViewModel(private val repository: EventsRepository) : ViewModel() {
             EventListItem.DayEventItem(event)
         }
         _displayList.value = formattedList
+    }
+
+    // Get an Event by its ID
+    fun getEventById(eventId: String?): Event? {
+        return currentEvents.find { it.id == eventId }
     }
 }
