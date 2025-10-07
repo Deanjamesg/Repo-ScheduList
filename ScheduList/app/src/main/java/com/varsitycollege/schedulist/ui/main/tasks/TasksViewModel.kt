@@ -21,6 +21,17 @@ class TasksViewModel(private val repository: TasksRepository) : ViewModel() {
     val displayList: LiveData<List<TaskListItem>> = _displayList
 
     // We call this from the Fragment to start the data loading process.
+    // This holds the raw list of tasks we get directly from Firestore.
+    private val _rawTasks = MutableLiveData<List<Task>>()
+
+    // A variable to remember which view the user has selected.
+    private var currentViewType = "Day"
+
+    // Spinner data for task list names
+    private val _taskListNames = MutableLiveData<List<String>>(listOf("All Tasks", "Personal", "Work", "School"))
+    val taskListNames: LiveData<List<String>> = _taskListNames
+
+    // We'll call this from our Fragment to start listening for data.
     fun startListeningForTasks(userId: String) {
         rawTasks = repository.getTasks(userId)
         rawTasks.observeForever { tasks ->
@@ -60,4 +71,28 @@ class TasksViewModel(private val repository: TasksRepository) : ViewModel() {
             }
         _displayList.value = formattedList
     }
+
+    // This gets called from our "Add New Task" fragment.
+    fun addTask(newTask: Task) {
+        // Just add the new task object to the "tasks" collection in Firestore.
+        // The snapshot listener will automatically pick up the change and update the UI.
+        tasksCollection.add(newTask)
+    }
+
+    // Call this to update the spinner's list
+    fun updateTaskListNames(newList: List<String>) {
+        _taskListNames.value = newList
+    }
+
+//    // Update an existing task in Firestore
+//    fun updateTask(taskId: String, updatedTask: Task) {
+//        tasksCollection.document(taskId).set(updatedTask)
+//    }
+//
+//    // Delete a task from Firestore
+//    fun deleteTask(taskId: String) {
+//        tasksCollection.document(taskId).delete()
+//    }
+
+    // Note: For week view grouping, you should extract the date part from dueDate (e.g., using OffsetDateTime.toLocalDate())
 }

@@ -13,6 +13,9 @@ import com.varsitycollege.schedulist.data.repository.TasksRepository
 import com.varsitycollege.schedulist.databinding.FragmentTasksBinding
 import com.varsitycollege.schedulist.ui.adapter.MonthGridAdapter
 import com.varsitycollege.schedulist.ui.adapter.TasksAdapter
+import com.varsitycollege.schedulist.R
+import androidx.lifecycle.Observer
+import com.varsitycollege.schedulist.ui.main.simplelist.TasksViewModel
 
 // This is our TasksFragment. It's in charge of the UI.
 // It sets up the views, listens for user input (like spinner clicks),
@@ -26,6 +29,11 @@ class TasksFragment : Fragment() {
     private lateinit var tasksViewModel: TasksViewModel
     private lateinit var tasksAdapter: TasksAdapter
     private lateinit var monthAdapter: MonthGridAdapter
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // TODO: Use the ViewModel
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -90,5 +98,28 @@ class TasksFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val spinnerTaskList = view.findViewById<android.widget.Spinner>(R.id.spinnerTaskList)
+        val spinnerViewType = view.findViewById<android.widget.Spinner>(R.id.spinnerViewType)
+
+        val viewTypeItems = listOf("List View", "Grid View")
+        val viewTypeAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, viewTypeItems)
+        viewTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerViewType.adapter = viewTypeAdapter
+
+        // Adapter for task list, initially empty
+        val taskListAdapter = android.widget.ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, mutableListOf())
+        taskListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerTaskList.adapter = taskListAdapter
+
+        // Observe the ViewModel's task list names
+        viewModel.taskListNames.observe(viewLifecycleOwner, Observer { newList ->
+            taskListAdapter.clear()
+            taskListAdapter.addAll(newList)
+            taskListAdapter.notifyDataSetChanged()
+        })
     }
 }
