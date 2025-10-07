@@ -34,4 +34,25 @@ class AccountFragment : Fragment() {
 
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        accountViewModel = AccountViewModel()
+        accountViewModel.loadUserData()
+        accountViewModel.user.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                // Split displayName into first and last name
+                val nameParts = user.displayName?.split(" ") ?: listOf("")
+                val firstName = nameParts.firstOrNull() ?: ""
+                val lastName = if (nameParts.size > 1) nameParts.subList(1, nameParts.size).joinToString(" ") else ""
+                binding.tvNameValue.text = firstName
+                binding.tvSurnameValue.text = lastName
+                binding.tvEmailValue.text = user.email ?: ""
+            } else {
+                binding.tvNameValue.text = ""
+                binding.tvSurnameValue.text = ""
+                binding.tvEmailValue.text = ""
+            }
+        }
+    }
 }
