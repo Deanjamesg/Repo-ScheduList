@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.varsitycollege.schedulist.data.model.Task
 import com.varsitycollege.schedulist.data.repository.TasksRepository
+import com.varsitycollege.schedulist.ui.adapter.MonthDay
 import com.varsitycollege.schedulist.ui.adapter.TaskListItem
+import java.util.Calendar
 
 // This is the ViewModel for the tasks screen. It gets the raw data from the
 // repository and then transforms it into the specific list that our adapter needs
@@ -13,64 +15,66 @@ import com.varsitycollege.schedulist.ui.adapter.TaskListItem
 
 class TasksViewModel(private val repository: TasksRepository) : ViewModel() {
 
-    // This holds the raw list of tasks from the repository.
     private lateinit var rawTasks: LiveData<List<Task>>
 
-    // This is the final formatted list for our TasksAdapter (Day/Week view).
+    // This is the final formatted list for our Day/Week adapter.
     private val _displayList = MutableLiveData<List<TaskListItem>>()
     val displayList: LiveData<List<TaskListItem>> = _displayList
 
-    // We call this from the Fragment to start the data loading process.
-    // This holds the raw list of tasks we get directly from Firestore.
-    private val _rawTasks = MutableLiveData<List<Task>>()
+    // This is the new list specifically for our MonthGridAdapter.
+    private val _monthList = MutableLiveData<List<MonthDay>>()
+    val monthList: LiveData<List<MonthDay>> = _monthList
 
-    // A variable to remember which view the user has selected.
-    private var currentViewType = "Day"
-
-    // Spinner data for task list names
-    private val _taskListNames = MutableLiveData<List<String>>(listOf("All Tasks", "Personal", "Work", "School"))
-    val taskListNames: LiveData<List<String>> = _taskListNames
-
-    // We'll call this from our Fragment to start listening for data.
     fun startListeningForTasks(userId: String) {
         rawTasks = repository.getTasks(userId)
         rawTasks.observeForever { tasks ->
-            // Whenever our raw data changes, we re-format it for the Day view by default.
+            // Whenever our raw data changes, we update all possible views.
             formatListForDayView(tasks)
+            formatListForWeekView(tasks)
+            formatListForMonthView(tasks)
         }
     }
 
-    // This function is called by the Fragment when the spinner changes.
     fun setViewType(viewType: String) {
-        val tasks = rawTasks.value ?: return // Get the current list of tasks
+        val tasks = rawTasks.value ?: return
         when (viewType) {
             "Day" -> formatListForDayView(tasks)
             "Week" -> formatListForWeekView(tasks)
-            // "Month" view will be handled by a different adapter in the fragment.
+            // The fragment will handle switching to the monthList LiveData.
         }
     }
 
-    // Formats the list for the detailed Day view.
     private fun formatListForDayView(tasks: List<Task>) {
-        _displayList.value = tasks.map { task ->
-            TaskListItem.DayTaskItem(task)
-        }
+        // This just maps our raw tasks to the DayTaskItem for the adapter.
+        _displayList.value = tasks
+            .sortedBy { it.isCompleted }
+            .map { task -> TaskListItem.DayTaskItem(task) }
     }
 
-    // Formats the list for the Week view, adding date headers.
     private fun formatListForWeekView(tasks: List<Task>) {
-        val formattedList = mutableListOf<TaskListItem>()
-        // This logic groups the tasks by date to add the headers.
-        tasks.sortedBy { it.dueDate }
-            .groupBy { /* Some logic to get just the date part of task.dueDate */ }
-            .forEach { (date, tasksOnThatDate) ->
-                formattedList.add(TaskListItem.HeaderItem("Formatted Date Here"))
-                tasksOnThatDate.forEach { task ->
-                    formattedList.add(TaskListItem.WeekTaskItem(task))
-                }
-            }
-        _displayList.value = formattedList
+        // This logic would group tasks by date and add headers.
     }
+
+    // This is the new function to prepare data for the calendar grid.
+    private fun formatListForMonthView(tasks: List<Task>) {
+        val calendar = Calendar.getInstance()
+        val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+        val monthDays = mutableListOf<MonthDay>()
+
+        // A simple loop to create 31 days for our grid.
+        // A real implementation would be more complex to handle empty start days.
+        for (i in 1..daysInMonth) {
+            // Find all the tasks that happen on this specific day.
+            val tasksForDay = tasks.filter {
+                val taskCalendar = Calendar.getInstance().apply { time = it.dueDate }
+                taskCalendar.get(Calendar.DAY_OF_MONTH) == i
+            }
+            // Add a new MonthDay object to our list.
+            monthDays.add(MonthDay(dayOfMonth = i.toString(), tasks = tasksForDay))
+        }
+        _monthList.value = monthDays
+    }
+
 
     // This gets called from our "Add New Task" fragment.
 //    fun addTask(newTask: Task) {
@@ -80,9 +84,9 @@ class TasksViewModel(private val repository: TasksRepository) : ViewModel() {
 //    }
 
     // Call this to update the spinner's list
-    fun updateTaskListNames(newList: List<String>) {
-        _taskListNames.value = newList
-    }
+//    fun updateTaskListNames(newList: List<String>) {
+//        _taskListNames.value = newList
+//    }
 
 //    // Update an existing task in Firestore
 //    fun updateTask(taskId: String, updatedTask: Task) {

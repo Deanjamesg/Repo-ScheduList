@@ -29,11 +29,6 @@ class TasksFragment : Fragment() {
     private lateinit var tasksViewModel: TasksViewModel
     private lateinit var tasksAdapter: TasksAdapter
     private lateinit var monthAdapter: MonthGridAdapter
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // TODO: Use the ViewModel
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,33 +41,26 @@ class TasksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // First, we set up our Repository, Factory, and ViewModel.
         val repository = TasksRepository()
         val factory = TasksViewModelFactory(repository)
         tasksViewModel = ViewModelProvider(this, factory).get(TasksViewModel::class.java)
 
-        // Then we set up our adapters and the default RecyclerView layout.
-        setupRecyclerView()
-
-        // We listen for when the user selects a different view type.
+        setupRecyclerViewAndAdapters()
         setupSpinnerListener()
+        setupObservers() // Moved the observers to their own function.
 
-        // We start observing the 'displayList' from the ViewModel. This code
-        // will now run automatically whenever the data changes in the ViewModel.
-        tasksViewModel.displayList.observe(viewLifecycleOwner) { taskList ->
-            // When we get the new list, we give it to our adapter to display.
-            tasksAdapter.submitList(taskList)
-        }
-
-        // Finally, we tell the ViewModel to start loading the task data.
+        // Start loading the task data.
         tasksViewModel.startListeningForTasks("sampleUserId")
     }
 
-    private fun setupRecyclerView() {
-        tasksAdapter = TasksAdapter()
+    // This function sets up both our adapters.
+    private fun setupRecyclerViewAndAdapters() {
+        tasksAdapter = TasksAdapter { task ->
+            // tasksViewModel.onTaskCheckedChanged(task)
+        }
         monthAdapter = MonthGridAdapter()
         binding.tasksRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.tasksRecyclerView.adapter = tasksAdapter
+        binding.tasksRecyclerView.adapter = tasksAdapter // Start with the default adapter
     }
 
     private fun setupSpinnerListener() {
@@ -87,13 +75,15 @@ class TasksFragment : Fragment() {
                     val selectedView = parent?.getItemAtPosition(position).toString()
 
                     if (selectedView == "Month") {
-                        binding.tasksRecyclerView.layoutManager = GridLayoutManager(context, 7)
+                        // If Month is selected, we switch to a 7-column grid and use the month adapter.
+                        binding.tasksRecyclerView.layoutManager =
+                            GridLayoutManager(requireContext(), 7)
                         binding.tasksRecyclerView.adapter = monthAdapter
-                        // TODO: Tell ViewModel to format data for the month adapter.
                     } else {
-                        binding.tasksRecyclerView.layoutManager = LinearLayoutManager(context)
+                        // For Day or Week, we use a standard vertical list and our main tasks adapter.
+                        binding.tasksRecyclerView.layoutManager =
+                            LinearLayoutManager(requireContext())
                         binding.tasksRecyclerView.adapter = tasksAdapter
-                        // Tell the ViewModel which view to prepare the data for.
                         tasksViewModel.setViewType(selectedView)
                     }
                 }
@@ -102,10 +92,31 @@ class TasksFragment : Fragment() {
             }
     }
 
+    // This function sets up the observers for our LiveData.
+    private fun setupObservers() {
+        // This observer watches the list for our Day/Week views.
+        tasksViewModel.displayList.observe(viewLifecycleOwner) { taskList ->
+            // We only submit to the tasksAdapter if it's the one currently in use.
+            if (binding.tasksRecyclerView.adapter is TasksAdapter) {
+                tasksAdapter.submitList(taskList)
+            }
+        }
+
+        // This is the new observer that watches the list for our Month/Calendar view.
+        tasksViewModel.monthList.observe(viewLifecycleOwner) { monthDayList ->
+            // We only submit to the monthAdapter if it's the one currently in use.
+            if (binding.tasksRecyclerView.adapter is MonthGridAdapter) {
+                monthAdapter.submitList(monthDayList)
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+}
+
 
 //    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 //        super.onViewCreated(view, savedInstanceState)
@@ -129,4 +140,3 @@ class TasksFragment : Fragment() {
 //            taskListAdapter.notifyDataSetChanged()
 //        })
 //   }
-}
