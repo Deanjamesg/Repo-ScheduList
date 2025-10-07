@@ -33,9 +33,6 @@ Schedulist reduces the cognitive load of using multiple apps by integrating with
   - Google Identity Services returns a Google ID Token credential.
   - The token is exchanged for a Firebase Auth Credential via GoogleAuthProvider.getCredential().
   - Firebase signs in the user and creates a session tied to their UID.
-  - Email + Password Option
-  - The app also supports Firebase’s built-in signInWithEmailAndPassword for users.
-  - User accounts created this way are also managed by Firebase Auth, ensuring session management.
 
    - **Sign-Out**
    - On sign-out, the app clears all credential states with credentialManager.clearCredentialState() and calls firebaseAuth.signOut() to prevent lingering sessions.
@@ -47,6 +44,9 @@ Schedulist reduces the cognitive load of using multiple apps by integrating with
 ---
 
 ## 🖼️ App Previews
+
+<img width="275" height="490" alt="image" src="https://github.com/user-attachments/assets/5ad8d23f-d6ca-4181-b715-fa032ffdea16" />
+
 
 ### 📊 Dashboard
 Quick-access cards: **Tasks, Calendar, Events, Simple List, Account, Settings**.
