@@ -162,12 +162,14 @@ Options for:
   - Wait for Gradle sync and dependency resolution.
 
 4. Run the App
+   
+  - Connect an Android device or start an emulator (minimum API level 26+).
+  - Build & run the app module.
+  - On first launch, you’ll be prompted to log in (Google sign-in or email/password), after which you’ll be taken to the dashboard.
 
 ---
 
 ### Video Link
 
-  - Connect an Android device or start an emulator (minimum API level 26+).
-  - Build & run the app module.
-  - On first launch, you’ll be prompted to log in (Google sign-in or email/password), after which you’ll be taken to the dashboard.
+https://youtu.be/5Kmdqez9nB8
 
