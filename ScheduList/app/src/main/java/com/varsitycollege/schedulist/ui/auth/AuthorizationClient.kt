@@ -14,7 +14,7 @@ import com.google.api.services.tasks.TasksScopes
 
 class AuthorizationClient(private val resultCaller: ActivityResultCaller) {
 
-    private val TAG = "AuthorizationClient: "
+    private val TAG = "AuthorizationClient"
     private var onAuthSuccess: ((AuthorizationResult) -> Unit)? = null
     private var onAuthFailure: ((Exception) -> Unit)? = null
 

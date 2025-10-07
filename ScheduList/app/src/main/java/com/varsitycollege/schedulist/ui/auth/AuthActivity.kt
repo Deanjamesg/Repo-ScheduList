@@ -20,13 +20,14 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAuthBinding
     private lateinit var googleAuthClient: GoogleAuthClient
     private lateinit var authorizationClient: AuthorizationClient
-
     private lateinit var auth: FirebaseAuth
-    private val TAG = "AuthActivity: "
+    private val TAG = "AuthActivity"
 
     override fun onStart() {
         super.onStart()
-        if (googleAuthClient.isSignedIn()) continueToMain()
+        if (googleAuthClient.isSignedIn()) {
+            continueToMain()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +45,10 @@ class AuthActivity : AppCompatActivity() {
                 startGoogleSignInFlow()
             }
         }
+
+//        lifecycleScope.launch {
+//            googleAuthClient.signOut()
+//        }
     }
 
     private suspend fun startGoogleSignInFlow() {
@@ -80,7 +85,6 @@ class AuthActivity : AppCompatActivity() {
                     val calendarApiClient = CalendarApiClient(this@AuthActivity, auth.currentUser!!.email.toString())
                     calendarApiClient.insertScheduListCalendar()
                 }
-
                 // Navigate to the main part of the application
                 continueToMain()
             },
