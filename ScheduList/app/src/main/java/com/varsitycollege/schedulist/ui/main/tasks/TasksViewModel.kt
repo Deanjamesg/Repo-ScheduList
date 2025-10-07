@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.varsitycollege.schedulist.data.model.EnergyLevel
 import com.varsitycollege.schedulist.data.model.Task
 import com.varsitycollege.schedulist.data.repository.TasksRepository
 import com.varsitycollege.schedulist.ui.adapter.MonthDay
@@ -35,32 +34,32 @@ class TasksViewModel(private val repository: TasksRepository) : ViewModel() {
         viewModelScope.launch {
             val tasks = repository.getTasks()
             currentTasks.clear()
-            currentTasks.addAll(tasks)
+            currentTasks.addAll(tasks as Collection<Task>)
             formatListForDayView(currentTasks)
         }
     }
 
-    fun addTask(
-        title: String,
-        description: String?,
-        dueDate: Date,
+//    fun addTask(
+//        title: String,
+//        description: String?,
+//        dueDate: Date,
+//
+//    ) {
+//        viewModelScope.launch {
+//            // We call the repository to add the task via the API.
+////            val newTask = repository.addTask(title, description, dueDate)
+//            // title, description, dueDate
+//            if (newTask != null) {
+//                // If it's successful, we add the new task to our local list and refresh the UI.
+//                currentTasks.add(newTask)
+//                formatListForDayView(currentTasks)
+//            }
+//        }
+//    }
 
-    ) {
-        viewModelScope.launch {
-            // We call the repository to add the task via the API.
-            val newTask = repository.addTask(title, description, dueDate)
-            if (newTask != null) {
-                // If it's successful, we add the new task to our local list and refresh the UI.
-                currentTasks.add(newTask)
-                formatListForDayView(currentTasks)
-            }
-        }
-    }
-
-    fun startListeningForTasks(userId: String) {
-        rawTasks = repository.getTasks(userId)
+    suspend fun startListeningForTasks() {
+        rawTasks = repository.getTasks()
         rawTasks.observeForever { tasks ->
-            // Whenever our raw data changes, we update all possible views.
             formatListForDayView(tasks)
             formatListForWeekView(tasks)
             formatListForMonthView(tasks)
@@ -72,7 +71,6 @@ class TasksViewModel(private val repository: TasksRepository) : ViewModel() {
         when (viewType) {
             "Day" -> formatListForDayView(tasks)
             "Week" -> formatListForWeekView(tasks)
-            // The fragment will handle switching to the monthList LiveData.
         }
     }
 

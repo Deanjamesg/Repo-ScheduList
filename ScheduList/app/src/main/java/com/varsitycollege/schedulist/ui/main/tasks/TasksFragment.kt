@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -15,10 +16,14 @@ import com.varsitycollege.schedulist.ui.adapter.MonthGridAdapter
 import com.varsitycollege.schedulist.ui.adapter.TasksAdapter
 import com.varsitycollege.schedulist.R
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.varsitycollege.schedulist.services.TasksApiClient
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 
@@ -26,7 +31,6 @@ class TasksFragment : Fragment() {
 
     private var _binding: FragmentTasksBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var auth: FirebaseAuth
     private lateinit var tasksApiClient : TasksApiClient
     private lateinit var tasksViewModel: TasksViewModel
@@ -82,7 +86,7 @@ class TasksFragment : Fragment() {
 
                 if (title.isNotEmpty()) {
                     // Call the ViewModel without the energy level.
-                    tasksViewModel.addTask(title, description, dueDate)
+//                    tasksViewModel.addTask(title, description, dueDate)
                     addTaskOverlay.visibility = View.GONE
                 } else {
                     etTitle?.error = "Title cannot be empty"
@@ -104,7 +108,10 @@ class TasksFragment : Fragment() {
         setupObservers() // Moved the observers to their own function.
 
         // Start loading the task data.
-        tasksViewModel.startListeningForTasks("sampleUserId")
+        lifecycleScope.launch {
+            tasksViewModel.startListeningForTasks()
+        }
+
     }
 
     // This function sets up both our adapters.

@@ -2,9 +2,6 @@ package com.varsitycollege.schedulist.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
-import com.varsitycollege.schedulist.data.model.EnergyLevel
-import com.varsitycollege.schedulist.data.model.SimpleItem
 import com.varsitycollege.schedulist.data.model.Task
 import com.varsitycollege.schedulist.data.model.TaskList
 import com.varsitycollege.schedulist.services.TasksApiClient
@@ -26,19 +23,19 @@ class TasksRepository (private val tasksApiClient: TasksApiClient) {
         }
     }
 
-    suspend fun addTask(taskListId: String, task: Task): Task? {
-        return withContext(Dispatchers.IO) {
-            val createdGoogleTask = tasksApiClient.insertTask(taskListId, task.title, task.description)
-            return@withContext createdGoogleTask?.let {
-                Task(
-                    id = it.id,
-                    title = it.title ?: "No Title",
-                    description = it.notes ?: "",
-                    isCompleted = it.status == "completed"
-                )
-            }
-        }
-    }
+//    suspend fun addTask(taskListId: String, title: String?, description: String, dueData: Date): Task? {
+//        return withContext(Dispatchers.IO) {
+//            val createdGoogleTask = tasksApiClient.insertTask(taskListId, title, description, dueData)
+//            return@withContext createdGoogleTask?.let {
+//                Task(
+//                    id = it.id,
+//                    title = it.title ?: "No Title",
+//                    description = it.notes ?: "",
+//                    isCompleted = it.status == "completed"
+//                )
+//            }
+//        }
+//    }
 
     suspend fun getTasks(): LiveData<List<Task>> {
         val liveData = MutableLiveData<List<Task>>()
