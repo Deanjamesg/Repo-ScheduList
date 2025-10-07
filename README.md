@@ -46,7 +46,6 @@ Schedulist reduces the cognitive load of using multiple apps by integrating with
 ## 🖼️ App Previews
 
 <img width="276" height="490" alt="image" src="https://github.com/user-attachments/assets/3aef2c77-9ca3-4773-935c-662560a82e7c" />
-test
 <img width="277" height="491" alt="image" src="https://github.com/user-attachments/assets/03c8962f-2a6a-4d2f-bb35-f0c9ca3d09c1" />
 <img width="274" height="489" alt="image" src="https://github.com/user-attachments/assets/26d56163-43a9-466d-a11e-14ce77ccfc4d" />
 <img width="275" height="489" alt="image" src="https://github.com/user-attachments/assets/64546082-812c-4a5d-928e-6479a84d532a" />
@@ -159,12 +158,12 @@ Options for:
 
 3. Launch Android Studio.
 
-Choose “Open an existing project” and select the cloned Repo-ScheduList directory.
-Wait for Gradle sync and dependency resolution.
+  - Choose “Open an existing project” and select the cloned Repo-ScheduList directory.
+  - Wait for Gradle sync and dependency resolution.
 
 4. Run the App
 
-Connect an Android device or start an emulator (minimum API level 26+).
-Build & run the app module.
-On first launch, you’ll be prompted to log in (Google sign-in or email/password), after which you’ll be taken to the dashboard.
+  - Connect an Android device or start an emulator (minimum API level 26+).
+  - Build & run the app module.
+  - On first launch, you’ll be prompted to log in (Google sign-in or email/password), after which you’ll be taken to the dashboard.
 
