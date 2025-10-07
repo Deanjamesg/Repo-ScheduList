@@ -9,6 +9,7 @@ import com.google.api.client.json.gson.GsonFactory
 import com.google.api.client.util.DateTime
 import com.google.api.services.calendar.Calendar
 import com.google.api.services.calendar.CalendarScopes
+import com.google.api.services.calendar.model.CalendarListEntry
 import com.google.api.services.calendar.model.Event
 import com.google.api.services.calendar.model.EventDateTime
 import com.google.api.services.calendar.model.Calendar as CalendarModel
@@ -24,17 +25,13 @@ class CalendarApiClient(
     private var calendarService: Calendar
 
     init {
-        // Create an Account object for the user's email
         val account = Account(userEmail, "com.google")
-
-        // Build the credential object
         val credential = GoogleAccountCredential.usingOAuth2(
             context, listOf(CalendarScopes.CALENDAR)
         ).apply {
             selectedAccount = account
         }
 
-        // Build the Google Calendar service object
         calendarService = Calendar.Builder(
             NetHttpTransport(),
             GsonFactory.getDefaultInstance(),
@@ -46,80 +43,88 @@ class CalendarApiClient(
         Log.d(TAG, "Google Calendar API client for account $userEmail initialized successfully.")
     }
 
-    suspend fun insertScheduListCalendar() {
-        withContext(Dispatchers.IO) {
+    suspend fun getOrInsertScheduListCalendar(): CalendarListEntry? {
+        return withContext(Dispatchers.IO) {
             try {
-                // Check if the "ScheduList" calendar already exists
+                // First, try to find the calendar
                 val existingCalendar = findCalendarBySummary("ScheduList")
                 if (existingCalendar != null) {
-                    Log.d(TAG, "ScheduList calendar already exists. No need to create a new one.")
-                    return@withContext
+                    Log.d(TAG, "Found existing ScheduList calendar.")
+                    return@withContext existingCalendar
                 }
-                Log.d(TAG, "Creating a new ScheduList calendar...")
 
-                // Create a new calendar model
+                Log.d(TAG, "Creating a new ScheduList calendar...")
                 val newCalendar = CalendarModel().apply {
                     summary = "ScheduList"
                     description = "Events and tasks managed by the ScheduList app."
                     timeZone = TimeZone.getDefault().id
                 }
+                calendarService.calendars().insert(newCalendar).execute()
+                Log.d(TAG, "Successfully created ScheduList calendar.")
 
-                // Insert the new calendar
-                val createdCalendar = calendarService.calendars().insert(newCalendar).execute()
+                // After creating, find it again to get the full CalendarListEntry object
+                return@withContext findCalendarBySummary("ScheduList")
 
-                Log.d(TAG, "Successfully created calendar: ${createdCalendar.summary} (ID: ${createdCalendar.id})")
             } catch (e: Exception) {
-                Log.e(TAG, "Error inserting calendar", e)
+                Log.e(TAG, "Error getting or inserting ScheduList calendar", e)
+                return@withContext null
             }
         }
     }
 
-    suspend fun insertEvent(summary: String, description: String, location: String, startTime: DateTime, endTime: DateTime) {
-        withContext(Dispatchers.IO) {
+    suspend fun getAllCalendarEvents(calendarId: String): List<Event> {
+        return withContext(Dispatchers.IO) {
             try {
-                // First, find the "ScheduList" calendar to get its ID
-                val scheduListCalendar = findCalendarBySummary("ScheduList")
-                if (scheduListCalendar == null) {
-                    Log.e(TAG, "ScheduList calendar not found. Cannot insert event.")
-                    return@withContext
-                }
+                calendarService.events().list(calendarId).execute().items ?: emptyList()
+            } catch (e: Exception) {
+                Log.e(TAG, "Error fetching events for calendar $calendarId", e)
+                emptyList()
+            }
+        }
+    }
 
-                val calendarId = scheduListCalendar.id
-                Log.d(TAG, "Found ScheduList calendar with ID: $calendarId. Proceeding to insert event.")
-
-                // Create a new Event object
+    suspend fun insertEvent(calendarId: String, summary: String, description: String?, location: String?, startTime: DateTime, endTime: DateTime): Event? {
+        return withContext(Dispatchers.IO) {
+            try {
                 val event = Event().apply {
                     this.summary = summary
                     this.description = description
                     this.location = location
-
-                    // Set the start time
-                    val start = EventDateTime().apply {
-                        dateTime = startTime
-                        timeZone = TimeZone.getDefault().id // Use the device's default timezone
-                    }
-                    this.start = start
-
-                    // Set the end time
-                    val end = EventDateTime().apply {
-                        dateTime = endTime
-                        timeZone = TimeZone.getDefault().id
-                    }
-                    this.end = end
+                    this.start = EventDateTime().setDateTime(startTime).setTimeZone(TimeZone.getDefault().id)
+                    this.end = EventDateTime().setDateTime(endTime).setTimeZone(TimeZone.getDefault().id)
                 }
-
-                // Insert the event into the specified calendar
-                val createdEvent = calendarService.events().insert(calendarId, event).execute()
-
-                Log.d(TAG, "Event created successfully: ${createdEvent.summary}, Link: ${createdEvent.htmlLink}")
-
+                calendarService.events().insert(calendarId, event).execute()
             } catch (e: Exception) {
-                Log.e(TAG, "Error inserting event", e)
+                Log.e(TAG, "Error inserting event into calendar $calendarId", e)
+                null
             }
         }
     }
-    
-    private fun findCalendarBySummary(summary: String): com.google.api.services.calendar.model.CalendarListEntry? {
+
+    suspend fun updateEvent(calendarId: String, eventId: String, updatedEvent: Event): Event? {
+        return withContext(Dispatchers.IO) {
+            try {
+                calendarService.events().update(calendarId, eventId, updatedEvent).execute()
+            } catch (e: Exception) {
+                Log.e(TAG, "Error updating event $eventId", e)
+                null
+            }
+        }
+    }
+
+    suspend fun deleteEvent(calendarId: String, eventId: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                calendarService.events().delete(calendarId, eventId).execute()
+                true // Successful deletion returns no content
+            } catch (e: Exception) {
+                Log.e(TAG, "Error deleting event $eventId", e)
+                false
+            }
+        }
+    }
+
+    private fun findCalendarBySummary(summary: String): CalendarListEntry? {
         return try {
             calendarService.calendarList().list().execute().items?.find {
                 it.summary == summary
@@ -130,3 +135,4 @@ class CalendarApiClient(
         }
     }
 }
+

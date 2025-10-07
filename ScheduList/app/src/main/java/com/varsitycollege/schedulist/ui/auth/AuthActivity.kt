@@ -83,7 +83,7 @@ class AuthActivity : AppCompatActivity() {
                 // Test API, insert a new calendar into user's Google Calendar, "ScheduList"
                 lifecycleScope.launch {
                     val calendarApiClient = CalendarApiClient(this@AuthActivity, auth.currentUser!!.email.toString())
-                    calendarApiClient.insertScheduListCalendar()
+                    calendarApiClient.getOrInsertScheduListCalendar()
                 }
                 // Navigate to the main part of the application
                 continueToMain()
