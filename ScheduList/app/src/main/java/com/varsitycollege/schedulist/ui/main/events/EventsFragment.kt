@@ -220,6 +220,12 @@ class EventsFragment : Fragment() {
         }
     }
 
+//    override fun onResume() {
+//        super.onResume()
+//        // Reload events every time the fragment becomes visible
+//        eventsViewModel.loadEvents("sampleUserId")
+//    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
