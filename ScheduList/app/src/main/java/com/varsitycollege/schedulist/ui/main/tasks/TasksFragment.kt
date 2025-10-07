@@ -15,8 +15,6 @@ class TasksFragment : Fragment() {
         fun newInstance() = TasksFragment()
     }
 
-    private val viewModel: TasksViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
