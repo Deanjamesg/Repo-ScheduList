@@ -74,11 +74,11 @@ class MainActivity : AppCompatActivity() {
 
         calendarApi = CalendarApiClient(this@MainActivity, auth.currentUser!!.email.toString())
 
-        lifecycleScope.launch {
-            testTaskListInsert()
-            testEventInsert()
-            testGetAllTaskLists()
-        }
+//        lifecycleScope.launch {
+//            testTaskListInsert()
+//            testEventInsert()
+//            testGetAllTaskLists()
+//        }
 
     }
 
