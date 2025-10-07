@@ -96,6 +96,10 @@
     <string name="event_view_label_leave_time">Recommended Leave Time:</string>
     <string name="event_view_button_edit">Edit</string>
     <string name="event_view_button_cancel">Cancel</string>
-    <string name="event_view_button_save">Save Changes</string>
+    <string name="event_view_button_save">Save changes</string>
     <string name="save">Save</string>
+
+    <!-- Calendar Screen -->
+    <string name="calendar_title">Calendar</string>
 </resources>
+

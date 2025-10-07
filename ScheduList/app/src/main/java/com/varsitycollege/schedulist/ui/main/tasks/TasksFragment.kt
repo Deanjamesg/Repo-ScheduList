@@ -15,7 +15,7 @@ import com.varsitycollege.schedulist.ui.adapter.MonthGridAdapter
 import com.varsitycollege.schedulist.ui.adapter.TasksAdapter
 import com.varsitycollege.schedulist.R
 import androidx.lifecycle.Observer
-
+//import com.varsitycollege.schedulist.ui.main.simplelist.TasksViewModel
 
 // This is our TasksFragment. It's in charge of the UI.
 // It sets up the views, listens for user input (like spinner clicks),
@@ -29,11 +29,6 @@ class TasksFragment : Fragment() {
     private lateinit var tasksViewModel: TasksViewModel
     private lateinit var tasksAdapter: TasksAdapter
     private lateinit var monthAdapter: MonthGridAdapter
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // TODO: Use the ViewModel
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,73 +41,73 @@ class TasksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // First, we set up our Repository, Factory, and ViewModel.
         val repository = TasksRepository()
         val factory = TasksViewModelFactory(repository)
         tasksViewModel = ViewModelProvider(this, factory).get(TasksViewModel::class.java)
 
-        // Then we set up our adapters and the default RecyclerView layout.
-        setupRecyclerView()
-
-        // Spinner setup
-        val spinnerTaskList = view.findViewById<android.widget.Spinner>(R.id.spinnerTaskList)
-        val spinnerViewType = view.findViewById<android.widget.Spinner>(R.id.spinnerViewType)
-
-        val viewTypeItems = listOf("List View", "Grid View", "Month")
-        val viewTypeAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, viewTypeItems)
-        viewTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerViewType.adapter = viewTypeAdapter
-
-        // Adapter for task list, initially empty
-        val taskListAdapter = android.widget.ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, mutableListOf())
-        taskListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerTaskList.adapter = taskListAdapter
-
-        // Observe the ViewModel's task list names
-        tasksViewModel.taskListNames.observe(viewLifecycleOwner, Observer { newList ->
-            taskListAdapter.clear()
-            taskListAdapter.addAll(newList)
-            taskListAdapter.notifyDataSetChanged()
-        })
-
-        // We listen for when the user selects a different view type.
+        setupRecyclerViewAndAdapters()
         setupSpinnerListener()
+        setupObservers() // Moved the observers to their own function.
 
-        // We start observing the 'displayList' from the ViewModel. This code
-        // will now run automatically whenever the data changes in the ViewModel.
-        tasksViewModel.displayList.observe(viewLifecycleOwner) { taskList ->
-            // When we get the new list, we give it to our adapter to display.
-            tasksAdapter.submitList(taskList)
-        }
-
-        // Finally, we tell the ViewModel to start loading the task data.
+        // Start loading the task data.
         tasksViewModel.startListeningForTasks("sampleUserId")
     }
 
-    private fun setupRecyclerView() {
-        tasksAdapter = TasksAdapter()
+    // This function sets up both our adapters.
+    private fun setupRecyclerViewAndAdapters() {
+        tasksAdapter = TasksAdapter { task ->
+            // tasksViewModel.onTaskCheckedChanged(task)
+        }
         monthAdapter = MonthGridAdapter()
         binding.tasksRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.tasksRecyclerView.adapter = tasksAdapter
+        binding.tasksRecyclerView.adapter = tasksAdapter // Start with the default adapter
     }
 
     private fun setupSpinnerListener() {
-        binding.spinnerViewType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val selectedView = parent?.getItemAtPosition(position).toString()
+        binding.spinnerViewType.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedView = parent?.getItemAtPosition(position).toString()
 
-                if (selectedView == "Month") {
-                    binding.tasksRecyclerView.layoutManager = GridLayoutManager(context, 7)
-                    binding.tasksRecyclerView.adapter = monthAdapter
-                    // TODO: Tell ViewModel to format data for the month adapter.
-                } else {
-                    binding.tasksRecyclerView.layoutManager = LinearLayoutManager(context)
-                    binding.tasksRecyclerView.adapter = tasksAdapter
-                    // Tell the ViewModel which view to prepare the data for.
-                    tasksViewModel.setViewType(selectedView)
+                    if (selectedView == "Month") {
+                        // If Month is selected, we switch to a 7-column grid and use the month adapter.
+                        binding.tasksRecyclerView.layoutManager =
+                            GridLayoutManager(requireContext(), 7)
+                        binding.tasksRecyclerView.adapter = monthAdapter
+                    } else {
+                        // For Day or Week, we use a standard vertical list and our main tasks adapter.
+                        binding.tasksRecyclerView.layoutManager =
+                            LinearLayoutManager(requireContext())
+                        binding.tasksRecyclerView.adapter = tasksAdapter
+                        tasksViewModel.setViewType(selectedView)
+                    }
                 }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+    }
+
+    // This function sets up the observers for our LiveData.
+    private fun setupObservers() {
+        // This observer watches the list for our Day/Week views.
+        tasksViewModel.displayList.observe(viewLifecycleOwner) { taskList ->
+            // We only submit to the tasksAdapter if it's the one currently in use.
+            if (binding.tasksRecyclerView.adapter is TasksAdapter) {
+                tasksAdapter.submitList(taskList)
+            }
+        }
+
+        // This is the new observer that watches the list for our Month/Calendar view.
+        tasksViewModel.monthList.observe(viewLifecycleOwner) { monthDayList ->
+            // We only submit to the monthAdapter if it's the one currently in use.
+            if (binding.tasksRecyclerView.adapter is MonthGridAdapter) {
+                monthAdapter.submitList(monthDayList)
+            }
         }
     }
 
@@ -121,3 +116,27 @@ class TasksFragment : Fragment() {
         _binding = null
     }
 }
+
+
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//        val spinnerTaskList = view.findViewById<android.widget.Spinner>(R.id.spinnerTaskList)
+//        val spinnerViewType = view.findViewById<android.widget.Spinner>(R.id.spinnerViewType)
+//
+//        val viewTypeItems = listOf("List View", "Grid View")
+//        val viewTypeAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, viewTypeItems)
+//        viewTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//        spinnerViewType.adapter = viewTypeAdapter
+//
+//        // Adapter for task list, initially empty
+//        val taskListAdapter = android.widget.ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, mutableListOf())
+//        taskListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//        spinnerTaskList.adapter = taskListAdapter
+//
+//        // Observe the ViewModel's task list names
+//        viewModel.taskListNames.observe(viewLifecycleOwner, Observer { newList ->
+//            taskListAdapter.clear()
+//            taskListAdapter.addAll(newList)
+//            taskListAdapter.notifyDataSetChanged()
+//        })
+//   }

@@ -27,17 +27,24 @@ sealed class TaskListItem {
     data class HeaderItem(val date: String) : TaskListItem()
 }
 
-class TasksAdapter : ListAdapter<TaskListItem, RecyclerView.ViewHolder>(TaskDiffCallback()) {
+class TasksAdapter(
+    private val onTaskChecked: (Task) -> Unit
+) : ListAdapter<TaskListItem, RecyclerView.ViewHolder>(TaskDiffCallback()) {
 
-    // This class holds the logic for a "Day" view item
     inner class DayTaskViewHolder(private val binding: ItemTaskDayBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: TaskListItem.DayTaskItem) {
-            binding.tvTaskTitle.text = item.task.title
-            binding.tvTaskDescription.text = item.task.description
+            val task = item.task
+            binding.tvTaskTitle.text = task.title
+            binding.tvTaskDescription.text = task.description
+            binding.tvTaskDate.text = dateFormatter.format(task.dueDate)
+            binding.tvTaskTime.text = timeFormatter.format(task.dueDate)
+            binding.cbTaskCompleted.isChecked = task.isCompleted
 
-            // --- NEW: Format the Date and Time and set the text ---
-            binding.tvTaskDate.text = dateFormatter.format(item.task.dueDate)
-            binding.tvTaskTime.text = timeFormatter.format(item.task.dueDate)
+            // We set a click listener on the checkbox.
+            binding.cbTaskCompleted.setOnClickListener {
+                // When clicked, we call the function we passed in from the Fragment.
+                onTaskChecked(task)
+            }
         }
     }
 

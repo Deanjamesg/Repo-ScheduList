@@ -13,39 +13,43 @@ import java.util.Locale
 // A simple formatter for the date and time.
 private val simpleListDateFormatter = SimpleDateFormat("MMM d, h:mm a", Locale.getDefault())
 
-// A generic data class for our simple list. This lets us show both Tasks
-// and Events in the same list by converting them to this simpler object first.
+// We need to add 'isCompleted' to our data class to track the checkbox state.
 data class SimpleListItem(
     val id: String,
     val title: String,
-    val date: Date
+    val date: Date,
+    val isCompleted: Boolean
 )
 
+class SimpleListAdapter(
+    private val onItemChecked: (SimpleListItem, Boolean) -> Unit
+) : ListAdapter<SimpleListItem, SimpleListAdapter.SimpleListViewHolder>(SimpleListDiffCallback()) {
 
-class SimpleListAdapter : ListAdapter<SimpleListItem, SimpleListAdapter.SimpleListViewHolder>(SimpleListDiffCallback()) {
-
-    // This is our ViewHolder. It just holds onto the views from item_simple_list.xml.
+    // The ViewHolder now binds the title, date, and the checkbox's status.
     inner class SimpleListViewHolder(private val binding: ItemSimpleListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: SimpleListItem) {
             binding.tvTitle.text = item.title
-            binding.tvTitle.text = simpleListDateFormatter.format(item.date)
+            binding.tvDateTime.text = simpleListDateFormatter.format(item.date)
+            binding.checkBoxSimple.isChecked = item.isCompleted
+
+            // This makes the checkbox interactive.
+            binding.checkBoxSimple.setOnCheckedChangeListener { _, isChecked ->
+                onItemChecked(item, isChecked)
+            }
         }
     }
 
-    // Creates an empty ViewHolder.
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemSimpleListBinding.inflate(inflater, parent, false)
         return SimpleListViewHolder(binding)
     }
 
-    // Fills the ViewHolder with data.
     override fun onBindViewHolder(holder: SimpleListViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 }
 
-// DiffUtil for efficient list updates.
 class SimpleListDiffCallback : DiffUtil.ItemCallback<SimpleListItem>() {
     override fun areItemsTheSame(oldItem: SimpleListItem, newItem: SimpleListItem): Boolean {
         return oldItem.id == newItem.id

@@ -31,6 +31,8 @@ class DashboardFragment : Fragment() {
         }
 
         binding.cvCalendar.setOnClickListener {
+            val direction = DashboardFragmentDirections.actionDashboardFragmentToCalendarFragment()
+            this.findNavController().navigate(direction)
         }
 
         binding.cvSimpleList.setOnClickListener {
