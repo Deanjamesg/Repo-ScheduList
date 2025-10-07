@@ -2,7 +2,9 @@ package com.varsitycollege.schedulist.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import com.varsitycollege.schedulist.data.model.EnergyLevel
+import com.varsitycollege.schedulist.data.model.SimpleItem
 import com.varsitycollege.schedulist.data.model.Task
 import com.varsitycollege.schedulist.services.TasksApiClient
 import java.util.Date
@@ -21,5 +23,18 @@ class TasksRepository (private val tasksApiClient: TasksApiClient) {
         )
         liveData.value = sampleTasks
         return liveData
+    }
+
+    fun getSimpleItems(userId: String): LiveData<List<SimpleItem>> {
+        return getTasks(userId).map { tasks: List<Task> ->
+            tasks.map { task: Task ->
+                SimpleItem(
+                    taskListId = task.taskListId,
+                    taskId = task.id ?: "",
+                    title = task.title,
+                    status = task.isCompleted
+                )
+            }
+        }
     }
 }

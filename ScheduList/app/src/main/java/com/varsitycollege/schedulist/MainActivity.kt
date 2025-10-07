@@ -65,17 +65,20 @@ class MainActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+        // Connect BottomNavigationView with NavController for navigation
+        androidx.navigation.ui.NavigationUI.setupWithNavController(binding.bottomNavBar, navController)
+
         binding.bottomNavBar.isItemActiveIndicatorEnabled = false
 
         tasksApi = TasksApiClient(this@MainActivity, auth.currentUser!!.email.toString())
 
         calendarApi = CalendarApiClient(this@MainActivity, auth.currentUser!!.email.toString())
 
-//        lifecycleScope.launch {
-//            testTaskListInsert()
-//            testEventInsert()
-//            testGetAllTaskLists()
-//        }
+        lifecycleScope.launch {
+            testTaskListInsert()
+            testEventInsert()
+            testGetAllTaskLists()
+        }
 
     }
 

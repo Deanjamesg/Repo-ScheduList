@@ -122,4 +122,3 @@ class TasksFragment : Fragment() {
         _binding = null
     }
 }
-
