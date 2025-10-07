@@ -95,5 +95,8 @@
     <string name="event_view_label_date_time">Date &amp; Time:</string>
     <string name="event_view_label_leave_time">Recommended Leave Time:</string>
     <string name="event_view_button_edit">Edit</string>
+
+    <!-- Calendar Screen -->
+    <string name="calendar_title">Calendar</string>
 </resources>
 

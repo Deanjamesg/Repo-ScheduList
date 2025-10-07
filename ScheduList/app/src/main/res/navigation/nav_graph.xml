@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_dashboardFragment_to_accountFragment"
             app:destination="@id/accountFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventsFragment"
@@ -60,4 +63,9 @@
         android:name="com.varsitycollege.schedulist.ui.main.account.AccountFragment"
         android:label="Account"
         tools:layout="@layout/fragment_account" />
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.varsitycollege.schedulist.ui.main.calendar.CalendarFragment"
+        android:label="fragment_calendar"
+        tools:layout="@layout/fragment_calendar" />
 </navigation>
