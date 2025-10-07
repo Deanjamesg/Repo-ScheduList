@@ -1,25 +1,26 @@
-package com.varsitycollege.schedulist.ui.main.simplelist
+package com.varsitycollege.schedulist.ui.main.tasks
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.firestore.FirebaseFirestore
 import com.varsitycollege.schedulist.data.model.Task
+import com.varsitycollege.schedulist.data.repository.TasksRepository
 import com.varsitycollege.schedulist.ui.adapter.TaskListItem
 
-// This is the ViewModel for our main tasks screen. It fetches data
-// from Firestore and gets it ready for our adapter. It uses a real-time
-// listener, so the UI will update automatically if data changes in the database.
+// This is the ViewModel for the tasks screen. It gets the raw data from the
+// repository and then transforms it into the specific list that our adapter needs
+// (like adding date headers for the week view).
 
-class TasksViewModel : ViewModel() {
+class TasksViewModel(private val repository: TasksRepository) : ViewModel() {
 
-    private val db = FirebaseFirestore.getInstance()
-    private val tasksCollection = db.collection("tasks")
+    // This holds the raw list of tasks from the repository.
+    private lateinit var rawTasks: LiveData<List<Task>>
 
-    // This holds the final, formatted list that our TasksAdapter will display.
+    // This is the final formatted list for our TasksAdapter (Day/Week view).
     private val _displayList = MutableLiveData<List<TaskListItem>>()
     val displayList: LiveData<List<TaskListItem>> = _displayList
 
+    // We call this from the Fragment to start the data loading process.
     // This holds the raw list of tasks we get directly from Firestore.
     private val _rawTasks = MutableLiveData<List<Task>>()
 
@@ -32,52 +33,37 @@ class TasksViewModel : ViewModel() {
 
     // We'll call this from our Fragment to start listening for data.
     fun startListeningForTasks(userId: String) {
-        // .addSnapshotListener is the key for real-time updates. This code block
-        // will run automatically every time the data changes in Firestore.
-        tasksCollection.whereEqualTo("userId", userId)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    // Handle the error
-                    return@addSnapshotListener
-                }
-
-                if (snapshot != null) {
-                    // We got new data! Convert all the documents into a list of our Task data class.
-                    val tasks = snapshot.toObjects(Task::class.java)
-                    _rawTasks.value = tasks
-                    // Re-format the list based on the user's current view selection.
-                    updateFormattedList()
-                }
-            }
-    }
-
-    // A public function the Fragment can call when the spinner changes.
-    fun setViewType(viewType: String) {
-        currentViewType = viewType
-        updateFormattedList()
-    }
-
-    // A private helper that decides how to format the list.
-    private fun updateFormattedList() {
-        when (currentViewType) {
-            "Day" -> formatListForDayView()
-            "Week" -> formatListForWeekView()
-            // "Month" would be handled by the MonthGridAdapter, so we might not format it here.
+        rawTasks = repository.getTasks(userId)
+        rawTasks.observeForever { tasks ->
+            // Whenever our raw data changes, we re-format it for the Day view by default.
+            formatListForDayView(tasks)
         }
     }
 
-    private fun formatListForDayView() {
-        _displayList.value = _rawTasks.value?.map { task ->
+    // This function is called by the Fragment when the spinner changes.
+    fun setViewType(viewType: String) {
+        val tasks = rawTasks.value ?: return // Get the current list of tasks
+        when (viewType) {
+            "Day" -> formatListForDayView(tasks)
+            "Week" -> formatListForWeekView(tasks)
+            // "Month" view will be handled by a different adapter in the fragment.
+        }
+    }
+
+    // Formats the list for the detailed Day view.
+    private fun formatListForDayView(tasks: List<Task>) {
+        _displayList.value = tasks.map { task ->
             TaskListItem.DayTaskItem(task)
         }
     }
 
-    private fun formatListForWeekView() {
+    // Formats the list for the Week view, adding date headers.
+    private fun formatListForWeekView(tasks: List<Task>) {
         val formattedList = mutableListOf<TaskListItem>()
-        // This is a simple example of grouping tasks by date for the week view.
-        _rawTasks.value?.sortedBy { it.dueDate }
-            ?.groupBy { /* Some logic to get just the date part of task.dueDate */ }
-            ?.forEach { (date, tasksOnThatDate) ->
+        // This logic groups the tasks by date to add the headers.
+        tasks.sortedBy { it.dueDate }
+            .groupBy { /* Some logic to get just the date part of task.dueDate */ }
+            .forEach { (date, tasksOnThatDate) ->
                 formattedList.add(TaskListItem.HeaderItem("Formatted Date Here"))
                 tasksOnThatDate.forEach { task ->
                     formattedList.add(TaskListItem.WeekTaskItem(task))
