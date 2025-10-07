@@ -40,6 +40,28 @@ class TasksRepository (private val tasksApiClient: TasksApiClient) {
         }
     }
 
+    suspend fun getTasks(): LiveData<List<Task>> {
+        val liveData = MutableLiveData<List<Task>>()
+        withContext(Dispatchers.IO) {
+            val allTasks = mutableListOf<Task>()
+            val googleTaskLists = tasksApiClient.getAllTaskLists()
+            googleTaskLists.forEach { googleList ->
+                val googleTasksInList = tasksApiClient.getAllTasksFromList(googleList.id)
+                val mappedTasks = googleTasksInList.map { googleTask ->
+                    Task(
+                        id = googleTask.id,
+                        title = googleTask.title ?: "No Title",
+                        description = googleTask.notes ?: "",
+                        isCompleted = googleTask.status == "completed"
+                    )
+                }
+                allTasks.addAll(mappedTasks)
+            }
+            liveData.postValue(allTasks)
+        }
+        return liveData
+    }
+
     suspend fun getTaskLists(): LiveData<List<TaskList>> {
         val liveData = MutableLiveData<List<TaskList>>()
         withContext(Dispatchers.IO) {
