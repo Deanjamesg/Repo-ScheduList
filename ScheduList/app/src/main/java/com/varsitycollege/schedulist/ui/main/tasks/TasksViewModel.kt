@@ -73,11 +73,11 @@ class TasksViewModel(private val repository: TasksRepository) : ViewModel() {
     }
 
     // This gets called from our "Add New Task" fragment.
-    fun addTask(newTask: Task) {
-        // Just add the new task object to the "tasks" collection in Firestore.
-        // The snapshot listener will automatically pick up the change and update the UI.
-        tasksCollection.add(newTask)
-    }
+//    fun addTask(newTask: Task) {
+//        // Just add the new task object to the "tasks" collection in Firestore.
+//        // The snapshot listener will automatically pick up the change and update the UI.
+//        tasksCollection.add(newTask)
+//    }
 
     // Call this to update the spinner's list
     fun updateTaskListNames(newList: List<String>) {
