@@ -4,12 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.varsitycollege.schedulist.data.model.EnergyLevel
 import com.varsitycollege.schedulist.data.model.Task
+import com.varsitycollege.schedulist.services.TasksApiClient
 import java.util.Date
 
-// This is our repository for Tasks. It's in charge of getting all our task data.
-// Later, it will talk to Firestore, but for now, it just creates a sample list.
-
-class TasksRepository {
+class TasksRepository (private val tasksApiClient: TasksApiClient) {
 
     // This function provides our list of tasks.
     fun getTasks(userId: String): LiveData<List<Task>> {

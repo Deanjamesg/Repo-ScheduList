@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.varsitycollege.schedulist.data.model.User
-import com.varsitycollege.schedulist.data.repository.Repository
+import com.varsitycollege.schedulist.data.repository.UserRepository
 
 // This ViewModel just handles the data for the account screen, like
 // showing the user's name and email.
@@ -47,7 +47,7 @@ class AccountViewModel : ViewModel() {
     }
 }
 
-class AccountViewModelFactory(private var repository: Repository) : ViewModelProvider.Factory {
+class AccountViewModelFactory(private var repository: UserRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AccountViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

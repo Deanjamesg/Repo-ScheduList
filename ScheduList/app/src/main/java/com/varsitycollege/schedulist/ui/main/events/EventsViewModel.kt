@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.varsitycollege.schedulist.data.model.Event
 import com.varsitycollege.schedulist.data.repository.EventsRepository
 import com.varsitycollege.schedulist.ui.adapter.EventListItem // Correct import added
+import java.util.Date
 
 // This is the ViewModel. It gets the data from the repository and
 // prepares it for our Fragment to display.
@@ -20,8 +21,8 @@ class EventsViewModel(private val repository: EventsRepository) : ViewModel() {
     private val currentEvents = mutableListOf<Event>()
 
     // This function tells the repository to start loading data.
-    fun loadEvents(userId: String) {
-        repository.getEvents(userId).observeForever { rawEventList ->
+    suspend fun loadEvents() {
+        repository.getEvents().observeForever { rawEventList ->
             currentEvents.clear()
             currentEvents.addAll(rawEventList)
             formatListForDayView(currentEvents)
@@ -29,9 +30,12 @@ class EventsViewModel(private val repository: EventsRepository) : ViewModel() {
     }
 
     // Add a new event and update the display list
-    fun addEvent(event: Event) {
-        currentEvents.add(event)
-        formatListForDayView(currentEvents)
+    suspend fun addEvent(title: String, description: String?, startTime: Date, location: String?) {
+        val event = repository.addEvent(title, description, startTime, location)
+        if (event != null) {
+            currentEvents.add(event)
+            formatListForDayView(currentEvents)
+        }
     }
 
     // This takes the raw list and wraps each item in a 'DayEventItem'
