@@ -45,7 +45,18 @@ Schedulist reduces the cognitive load of using multiple apps by integrating with
 
 ## 🖼️ App Previews
 
-<img width="275" height="490" alt="image" src="https://github.com/user-attachments/assets/5ad8d23f-d6ca-4181-b715-fa032ffdea16" />
+<img width="276" height="490" alt="image" src="https://github.com/user-attachments/assets/3aef2c77-9ca3-4773-935c-662560a82e7c" />
+<img width="277" height="491" alt="image" src="https://github.com/user-attachments/assets/03c8962f-2a6a-4d2f-bb35-f0c9ca3d09c1" />
+<img width="274" height="489" alt="image" src="https://github.com/user-attachments/assets/26d56163-43a9-466d-a11e-14ce77ccfc4d" />
+
+<img width="277" height="489" alt="image" src="https://github.com/user-attachments/assets/671ee091-783c-4bc3-aa04-37c564ea888e" />
+
+<img width="276" height="489" alt="image" src="https://github.com/user-attachments/assets/7d867af3-80d9-4917-851c-797272472c57" />
+<img width="275" height="489" alt="image" src="https://github.com/user-attachments/assets/b46cced0-2d87-4b13-b1ad-63719c4a99e5" />
+
+
+<img width="275" height="490" alt="image" src="https://github.com/user-attachments/assets/5ad8d23f-d6ca-4181-b715-fa032ffdea16" 
+  
 
 
 ### 📊 Dashboard
