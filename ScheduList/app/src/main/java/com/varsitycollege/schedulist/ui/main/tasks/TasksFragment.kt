@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.varsitycollege.schedulist.R
+import com.varsitycollege.schedulist.ui.main.simplelist.TasksViewModel
 
 class TasksFragment : Fragment() {
 

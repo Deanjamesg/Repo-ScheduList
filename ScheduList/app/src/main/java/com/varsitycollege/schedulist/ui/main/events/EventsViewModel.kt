@@ -3,36 +3,33 @@ package com.varsitycollege.schedulist.ui.main.events
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.firestore.FirebaseFirestore
 import com.varsitycollege.schedulist.data.model.Event
+import com.varsitycollege.schedulist.data.repository.EventsRepository
+import com.varsitycollege.schedulist.ui.adapter.EventListItem // Correct import added
 
-class EventsViewModel : ViewModel() {
-    private val db = FirebaseFirestore.getInstance()
-    private val eventsCollection = db.collection("events")
+// This is the ViewModel. It gets the data from the repository and
+// prepares it for our Fragment to display.
 
-    private val _events = MutableLiveData<List<Event>>()
-    val events: LiveData<List<Event>> = _events
+class EventsViewModel(private val repository: EventsRepository) : ViewModel() {
 
-    fun fetchEvents(userId: String) {
-        eventsCollection.whereEqualTo("userId", userId)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) return@addSnapshotListener
-                if (snapshot != null) {
-                    val events = snapshot.toObjects(Event::class.java)
-                    _events.value = events
-                }
-            }
+    // This is the final list that our Fragment will be watching for changes.
+    private val _displayList = MutableLiveData<List<EventListItem>>()
+    val displayList: LiveData<List<EventListItem>> = _displayList
+
+    // This function tells the repository to start loading data.
+    fun loadEvents(userId: String) {
+        repository.getEvents(userId).observeForever { rawEventList ->
+            // Once we get the raw data, we format it for our adapter.
+            formatListForDayView(rawEventList)
+        }
     }
 
-    fun addEvent(event: Event) {
-        eventsCollection.add(event)
-    }
-
-    fun updateEvent(eventId: String, event: Event) {
-        eventsCollection.document(eventId).set(event)
-    }
-
-    fun deleteEvent(eventId: String) {
-        eventsCollection.document(eventId).delete()
+    // This takes the raw list and wraps each item in a 'DayEventItem'
+    // so the adapter knows which layout to use.
+    private fun formatListForDayView(events: List<Event>) {
+        val formattedList = events.map { event ->
+            EventListItem.DayEventItem(event)
+        }
+        _displayList.value = formattedList
     }
 }
