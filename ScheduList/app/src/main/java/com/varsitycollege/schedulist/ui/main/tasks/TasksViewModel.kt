@@ -26,6 +26,10 @@ class TasksViewModel : ViewModel() {
     // A variable to remember which view the user has selected.
     private var currentViewType = "Day"
 
+    // Spinner data for task list names
+    private val _taskListNames = MutableLiveData<List<String>>(listOf("All Tasks", "Personal", "Work", "School"))
+    val taskListNames: LiveData<List<String>> = _taskListNames
+
     // We'll call this from our Fragment to start listening for data.
     fun startListeningForTasks(userId: String) {
         // .addSnapshotListener is the key for real-time updates. This code block
@@ -87,6 +91,11 @@ class TasksViewModel : ViewModel() {
         // Just add the new task object to the "tasks" collection in Firestore.
         // The snapshot listener will automatically pick up the change and update the UI.
         tasksCollection.add(newTask)
+    }
+
+    // Call this to update the spinner's list
+    fun updateTaskListNames(newList: List<String>) {
+        _taskListNames.value = newList
     }
 
 //    // Update an existing task in Firestore
