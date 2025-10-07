@@ -33,7 +33,8 @@
                 android:text="@string/event_card_title_placeholder"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:textColor="?attr/colorOnSurface"
-                app:layout_constraintEnd_toStartOf="@id/iconMenu"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,7 +42,7 @@
                 android:id="@+id/tvEventDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/event_card_description_placeholder"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?attr/colorOnSurfaceVariant"
@@ -53,7 +54,7 @@
                 android:id="@+id/iconLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="15dp"
                 android:src="@drawable/ic_location"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvEventDescription"
@@ -76,9 +77,9 @@
                 android:id="@+id/chipDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="20dp"
                 android:text="Apr 1, 2025"
-                app:chipBackgroundColor="?attr/colorSurfaceContainerHighest"
+                app:chipBackgroundColor="@color/tertiary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iconLocation" />
 
@@ -86,9 +87,9 @@
                 android:id="@+id/chipTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="10dp"
                 android:text="9:41 AM"
-                app:chipBackgroundColor="?attr/colorSurfaceContainerHighest"
+                app:chipBackgroundColor="@color/tertiary"
                 app:layout_constraintStart_toEndOf="@id/chipDate"
                 app:layout_constraintTop_toTopOf="@id/chipDate" />
 
@@ -97,19 +98,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/event_view_button"
+                app:cornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="@id/chipTime"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/chipDate" />
-
-            <ImageView
-                android:id="@+id/iconMenu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="Event Options"
-                android:src="@drawable/ic_more_vert"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="?attr/colorOnSurfaceVariant" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

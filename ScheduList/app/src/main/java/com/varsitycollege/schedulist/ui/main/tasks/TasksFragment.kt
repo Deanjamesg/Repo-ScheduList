@@ -15,17 +15,19 @@ import com.varsitycollege.schedulist.ui.adapter.MonthGridAdapter
 import com.varsitycollege.schedulist.ui.adapter.TasksAdapter
 import com.varsitycollege.schedulist.R
 import androidx.lifecycle.Observer
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import com.varsitycollege.schedulist.services.TasksApiClient
 
-
-// This is our TasksFragment. It's in charge of the UI.
-// It sets up the views, listens for user input (like spinner clicks),
-// and observes the ViewModel to update the list.
 
 class TasksFragment : Fragment() {
 
     private var _binding: FragmentTasksBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var auth: FirebaseAuth
+    private lateinit var tasksApiClient : TasksApiClient
     private lateinit var tasksViewModel: TasksViewModel
     private lateinit var tasksAdapter: TasksAdapter
     private lateinit var monthAdapter: MonthGridAdapter
@@ -35,13 +37,17 @@ class TasksFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTasksBinding.inflate(inflater, container, false)
+
+        auth = Firebase.auth
+        tasksApiClient = TasksApiClient(requireContext(), auth.currentUser!!.email.toString())
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val repository = TasksRepository()
+        val repository = TasksRepository(tasksApiClient)
         val factory = TasksViewModelFactory(repository)
         tasksViewModel = ViewModelProvider(this, factory).get(TasksViewModel::class.java)
 
@@ -116,4 +122,3 @@ class TasksFragment : Fragment() {
         _binding = null
     }
 }
-
