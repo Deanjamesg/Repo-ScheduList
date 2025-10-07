@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.varsitycollege.schedulist.R
 import com.varsitycollege.schedulist.data.repository.EventsRepository
@@ -199,7 +200,20 @@ class EventsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        eventsAdapter = EventsAdapter() // No view button callback
+        eventsAdapter = EventsAdapter(onDayEventClick = { event ->
+            val bundle = Bundle().apply {
+                putString("title", event.title)
+                putString("description", event.description)
+                putString("location", event.location)
+                putLong("date", event.startTime?.time ?: 0L)
+                putLong("time", event.startTime?.time ?: 0L)
+            }
+            try {
+                findNavController().navigate(R.id.action_eventsFragment_to_eventViewFragment, bundle)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        })
         binding.eventsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = eventsAdapter

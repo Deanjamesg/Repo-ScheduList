@@ -30,7 +30,16 @@
         android:id="@+id/eventsFragment"
         android:name="com.varsitycollege.schedulist.ui.main.events.EventsFragment"
         android:label="Events"
-        tools:layout="@layout/fragment_events" />
+        tools:layout="@layout/fragment_events">
+        <action
+            android:id="@+id/action_eventsFragment_to_eventViewFragment"
+            app:destination="@id/eventViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventViewFragment"
+        android:name="com.varsitycollege.schedulist.ui.main.events.EventViewFragment"
+        android:label="Event Details"
+        tools:layout="@layout/fragment_event_view" />
     <fragment
         android:id="@+id/tasksFragment"
         android:name="com.varsitycollege.schedulist.ui.main.tasks.TasksFragment"
