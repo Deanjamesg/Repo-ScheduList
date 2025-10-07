@@ -20,7 +20,7 @@ class CalendarApiClient(
     private val context: Context,
     userEmail: String
 ) {
-    private val TAG = "CalendarApiClient: "
+    private val TAG = "CalendarApiClient"
     private var calendarService: Calendar
 
     init {
