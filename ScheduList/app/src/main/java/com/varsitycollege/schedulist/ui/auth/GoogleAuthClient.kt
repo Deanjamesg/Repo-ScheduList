@@ -1,6 +1,7 @@
 package com.varsitycollege.schedulist.ui.auth
 
 import android.content.Context
+import android.util.Log
 import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
@@ -18,7 +19,7 @@ import com.varsitycollege.schedulist.BuildConfig
 class GoogleAuthClient(
     private val context: Context,
 ) {
-    private val tag = "GoogleAuthClient: "
+    private val TAG = "GoogleAuthClient"
     private val credentialManager = CredentialManager.create(context)
     private val firebaseAuth = FirebaseAuth.getInstance()
 
@@ -39,7 +40,7 @@ class GoogleAuthClient(
         } catch (e: Exception) {
             e.printStackTrace()
             if (e is CancellationException) throw e
-            println(tag + "signIn Error: ${e.message}")
+            Log.e(TAG, "SignIn Error: ${e.message}")
             return false
         }
     }
@@ -62,12 +63,12 @@ class GoogleAuthClient(
                 return authResult.user != null
 
             } catch(e: GoogleIdTokenParsingException) {
-                println(tag + "GoogleIdTokenParsingException: ${e.message}")
+                Log.e(TAG, "GoogleIdTokenParsingException: ${e.message}")
                 return false
             }
 
         } else {
-            println(tag + "Credential is not GoogleIdTokenCredential")
+            Log.d(TAG, "Credential is not GoogleIdTokenCredential")
             return false
         }
 
@@ -96,5 +97,6 @@ class GoogleAuthClient(
             ClearCredentialStateRequest()
         )
         firebaseAuth.signOut()
+        Log.d(TAG, "User Signed Out.")
     }
 }
