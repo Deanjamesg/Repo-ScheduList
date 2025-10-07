@@ -41,6 +41,26 @@ class TasksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Populate spinnerTaskList with sample data
+        val taskLists = listOf("Personal", "Work", "Shopping")
+        val spinnerAdapter = android.widget.ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            taskLists
+        )
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerTaskList.adapter = spinnerAdapter
+
+        // Populate spinnerViewType with Day, Week, Month
+        val viewTypes = listOf("Day", "Week", "Month")
+        val viewTypeAdapter = android.widget.ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            viewTypes
+        )
+        viewTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerViewType.adapter = viewTypeAdapter
+
         val repository = TasksRepository()
         val factory = TasksViewModelFactory(repository)
         tasksViewModel = ViewModelProvider(this, factory).get(TasksViewModel::class.java)
@@ -116,4 +136,3 @@ class TasksFragment : Fragment() {
         _binding = null
     }
 }
-
