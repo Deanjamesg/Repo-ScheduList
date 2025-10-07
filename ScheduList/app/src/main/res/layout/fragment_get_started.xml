@@ -1,48 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.main.GetStartFragment">
 
-    <TextView
-        android:id="@+id/tvGetStartedTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/get_started_title"
-        android:textSize="28sp"
-        android:textStyle="bold"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tvGetStartedSubtitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/get_started_subtitle"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@id/tvGetStartedTitle"
-        app:layout_constraintStart_toStartOf="@id/tvGetStartedTitle"
-        app:layout_constraintTop_toBottomOf="@id/tvGetStartedTitle" />
-
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/tvGetStartedTitle"
-        app:layout_constraintStart_toStartOf="@id/tvGetStartedTitle"
-        app:layout_constraintTop_toBottomOf="@id/tvGetStartedSubtitle">
+        app:layout_constraintTop_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingHorizontal="15dp"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvGetStartedTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/get_started_title"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvGetStartedSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/get_started_subtitle"
+                android:textSize="16sp" />
 
             <!-- Card 1 -->
             <com.google.android.material.card.MaterialCardView
@@ -208,10 +202,10 @@
                 android:id="@+id/btnContinueToDashboard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/black"
-                android:paddingVertical="12dp"
+                android:paddingVertical="15dp"
                 android:text="@string/get_started_continue_button"
-                android:textColor="@color/white" />
+                android:textSize="16sp"
+                app:cornerRadius="5dp" />
         </LinearLayout>
     </ScrollView>
 
