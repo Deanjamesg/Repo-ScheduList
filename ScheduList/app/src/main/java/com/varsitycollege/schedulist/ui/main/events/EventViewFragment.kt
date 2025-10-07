@@ -15,7 +15,6 @@ import java.util.*
 class EventViewFragment : Fragment() {
     private var _binding: FragmentEventViewBinding? = null
     private val binding get() = _binding!!
-
     private var selectedDate: Calendar = Calendar.getInstance()
     private var selectedTime: Calendar = Calendar.getInstance()
 

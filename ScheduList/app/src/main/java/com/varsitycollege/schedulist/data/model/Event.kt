@@ -4,7 +4,7 @@ import java.util.Date
 
 // Represents a calendar, compatible with Google Calendar API
 data class Event(
-    var id: String? = null,
+    var id: String,
     val title: String = "",
     val description: String? = null,
     val startTime: Date = Date(), // Combines the date and time from the pickers.

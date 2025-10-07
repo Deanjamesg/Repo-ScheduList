@@ -11,6 +11,8 @@
         android:layout_margin="16dp"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="16dp"
+        app:strokeColor="@color/primary"
+        app:strokeWidth="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -25,24 +27,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/event_card_title_placeholder"
-                android:textAppearance="?attr/textAppearanceTitleLarge"
                 android:textColor="?attr/colorOnSurface"
                 android:background="@android:color/transparent"
                 android:enabled="false"
                 android:focusable="false"
                 android:inputType="textCapSentences"
-                app:layout_constraintEnd_toStartOf="@id/iconMenu"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/iconMenu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_more_vert"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="?attr/colorOnSurfaceVariant" />
 
             <TextView
                 android:id="@+id/labelDescription"
@@ -160,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Apr 1, 2025"
-                app:chipBackgroundColor="?attr/colorSurfaceContainerHighest"
+                app:chipBackgroundColor="@color/tertiary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/labelDateTime" />
 
@@ -170,41 +162,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="9:41 AM"
-                app:chipBackgroundColor="?attr/colorSurfaceContainerHighest"
+                app:chipBackgroundColor="@color/tertiary"
                 app:layout_constraintStart_toEndOf="@id/chipDate"
                 app:layout_constraintTop_toTopOf="@id/chipDate" />
 
-            <TextView
-                android:id="@+id/labelLeaveTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/event_view_label_leave_time"
-                android:textAppearance="?attr/textAppearanceLabelLarge"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/chipDate" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipLeaveTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="8:30 AM"
-                android:textColor="?attr/colorOnPrimary"
-                app:chipBackgroundColor="?attr/colorPrimary"
-                app:chipIcon="@drawable/ic_car"
-                app:chipIconTint="?attr/colorOnPrimary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/labelLeaveTime" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEdit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/event_view_button_edit"
-                app:layout_constraintBottom_toBottomOf="@id/chipLeaveTime"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/chipLeaveTime" />
+                app:cornerRadius="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

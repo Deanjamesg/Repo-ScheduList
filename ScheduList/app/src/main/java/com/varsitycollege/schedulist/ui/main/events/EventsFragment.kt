@@ -7,12 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import com.varsitycollege.schedulist.R
 import com.varsitycollege.schedulist.data.repository.EventsRepository
 import com.varsitycollege.schedulist.databinding.FragmentEventsBinding
+import com.varsitycollege.schedulist.services.CalendarApiClient
 import com.varsitycollege.schedulist.ui.adapter.EventsAdapter
+import kotlinx.coroutines.launch
 
 // This is our Fragment. It's the UI part of the screen.
 // Its job is to set up the view, observe the ViewModel, and update the adapter.
@@ -25,11 +31,20 @@ class EventsFragment : Fragment() {
     private lateinit var eventsViewModel: EventsViewModel
     private lateinit var eventsAdapter: EventsAdapter
 
+    private lateinit var auth: FirebaseAuth
+    private lateinit var calendarApiClient: CalendarApiClient
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentEventsBinding.inflate(inflater, container, false)
+
+        auth = Firebase.auth
+
+        calendarApiClient = CalendarApiClient(requireContext(), auth.currentUser!!.email.toString())
+
         return binding.root
     }
 
@@ -37,7 +52,7 @@ class EventsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // We create our Repository and the Factory first.
-        val repository = EventsRepository()
+        val repository = EventsRepository(calendarApiClient)
         val factory = EventsViewModelFactory(repository)
 
         // Then, we use the Factory to get our ViewModel.
@@ -54,22 +69,9 @@ class EventsFragment : Fragment() {
         }
 
         // Now we tell the ViewModel to start loading the data.
-        eventsViewModel.loadEvents("sampleUserId")
-
-        // Spinner setup
-        val spinnerEventList = view.findViewById<android.widget.Spinner>(R.id.spinnerEventList)
-        val spinnerViewType = view.findViewById<android.widget.Spinner>(R.id.spinnerViewType)
-
-        val eventListItems = listOf("All Events", "Birthdays", "Meetings", "Reminders")
-        val viewTypeItems = listOf("List View", "Calendar View")
-
-        val eventListAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, eventListItems)
-        eventListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerEventList.adapter = eventListAdapter
-
-        val viewTypeAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, viewTypeItems)
-        viewTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerViewType.adapter = viewTypeAdapter
+        lifecycleScope.launch {
+            eventsViewModel.loadEvents()
+        }
 
         // Overlay logic for Add Event
         val addEventOverlay = binding.root.findViewById<android.widget.FrameLayout>(R.id.addEventOverlay)
@@ -185,14 +187,16 @@ class EventsFragment : Fragment() {
                 val description = etDescription?.text?.toString()?.trim()
                 val location = etLocation?.text?.toString()?.trim()
                 val startTime = calendar.time
-                val newEvent = com.varsitycollege.schedulist.data.model.Event(
-                    title = title,
-                    description = description,
-                    startTime = startTime,
-                    location = location,
-                    userId = "sampleUserId"
-                )
-                eventsViewModel.addEvent(newEvent)
+//                val newEvent = com.varsitycollege.schedulist.data.model.Event(
+//                    title = title,
+//                    description = description,
+//                    startTime = startTime,
+//                    location = location
+//                )
+                lifecycleScope.launch {
+                    eventsViewModel.addEvent(title, description, startTime, location)
+                }
+
                 addEventOverlay.visibility = View.GONE
             }
             addEventOverlay.visibility = View.VISIBLE
