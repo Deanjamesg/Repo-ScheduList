@@ -56,6 +56,61 @@ Schedulist reduces the cognitive load of using multiple apps by integrating with
 <img width="275" height="490" alt="image" src="https://github.com/user-attachments/assets/5ad8d23f-d6ca-4181-b715-fa032ffdea16"/>
   
 
+📖 How to Use Schedulist
+1. Login & Authentication
+
+  - On launch, you’ll see the Login Screen.
+  - You can sign in using your email & password, or quickly with Google Sign-In.
+  - If you don’t have an account, tap “Don’t have an account?” to create one.
+
+2. Dashboard Overview
+
+  - After signing in, you’ll land on the Dashboard, which includes:
+  - Tasks – Create, edit, and track personal tasks.
+  - Calendar – View your synced events from Google Calendar.
+  - Events – Add new events with title, description, location, and attachments.
+  - Simple List – Create quick to-do lists without extra details.
+  - Account – Manage your profile and authentication.
+  - Settings – Configure app preferences.
+
+3. Adding a New Event
+
+  - Tap “Add New Event”.
+  - Enter details:
+  - Title
+  - Description
+  - Location
+  - (Optional) Attach a Google Document
+  - Set the date & time.
+  - Tap Save Event to add it to your schedule.
+
+4. Adding a New Task
+
+  - Tap “Add New Task”.
+  - Enter:
+  - Title
+  - Description
+  - Priority/Energy level (Low, Medium, High)
+  - Date & Time
+  - Tap Save Task.
+  - Tasks will appear in your Task List, where you can view or edit them.
+
+5. Notifications
+
+  - The Notifications Panel helps you stay on track.
+  - Types of alerts include:
+  - Task Reminders – Upcoming tasks.
+  - Event Reminders – Calendar events.
+  - Productivity Alerts – General productivity nudges.
+  - Toggle notifications on/off in this panel.
+
+6. Managing Tasks & Events
+
+  - Tasks and events are displayed as cards with details like title, description, date, and location.
+  - Tap View to open full details.
+  - Use filters to organize tasks into lists for easier management.
+
+
 
 ### 📊 Dashboard
 Quick-access cards: **Tasks, Calendar, Events, Simple List, Account, Settings**.
