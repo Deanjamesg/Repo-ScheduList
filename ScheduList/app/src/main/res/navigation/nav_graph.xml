@@ -75,6 +75,6 @@
     <fragment
         android:id="@+id/calendarFragment"
         android:name="com.varsitycollege.schedulist.ui.main.calendar.CalendarFragment"
-        android:label="fragment_calendar"
+        android:label="Calendar"
         tools:layout="@layout/fragment_calendar" />
 </navigation>
