@@ -1,55 +1,64 @@
 # 📅 Schedulist
 
-> A smart, focused Android app for **tasks, events, and schedules** all in one place.  
-> Schedulist helps  reduce mental load by combining Google Calendar integration, intelligent notifications, and offline reliability into a clean, modern app.
+> A smart, student-focused Android app for tasks, events, and schedules — all in one place.  
+Schedulist reduces the cognitive load of using multiple apps by integrating with Google Calendar and Google Tasks, Firebase Cloud Firestore for data storage and Google Identity Services for secure login.
 
 ---
 
 ## Features
 
 - 📝 **Task Management**  
-  - Create and organise tasks into lists.  
-  - Energy levels (Low / Medium / High) for smarter prioritisation.  
-  - Multiple views: Daily, Weekly, Monthly, and Simple List.  
+  - Create, edit, and delete tasks with categories and lists.  
+  - Integrated with **Google Tasks API**.  
+  - Multiple task views: Daily, Weekly, Monthly, Simple List.  
 
-- 📆 **Events & Calendar**  
-  - Sync with Google Calendar.  
-  - View events alongside tasks in one interface.  
-
-- 🚦 **Smart Alerts**  
-  - Productivity suggestions based on energy & deadlines.  
-  - Travel time alerts with Google Maps API.  
-  - Reminders for tasks and events.  
+- 📆 **Event Management**  
+  - Sync with **Google Calendar API**.  
+  - Unified view of academic and personal events.  
 
 - ⚙️ **Customisable Settings**  
-  - Dark / Light Mode.  
+  - Dark / Light Mode support.  
   - Multi-language support (English & Afrikaans).  
-  - Toggle notifications (Productivity, Task, Travel).  
+  - Account management settings.  
 
-- 🔒 **Secure Accounts**  
-  - Google Single Sign-On.  
+- 🔐 Secure Authentication
+  - Schedulist prioritizes security-first authentication:
+  - Credential Manager – Provides a modern, unified way to request credentials on Android. This ensures a consistent and secure sign-in across devices.
+  - Google Identity Services (GIS) – Handles OAuth2-based identity verification with Google accounts.
+  - Firebase Authentication – Validates and persists sessions securely on the backend.
+  - Firestore Integration – Stores user metadata (not raw credentials) for role management and personalization.
 
-- 📴 **Offline-First Architecture**  
-  - Online caching with Firebase.  
-  - Background sync with WorkManager.  
+- 🔑 **How It Works**
+  - When a user taps "Sign in with Google", the app uses CredentialManager to build a GetCredentialRequest with the server-side client ID.
+  - Google Identity Services returns a Google ID Token credential.
+  - The token is exchanged for a Firebase Auth Credential via GoogleAuthProvider.getCredential().
+  - Firebase signs in the user and creates a session tied to their UID.
+  - Email + Password Option
+  - The app also supports Firebase’s built-in signInWithEmailAndPassword for users.
+  - User accounts created this way are also managed by Firebase Auth, ensuring session management.
+
+   - **Sign-Out**
+   - On sign-out, the app clears all credential states with credentialManager.clearCredentialState() and calls firebaseAuth.signOut() to prevent lingering sessions.
+
+- ☁️ **Cloud Integration**  
+  - **Firebase Cloud Firestore** for storing tasks, events, and user data.  
+  - Synchronised experience across devices.  
 
 ---
 
-## 🖼️ App Screenshots
+## 🖼️ App Previews
 
 ### 📊 Dashboard
-Cards for quick access to **Tasks, Calendar, Events, Simple List, Account, Settings**.
+Quick-access cards: **Tasks, Calendar, Events, Simple List, Account, Settings**.
 
-### ✅ Task Management
-Spinners for filtering, RecyclerView task lists, and quick-add buttons for **New Task** and **New List**.
+### ✅ Tasks
+Organise with filters and lists. Create new tasks via a clean pop-up form.
 
 ### ⚙️ Settings
-Card-based preferences for:  
-- Language selection  
-- Notifications  
-- Dark/Light mode  
-- Offline mode  
-- Task list management  
+Options for:  
+- Language preferences  
+- Dark/Light theme  
+- Notification toggles  
 - Account settings  
 
 ---
@@ -57,10 +66,12 @@ Card-based preferences for:
 ## 🛠️ Tech Stack
 
 - **Android (Kotlin/Java)**  
-- **Firebase** – online data storage  
-- **WorkManager** – background sync  
-- **Google Calendar API** – two-way sync  
-- **Google Maps Routes API** – travel time alerts  
+- **Firebase Cloud Firestore** – app data storage  
+- **Google Identity Services** – secure user login  
+- **Credential Manager API** – authentication handling  
+- **Google Calendar API (Client Library)** – event management  
+- **Google Tasks API (Client Library)** – task management  
+- **Google Cloud Console** – scope configuration for Calendar & Tasks APIs  
 - **Material Design Components** – UI/UX  
 
 ---
@@ -68,10 +79,10 @@ Card-based preferences for:
 ## 📋 Requirements
 
 - Android 8.0 (API level 26) or higher  
-- Google account for Calendar sync  
-- API keys for:  
+- Google account for authentication & API access  
+- Enabled APIs in **Google Cloud Console**:  
   - Google Calendar API  
-  - Google Maps Routes API  
+  - Google Tasks API  
 
 ---
 
@@ -79,6 +90,5 @@ Card-based preferences for:
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/your-username/schedulist.git
+   git clone 
    cd schedulist
-
