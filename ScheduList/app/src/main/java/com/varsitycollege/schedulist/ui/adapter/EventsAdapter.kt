@@ -1,4 +1,4 @@
-package com.varsitycollege.schedulist.ui.adapter
+package com.varsitycollege.schedulist.ui.adapter // Correct package name
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,19 +11,20 @@ import com.varsitycollege.schedulist.databinding.ItemEventWeekBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-// These are our formatters to turn a Date object into text like "Apr 1, 2025" or "9:41 AM"
-private val dateFormatter = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
-private val timeFormatter = SimpleDateFormat("h:mm a", Locale.getDefault())
-
-// This sealed class defines what kind of items our list can actually show
+// --- CHANGE ---
+// We moved this sealed class outside the adapter class.
+// This makes it a top-level class that our ViewModel can easily import and use.
 sealed class EventListItem {
     data class DayEventItem(val event: Event) : EventListItem()
     data class WeekEventItem(val event: Event) : EventListItem()
 }
 
+// These formatters will turn a Date object into text we can show in the UI.
+private val dateFormatter = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
+private val timeFormatter = SimpleDateFormat("h:mm a", Locale.getDefault())
+
 class EventsAdapter : ListAdapter<EventListItem, RecyclerView.ViewHolder>(EventDiffCallback()) {
 
-    // These constants represent our two different layouts.
     companion object {
         private const val ITEM_VIEW_TYPE_DAY = 1
         private const val ITEM_VIEW_TYPE_WEEK = 2
@@ -78,7 +79,7 @@ class EventsAdapter : ListAdapter<EventListItem, RecyclerView.ViewHolder>(EventD
     }
 }
 
-// This is the DiffUtil part that makes the ListAdapter efficient.
+// DiffUtil for efficient list updates.
 class EventDiffCallback : DiffUtil.ItemCallback<EventListItem>() {
     override fun areItemsTheSame(oldItem: EventListItem, newItem: EventListItem): Boolean {
         return oldItem == newItem
