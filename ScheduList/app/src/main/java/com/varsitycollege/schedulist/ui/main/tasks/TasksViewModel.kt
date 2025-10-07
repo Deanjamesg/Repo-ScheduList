@@ -3,11 +3,15 @@ package com.varsitycollege.schedulist.ui.main.tasks
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.varsitycollege.schedulist.data.model.EnergyLevel
 import com.varsitycollege.schedulist.data.model.Task
 import com.varsitycollege.schedulist.data.repository.TasksRepository
 import com.varsitycollege.schedulist.ui.adapter.MonthDay
 import com.varsitycollege.schedulist.ui.adapter.TaskListItem
+import kotlinx.coroutines.launch
 import java.util.Calendar
+import java.util.Date
 
 // This is the ViewModel for the tasks screen. It gets the raw data from the
 // repository and then transforms it into the specific list that our adapter needs
@@ -24,6 +28,34 @@ class TasksViewModel(private val repository: TasksRepository) : ViewModel() {
     // This is the new list specifically for our MonthGridAdapter.
     private val _monthList = MutableLiveData<List<MonthDay>>()
     val monthList: LiveData<List<MonthDay>> = _monthList
+
+    private val currentTasks = mutableListOf<Task>()
+
+    fun loadTasks() {
+        viewModelScope.launch {
+            val tasks = repository.getTasks()
+            currentTasks.clear()
+            currentTasks.addAll(tasks)
+            formatListForDayView(currentTasks)
+        }
+    }
+
+    fun addTask(
+        title: String,
+        description: String?,
+        dueDate: Date,
+
+    ) {
+        viewModelScope.launch {
+            // We call the repository to add the task via the API.
+            val newTask = repository.addTask(title, description, dueDate)
+            if (newTask != null) {
+                // If it's successful, we add the new task to our local list and refresh the UI.
+                currentTasks.add(newTask)
+                formatListForDayView(currentTasks)
+            }
+        }
+    }
 
     fun startListeningForTasks(userId: String) {
         rawTasks = repository.getTasks(userId)

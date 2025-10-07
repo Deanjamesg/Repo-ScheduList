@@ -19,6 +19,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.varsitycollege.schedulist.services.TasksApiClient
+import java.util.Calendar
 
 
 class TasksFragment : Fragment() {
@@ -42,6 +43,53 @@ class TasksFragment : Fragment() {
         tasksApiClient = TasksApiClient(requireContext(), auth.currentUser!!.email.toString())
 
         return binding.root
+    }
+
+    private fun setupAddButtonListener() {
+        val addTaskOverlay = binding.root.findViewById<FrameLayout>(R.id.addTaskOverlay)
+        val inflater = LayoutInflater.from(requireContext())
+        var addTaskView: View? = null
+
+        binding.btnNewTask.setOnClickListener {
+            addTaskOverlay.removeAllViews()
+            addTaskView = inflater.inflate(R.layout.fragment_add_task, addTaskOverlay, false)
+            addTaskOverlay.addView(addTaskView)
+
+            // Get references to all the views inside the pop-up
+            val tilTitle = addTaskView!!.findViewById<TextInputLayout>(R.id.tilTitle)
+            val tilDescription = addTaskView!!.findViewById<TextInputLayout>(R.id.tilDescription)
+            val etTitle = tilTitle.editText
+            val etDescription = tilDescription.editText
+
+            // Date & Time Picker setup...
+            val btnDatePicker = addTaskView!!.findViewById<MaterialButton>(R.id.btnDatePicker)
+            val btnTimePicker = addTaskView!!.findViewById<MaterialButton>(R.id.btnTimePicker)
+            val calendar = Calendar.getInstance()
+            // ... (rest of your date/time picker logic)
+
+            val btnCancel = addTaskView!!.findViewById<MaterialButton>(R.id.btnCancel)
+            val btnSave = addTaskView!!.findViewById<MaterialButton>(R.id.btnSaveTask)
+
+            btnCancel.setOnClickListener {
+                addTaskOverlay.visibility = View.GONE
+            }
+
+            btnSave.setOnClickListener {
+                // Get user input as separate variables.
+                val title = etTitle?.text.toString().trim()
+                val description = etDescription?.text.toString().trim()
+                val dueDate = calendar.time
+
+                if (title.isNotEmpty()) {
+                    // Call the ViewModel without the energy level.
+                    tasksViewModel.addTask(title, description, dueDate)
+                    addTaskOverlay.visibility = View.GONE
+                } else {
+                    etTitle?.error = "Title cannot be empty"
+                }
+            }
+            addTaskOverlay.visibility = View.VISIBLE
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
