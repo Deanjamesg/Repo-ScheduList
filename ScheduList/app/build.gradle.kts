@@ -109,4 +109,7 @@ dependencies {
     // Using recent versions
     implementation("com.google.apis:google-api-services-calendar:v3-rev20220715-2.0.0")
     implementation("com.google.apis:google-api-services-tasks:v1-rev20210709-2.0.0")
+
+    // 4. biometrics
+    implementation("androidx.biometric:biometric:1.2.0-alpha05")
 }
