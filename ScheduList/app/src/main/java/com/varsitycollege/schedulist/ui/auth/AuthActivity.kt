@@ -1,3 +1,4 @@
+// Kotlin
 package com.varsitycollege.schedulist.ui.auth
 
 import android.content.Intent
@@ -30,14 +31,33 @@ class AuthActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        // Check if user is already signed in AND has biometric enabled
+        // If user is already signed in, require biometric auth or force setup
         if (googleAuthClient.isSignedIn()) {
             if (biometricPreferences.isBiometricEnabled()) {
-                // User was previously logged in with biometrics - skip to main
-                continueToMain()
+                // Require biometric authentication before continuing
+                binding.progressBar.visibility = View.VISIBLE
+                biometricHelper.authenticate(
+                    title = "Unlock ScheduList",
+                    subtitle = "Confirm with fingerprint to continue",
+                    negativeButtonText = "Cancel",
+                    onSuccess = {
+                        binding.progressBar.visibility = View.GONE
+                        continueToMain()
+                    },
+                    onError = { _, errorMessage ->
+                        binding.progressBar.visibility = View.GONE
+                        Log.e(TAG, "Biometric auth error onStart: $errorMessage")
+                        showAuthFailedDialog(errorMessage)
+                    },
+                    onFailed = {
+                        binding.progressBar.visibility = View.GONE
+                        Log.d(TAG, "Biometric auth failed onStart")
+                        showAuthFailedDialog("Authentication failed. Try again or sign out.")
+                    }
+                )
             } else {
-                // User is signed in but hasn't set up biometrics yet
-                continueToMain()
+                // Signed in but biometric not configured yet -> force setup
+                offerBiometricSetup()
             }
         }
     }
@@ -67,12 +87,13 @@ class AuthActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Check if user enrolled fingerprint and wants to enable it
+        // After returning from enrollment, if user logged in but biometric not yet enabled,
+        // check if enrollment completed and prompt to test/enable.
         if (biometricPreferences.isUserLoggedIn() &&
             !biometricPreferences.isBiometricEnabled()) {
             val status = biometricHelper.isBiometricAvailable()
             if (status == BiometricHelper.BiometricStatus.AVAILABLE) {
-                // User just enrolled, offer to test it
+                // User just enrolled, require testing/enabling now
                 testBiometric()
             }
         }
@@ -116,7 +137,7 @@ class AuthActivity : AppCompatActivity() {
                 // Mark user as logged in
                 biometricPreferences.setUserLoggedIn(true)
 
-                // Offer biometric setup for first-time users
+                // Force biometric setup for first-time users
                 offerBiometricSetup()
             },
             onAuthorizationFailure = { exception ->
@@ -128,32 +149,33 @@ class AuthActivity : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show()
 
-                // Even if they deny, we can still let them into the app,
-                // but the features just won't work.
-//                continueToMain()
+                // Do not continue to main until biometric is configured (or allow limited access if desired).
+                binding.progressBar.visibility = View.GONE
             }
         )
     }
 
     private fun offerBiometricSetup() {
-        // Check if this is first login (biometric not yet configured)
+        // Do not allow skipping biometric setup. Decide flow based on availability.
         if (biometricPreferences.isBiometricEnabled()) {
-            // Already set up, just continue
+            // Already set up
             continueToMain()
             return
         }
 
         when (biometricHelper.isBiometricAvailable()) {
             BiometricHelper.BiometricStatus.AVAILABLE -> {
+                // Offer only to enable (no skip)
                 showBiometricSetupDialog()
             }
             BiometricHelper.BiometricStatus.NOT_ENROLLED -> {
+                // Force enrollment (no skip)
                 showEnrollmentRequiredDialog()
             }
             else -> {
-                // Biometric not available, go to main
+                // Biometric not available on device - cannot proceed
                 Log.d(TAG, "Biometric authentication not available on this device")
-                continueToMain()
+                showBiometricUnavailableDialog()
             }
         }
     }
@@ -162,13 +184,10 @@ class AuthActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.GONE
 
         AlertDialog.Builder(this)
-            .setTitle("Enable Fingerprint?")
-            .setMessage("Would you like to use your fingerprint for faster login next time?")
+            .setTitle("Enable Fingerprint")
+            .setMessage("To continue you must enable fingerprint login for this app. Touch enable to set it up now.")
             .setPositiveButton("Enable") { _, _ ->
                 testBiometric()
-            }
-            .setNegativeButton("Skip") { _, _ ->
-                continueToMain()
             }
             .setCancelable(false)
             .show()
@@ -188,12 +207,14 @@ class AuthActivity : AppCompatActivity() {
             onError = { _, errorMessage ->
                 Log.e(TAG, "Biometric setup error: $errorMessage")
                 Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
-                continueToMain()
+                // If setup errors, force user back to enrollment flow (don't continue)
+                offerBiometricSetup()
             },
             onFailed = {
                 Log.d(TAG, "Biometric setup failed")
-                Toast.makeText(this, "Setup failed. Try again later.", Toast.LENGTH_SHORT).show()
-                continueToMain()
+                Toast.makeText(this, "Setup failed. Try again.", Toast.LENGTH_SHORT).show()
+                // retry by offering setup again
+                offerBiometricSetup()
             }
         )
     }
@@ -203,12 +224,14 @@ class AuthActivity : AppCompatActivity() {
 
         AlertDialog.Builder(this)
             .setTitle("Fingerprint Required")
-            .setMessage("Please register a fingerprint in your device settings to enable this feature.")
+            .setMessage("Please register a fingerprint in your device settings to enable this feature. This cannot be skipped.")
             .setPositiveButton("Open Settings") { _, _ ->
                 openBiometricEnrollment()
             }
-            .setNegativeButton("Skip") { _, _ ->
-                continueToMain()
+            .setNegativeButton("Sign Out") { _, _ ->
+                lifecycleScope.launch {
+                    performSignOut()
+                }
             }
             .setCancelable(false)
             .show()
@@ -234,9 +257,77 @@ class AuthActivity : AppCompatActivity() {
                     "Please manually enable fingerprint in Settings > Security",
                     Toast.LENGTH_LONG
                 ).show()
-                continueToMain()
+                // Can't continue without enrollment - force sign out
+                lifecycleScope.launch {
+                    performSignOut()
+                }
             }
         }
+    }
+
+    private fun showBiometricUnavailableDialog() {
+        binding.progressBar.visibility = View.GONE
+
+        AlertDialog.Builder(this)
+            .setTitle("Biometric Not Available")
+            .setMessage("This device does not support the required fingerprint authentication. The app requires fingerprint login and cannot continue on this device.")
+            .setPositiveButton("Sign Out") { _, _ ->
+                lifecycleScope.launch {
+                    performSignOut()
+                }
+            }
+            .setNegativeButton("Exit") { _, _ ->
+                finishAffinity()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun showAuthFailedDialog(message: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Authentication Required")
+            .setMessage(message)
+            .setPositiveButton("Retry") { _, _ ->
+                // Retry biometric auth
+                binding.progressBar.visibility = View.VISIBLE
+                biometricHelper.authenticate(
+                    title = "Retry Fingerprint",
+                    subtitle = "Touch sensor to continue",
+                    negativeButtonText = "Cancel",
+                    onSuccess = {
+                        binding.progressBar.visibility = View.GONE
+                        continueToMain()
+                    },
+                    onError = { _, errorMessage ->
+                        binding.progressBar.visibility = View.GONE
+                        showAuthFailedDialog(errorMessage)
+                    },
+                    onFailed = {
+                        binding.progressBar.visibility = View.GONE
+                        showAuthFailedDialog("Authentication failed. Try again or sign out.")
+                    }
+                )
+            }
+            .setNegativeButton("Sign Out") { _, _ ->
+                lifecycleScope.launch {
+                    performSignOut()
+                }
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private suspend fun performSignOut() {
+        try {
+            googleAuthClient.signOut()
+        } catch (e: Exception) {
+            Log.e(TAG, "Sign out failed", e)
+        }
+        biometricPreferences.setUserLoggedIn(false)
+        biometricPreferences.setBiometricEnabled(false)
+        binding.progressBar.visibility = View.GONE
+        Toast.makeText(this, "Signed out", Toast.LENGTH_SHORT).show()
+        // Stay on AuthActivity to allow sign-in again
     }
 
     private fun continueToMain() {
