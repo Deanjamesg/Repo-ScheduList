@@ -104,4 +104,14 @@
 
     <!-- Calendar Screen -->
     <string name="calendar_title">Calendar</string>
+
+    <string name="get_started">Kom Begin</string>
+    <string name="dashboard">Dashbord</string>
+    <string name="tasks">Take</string>
+    <string name="calendar">Kalender</string>
+    <string name="events">Gebeure</string>
+    <string name="simple_list">Eenvoudige Lys</string>
+    <string name="account">Rekening</string>
+    <string name="settings">Instellings</string>
+    <string name="instructions">Instruksies</string>
 </resources>

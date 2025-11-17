@@ -13,8 +13,8 @@ import com.varsitycollege.schedulist.ui.auth.GoogleAuthClient
 import kotlinx.coroutines.launch
 
 class AccountFragment : Fragment() {
-    lateinit var binding : FragmentAccountBinding
-    lateinit var accountViewModel: AccountViewModel
+    private lateinit var binding: FragmentAccountBinding
+    private lateinit var accountViewModel: AccountViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,17 +41,18 @@ class AccountFragment : Fragment() {
         accountViewModel.loadUserData()
         accountViewModel.user.observe(viewLifecycleOwner) { user ->
             if (user != null) {
-                // Split displayName into first and last name
-                val nameParts = user.displayName?.split(" ") ?: listOf("")
+                val displayName = user.displayName ?: ""
+                val nameParts = displayName.split(" ")
                 val firstName = nameParts.firstOrNull() ?: ""
-                val lastName = if (nameParts.size > 1) nameParts.subList(1, nameParts.size).joinToString(" ") else ""
-                binding.tvNameValue.text = firstName
-                binding.tvSurnameValue.text = lastName
-                binding.tvEmailValue.text = user.email ?: ""
+                val lastName = if (nameParts.size > 1) nameParts.drop(1).joinToString(" ") else ""
+
+                binding.tvNameValue.text = firstName.ifEmpty { "Not set" }
+                binding.tvSurnameValue.text = lastName.ifEmpty { "Not set" }
+                binding.tvEmailValue.text = user.email ?: "No email"
             } else {
-                binding.tvNameValue.text = ""
-                binding.tvSurnameValue.text = ""
-                binding.tvEmailValue.text = ""
+                binding.tvNameValue.text = "Not set"
+                binding.tvSurnameValue.text = "Not set"
+                binding.tvEmailValue.text = "No email"
             }
         }
     }
