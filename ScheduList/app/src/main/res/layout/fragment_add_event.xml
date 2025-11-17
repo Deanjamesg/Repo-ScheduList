@@ -36,7 +36,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Apr 1, 2025"
+                android:text="@string/add_event_date_placeholder"
                 app:icon="@drawable/ic_calendar"
                 app:layout_constraintEnd_toStartOf="@id/btnTimePicker"
                 app:layout_constraintStart_toStartOf="parent"
@@ -47,11 +47,35 @@
                 style="@style/Widget.Material3.Button.TextButton.Icon"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="9:41 AM"
+                android:text="@string/add_event_time_placeholder"
                 app:icon="@drawable/ic_time"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/btnDatePicker"
                 app:layout_constraintTop_toTopOf="@id/btnDatePicker" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEndDatePicker"
+                style="@style/Widget.Material3.Button.TextButton.Icon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:text="@string/add_event_end_date_placeholder"
+                app:icon="@drawable/ic_calendar"
+                app:layout_constraintEnd_toStartOf="@id/btnEndTimePicker"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnTimePicker" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEndTimePicker"
+                style="@style/Widget.Material3.Button.TextButton.Icon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:text="@string/add_event_end_time_placeholder"
+                app:icon="@drawable/ic_time"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btnEndDatePicker"
+                app:layout_constraintTop_toTopOf="@id/btnEndDatePicker" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilTitle"
@@ -61,7 +85,7 @@
                 android:hint="@string/add_task_title_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnDatePicker">
+                app:layout_constraintTop_toBottomOf="@id/btnEndTimePicker">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -90,7 +114,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Enter the location"
+                android:hint="@string/add_event_location_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tilDescription">

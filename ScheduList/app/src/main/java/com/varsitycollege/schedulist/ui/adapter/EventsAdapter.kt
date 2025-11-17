@@ -40,7 +40,13 @@ class EventsAdapter(
             binding.tvEventDescription.text = event.description
             binding.tvEventLocation.text = event.location
             binding.chipDate.text = dateFormatter.format(event.startTime)
-            binding.chipTime.text = timeFormatter.format(event.startTime)
+            // Show start time or a start-end range if endTime is available
+            val timeText = if (event.endTime != null && event.endTime.time > event.startTime.time) {
+                "${timeFormatter.format(event.startTime)} - ${timeFormatter.format(event.endTime)}"
+            } else {
+                timeFormatter.format(event.startTime)
+            }
+            binding.chipTime.text = timeText
             binding.btnViewEventDay.setOnClickListener {
                 onDayEventClick?.invoke(event)
             }

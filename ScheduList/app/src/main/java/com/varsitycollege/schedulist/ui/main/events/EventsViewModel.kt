@@ -30,8 +30,8 @@ class EventsViewModel(private val repository: EventsRepository) : ViewModel() {
     }
 
     // Add a new event and update the display list
-    suspend fun addEvent(title: String, description: String?, startTime: Date, location: String?) {
-        val event = repository.addEvent(title, description, startTime, location)
+    suspend fun addEvent(title: String, description: String?, startTime: Date, endTime: Date?, location: String?) {
+        val event = repository.addEvent(title, description, startTime, endTime, location)
         if (event != null) {
             currentEvents.add(event)
             formatListForDayView(currentEvents)
