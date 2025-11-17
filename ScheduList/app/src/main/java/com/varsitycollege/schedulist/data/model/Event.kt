@@ -4,12 +4,12 @@ import java.util.Date
 
 // Represents a calendar, compatible with Google Calendar API
 data class Event(
-    var id: String,
+    val id: String = "",
+    val googleCalendarEventId: String = "",  // Google Calendar's event ID
     val title: String = "",
-    val description: String? = null,
-    val startTime: Date = Date(), // Combines the date and time from the pickers.
-    val endTime: Date? = null, // Optional end time for the event
-    val location: String? = null,
-   // val attachmentUrl: String? = null,
-    val userId: String = "" // To know which user this event belongs to.
+    val description: String = "",
+    val location: String = "",
+    val startTime: Date = Date(),
+    val endTime: Date? = null,
+    val userId: String = "" 
 )

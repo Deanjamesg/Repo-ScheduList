@@ -1,5 +1,6 @@
 package com.varsitycollege.schedulist
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.SystemBarStyle
@@ -20,8 +21,10 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.varsitycollege.schedulist.databinding.ActivityMainBinding
+import com.varsitycollege.schedulist.services.ApiClients
 import com.varsitycollege.schedulist.services.CalendarApiClient
 import com.varsitycollege.schedulist.services.TasksApiClient
+import com.varsitycollege.schedulist.ui.auth.AuthActivity
 import kotlinx.coroutines.launch
 import com.varsitycollege.schedulist.data.preferences.SettingsPreferencesManager
 
@@ -56,6 +59,18 @@ class MainActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
+        // Initialize API clients if needed (handles app restart)
+        auth.currentUser?.let { user ->
+            if (ApiClients.calendarApi == null) {
+                ApiClients.initialize(this, user.email!!)
+            }
+        } ?: run {
+            // No user logged in, redirect to auth
+            startActivity(Intent(this, AuthActivity::class.java))
+            finish()
+            return
+        }
+
         setSupportActionBar(binding.toolBar)
 
         binding.toolBar.overflowIcon = AppCompatResources.getDrawable(this@MainActivity, R.drawable.ic_more_vert)
@@ -73,72 +88,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavBar.isItemActiveIndicatorEnabled = false
 
-        tasksApi = TasksApiClient(this@MainActivity, auth.currentUser!!.email.toString())
-
-        calendarApi = CalendarApiClient(this@MainActivity, auth.currentUser!!.email.toString())
-
-//        lifecycleScope.launch {
-//            testTaskListInsert()
-//            testEventInsert()
-//            testGetAllTaskLists()
-//        }
-
     }
 
-    private suspend fun testTaskListInsert() {
 
-        Log.d(TAG, "Step 1: Launched Lifecycle Scope")
-        Log.d(TAG, "Step 2: Calling Tasks API Client")
-        val taskList = tasksApi.insertTaskList("ScheduList Tasks")
-        Log.d(TAG, "Step 3: After Insert Called")
-
-        testInsertTaskIntoList(taskList!!)
-
-    }
-
-    private suspend fun testGetAllTaskLists() {
-        val list = tasksApi.getAllTaskLists()
-        list.forEach { item ->
-            Log.d(TAG, "${item.title}")
-            var tasks = tasksApi.getAllTasksFromList(item.id)
-            tasks.forEach { task ->
-                Log.d(TAG, "${task.title}")
-                Log.d(TAG, "${task.status}")
-                tasksApi.deleteTask(item.id, task.id )
-            }
-        }
-
-    }
-
-    private suspend fun testInsertTaskIntoList(scheduList : TaskList) {
-        tasksApi.insertTask(
-            taskListId = scheduList.id,
-            title = "Complete ScheduList setup",
-            notes = "This is a sample task added during initial sign-in."
-        )
-    }
-
-    private suspend fun testEventInsert() {
-
-        Log.d(TAG, "Step 1: Insert Event Function Called")
-        val calendarId = calendarApi.getOrInsertScheduListCalendar()
-        val now = System.currentTimeMillis()
-        val startDateTime = DateTime(now)
-        val endDateTime = DateTime(now + 3600000)
-
-        Log.d(TAG, "Step 2: Calling Insert Event via Api Client")
-
-        calendarApi.insertEvent(
-            calendarId = calendarId?.id.toString(),
-            summary = "My First ScheduList Event",
-            description = "This is a test event created automatically from the app.",
-            location = "V&A Waterfront, Cape Town",
-            startTime = startDateTime,
-            endTime = endDateTime
-        )
-        Log.d(TAG, "Step 4: After Insert Called")
-
-    }
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
