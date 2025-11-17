@@ -29,6 +29,7 @@
             android:id="@+id/action_dashboardFragment_to_calendarFragment"
             app:destination="@id/calendarFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/eventsFragment"
         android:name="com.varsitycollege.schedulist.ui.main.events.EventsFragment"
@@ -38,26 +39,71 @@
             android:id="@+id/action_eventsFragment_to_eventViewFragment"
             app:destination="@id/eventViewFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/eventViewFragment"
         android:name="com.varsitycollege.schedulist.ui.main.events.EventViewFragment"
         android:label="Event Details"
         tools:layout="@layout/fragment_event_view" />
+
     <fragment
         android:id="@+id/tasksFragment"
         android:name="com.varsitycollege.schedulist.ui.main.tasks.TasksFragment"
         android:label="Tasks"
         tools:layout="@layout/fragment_tasks" />
+
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.varsitycollege.schedulist.ui.main.settings.SettingsFragment"
         android:label="Settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_languageFragment"
+            app:destination="@id/languageFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_notificationsFragment"
+            app:destination="@id/notificationsFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_darkLightModeFragment"
+            app:destination="@id/darkLightModeFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_offlineFragment"
+            app:destination="@id/offlineFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_accountFragment"
+            app:destination="@id/accountFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/languageFragment"
+        android:name="com.varsitycollege.schedulist.ui.main.settings.LanguageFragment"
+        android:label="Language"
+        tools:layout="@layout/fragment_language" />
+
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.varsitycollege.schedulist.ui.main.settings.NotificationsFragment"
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/darkLightModeFragment"
+        android:name="com.varsitycollege.schedulist.ui.main.settings.DarkLightModeFragment"
+        android:label="Dark Mode"
+        tools:layout="@layout/fragment_dark_light_mode" />
+
+    <fragment
+        android:id="@+id/offlineFragment"
+        android:name="com.varsitycollege.schedulist.ui.main.settings.OfflineFragment"
+        android:label="Offline Mode"
+        tools:layout="@layout/fragment_offline" />
+
     <fragment
         android:id="@+id/simpleListFragment"
         android:name="com.varsitycollege.schedulist.ui.main.simplelist.SimpleListFragment"
         android:label="Simple List"
         tools:layout="@layout/fragment_simple_list" />
+
     <fragment
         android:id="@+id/getStartFragment"
         android:name="com.varsitycollege.schedulist.ui.main.GetStartFragment"
@@ -67,14 +113,17 @@
             android:id="@+id/action_getStartFragment_to_dashboardFragment"
             app:destination="@id/dashboardFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/accountFragment"
         android:name="com.varsitycollege.schedulist.ui.main.account.AccountFragment"
         android:label="Account"
         tools:layout="@layout/fragment_account" />
+
     <fragment
         android:id="@+id/calendarFragment"
         android:name="com.varsitycollege.schedulist.ui.main.calendar.CalendarFragment"
         android:label="Calendar"
         tools:layout="@layout/fragment_calendar" />
+
 </navigation>

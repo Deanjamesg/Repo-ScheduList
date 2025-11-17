@@ -1,31 +1,54 @@
 package com.varsitycollege.schedulist.ui.main.settings
 
-import androidx.fragment.app.viewModels
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.varsitycollege.schedulist.R
+import com.varsitycollege.schedulist.databinding.FragmentSettingsBinding
 
 class SettingsFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = SettingsFragment()
-    }
-
-    private val viewModel: SettingsViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // TODO: Use the ViewModel
-    }
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.cvLanguagePreferences.setOnClickListener {
+            findNavController().navigate(R.id.action_settingsFragment_to_languageFragment)
+        }
+
+        binding.cvNotifications.setOnClickListener {
+            findNavController().navigate(R.id.action_settingsFragment_to_notificationsFragment)
+        }
+
+        binding.cvDarkLightMode.setOnClickListener {
+            findNavController().navigate(R.id.action_settingsFragment_to_darkLightModeFragment)
+        }
+
+        binding.cvOfflineMode.setOnClickListener {
+            findNavController().navigate(R.id.action_settingsFragment_to_offlineFragment)
+        }
+
+        binding.cvProfile.setOnClickListener {
+            findNavController().navigate(R.id.action_settingsFragment_to_accountFragment)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
