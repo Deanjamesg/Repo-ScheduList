@@ -15,6 +15,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 import com.varsitycollege.schedulist.BuildConfig
+import com.varsitycollege.schedulist.services.ApiClients
 
 class GoogleAuthClient(
     private val context: Context,
@@ -97,6 +98,7 @@ class GoogleAuthClient(
             ClearCredentialStateRequest()
         )
         firebaseAuth.signOut()
+        ApiClients.clear()
         Log.d(TAG, "User Signed Out.")
     }
 }

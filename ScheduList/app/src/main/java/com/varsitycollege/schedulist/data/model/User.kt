@@ -8,9 +8,11 @@ data class NotificationPreferences(
 )
 
 data class User(
-    val userId: String = "", // The unique ID provided by Firebase Authentication.
-    val displayName: String? = null, // The user's Google display name.
+    val userId: String = "",
+    val displayName: String? = null,
     val email: String? = null,
     val profilePictureUrl: String? = null,
-    val notificationPrefs: NotificationPreferences = NotificationPreferences()
+    val scheduListCalendarId: String? = null,
+    val notificationPrefs: NotificationPreferences = NotificationPreferences(),
+    val createdAt: Long = System.currentTimeMillis()
 )
