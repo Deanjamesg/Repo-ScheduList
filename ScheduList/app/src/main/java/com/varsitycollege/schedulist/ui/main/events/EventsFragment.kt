@@ -55,7 +55,7 @@ class EventsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // We create our Repository and the Factory first.
-        val repository = EventsRepository(calendarApiClient)
+        val repository = EventsRepository()
         val factory = EventsViewModelFactory(repository)
 
         // Then, we use the Factory to get our ViewModel.
@@ -71,9 +71,8 @@ class EventsFragment : Fragment() {
             eventsAdapter.submitList(eventList)
         }
 
-        // Now we tell the ViewModel to start loading the data.
-        lifecycleScope.launch {
-            eventsViewModel.loadEvents()
+        eventsViewModel.displayList.observe(viewLifecycleOwner) { eventList ->
+            eventsAdapter.submitList(eventList)
         }
 
         // Overlay logic for Add Event
