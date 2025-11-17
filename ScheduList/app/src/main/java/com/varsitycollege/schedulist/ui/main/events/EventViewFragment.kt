@@ -21,7 +21,7 @@ class EventViewFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentEventViewBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -35,6 +35,7 @@ class EventViewFragment : Fragment() {
         val attachment = args?.getString("attachment") ?: ""
         val date = args?.getLong("date") ?: 0L
         val time = args?.getLong("time") ?: 0L
+        val endTimeMillis = args?.getLong("endTime") ?: 0L
 
         val dateFormatter = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
         val timeFormatter = SimpleDateFormat("h:mm a", Locale.getDefault())
@@ -55,6 +56,13 @@ class EventViewFragment : Fragment() {
             binding.chipTime.text = timeFormatter.format(Date(time))
         } else {
             binding.chipTime.text = ""
+        }
+
+        // NEW: display end time if provided
+        if (endTimeMillis != 0L) {
+            val endDate = Date(endTimeMillis)
+            // Append end time to chip (show range)
+            binding.chipTime.text = timeFormatter.format(Date(time)) + " - " + timeFormatter.format(endDate)
         }
 
         setEditMode(false)

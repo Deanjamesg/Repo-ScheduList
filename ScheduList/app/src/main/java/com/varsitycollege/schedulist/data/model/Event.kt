@@ -8,6 +8,7 @@ data class Event(
     val title: String = "",
     val description: String? = null,
     val startTime: Date = Date(), // Combines the date and time from the pickers.
+    val endTime: Date? = null, // Optional end time for the event
     val location: String? = null,
    // val attachmentUrl: String? = null,
     val userId: String = "" // To know which user this event belongs to.

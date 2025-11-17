@@ -26,12 +26,14 @@ class EventsRepository(private val calendarApiClient: CalendarApiClient) {
                 val mappedEvents = googleEvents.mapNotNull { googleEvent ->
                     val startTimeMillis = googleEvent.start?.dateTime?.value
                     if (startTimeMillis != null) {
+                        val endTimeMillis = googleEvent.end?.dateTime?.value
                         Event(
                             id = googleEvent.id,
                             title = googleEvent.summary ?: "No Title",
                             description = googleEvent.description ?: "",
                             location = googleEvent.location ?: "",
-                            startTime = Date(startTimeMillis)
+                            startTime = Date(startTimeMillis),
+                            endTime = endTimeMillis?.let { Date(it) }
                         )
                     } else {
                         null // Ignore all-day events for now
@@ -45,13 +47,14 @@ class EventsRepository(private val calendarApiClient: CalendarApiClient) {
         return liveData
     }
 
-    suspend fun addEvent(title: String, description: String?, startTime: Date, location: String?): Event? {
+    suspend fun addEvent(title: String, description: String?, startTime: Date, endTime: Date?, location: String?): Event? {
         return withContext(Dispatchers.IO) {
             val scheduListCalendar = calendarApiClient.getOrInsertScheduListCalendar()
             val calendarId = scheduListCalendar?.id ?: return@withContext null
 
-            // NOTE: Google Calendar requires an end time. Default to 1 hour after the start time.
-            val endTime = DateTime(startTime.time + 3600_000)
+            // NOTE: Google Calendar requires an end time. If not provided, default to 1 hour after the start time.
+            val end = endTime?.time ?: (startTime.time + 3600_000)
+            val endTimeDateTime = DateTime(end)
 
             val googleEvent = calendarApiClient.insertEvent(
                 calendarId = calendarId,
@@ -59,7 +62,7 @@ class EventsRepository(private val calendarApiClient: CalendarApiClient) {
                 description = description,
                 location = location ?: "",
                 startTime = DateTime(startTime),
-                endTime = endTime
+                endTime = endTimeDateTime
             )
 
             return@withContext googleEvent?.let {
@@ -68,7 +71,8 @@ class EventsRepository(private val calendarApiClient: CalendarApiClient) {
                     title = it.summary ?: "No Title",
                     description = it.description ?: "",
                     location = it.location ?: "",
-                    startTime = Date(it.start.dateTime.value)
+                    startTime = Date(it.start.dateTime.value),
+                    endTime = it.end?.dateTime?.value?.let { millis -> Date(millis) }
                 )
             }
         }
@@ -86,9 +90,10 @@ class EventsRepository(private val calendarApiClient: CalendarApiClient) {
                 start = EventDateTime()
                     .setDateTime(DateTime(event.startTime))
                     .setTimeZone(TimeZone.getDefault().id)
-                // Defaulting end time to 1 hour after start
+                // Use event.endTime if provided; otherwise default to 1 hour after start
+                val endMillis = event.endTime?.time ?: (event.startTime.time + 3600_000)
                 end = EventDateTime()
-                    .setDateTime(DateTime(event.startTime.time + 3600_000))
+                    .setDateTime(DateTime(endMillis))
                     .setTimeZone(TimeZone.getDefault().id)
             }
 
@@ -106,4 +111,3 @@ class EventsRepository(private val calendarApiClient: CalendarApiClient) {
         }
     }
 }
-
