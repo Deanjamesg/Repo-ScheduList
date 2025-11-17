@@ -105,6 +105,7 @@ class TasksFragment : Fragment() {
 
         setupRecyclerViewAndAdapters()
         setupSpinnerListener()
+        setupAddButtonListener()
         setupObservers() // Moved the observers to their own function.
 
         // Start loading the task data.

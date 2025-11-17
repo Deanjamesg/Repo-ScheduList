@@ -11,5 +11,5 @@ data class Event(
     val location: String = "",
     val startTime: Date = Date(),
     val endTime: Date? = null,
-    val userId: String = ""  // Add this field
+    val userId: String = "" 
 )

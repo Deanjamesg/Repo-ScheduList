@@ -78,6 +78,11 @@
     <string name="button_save_task">Stoor Taak</string>
 
     <string name="add_event_title">Voeg Nuwe Gebeurtenis By</string>
+    <string name="add_event_date_placeholder">1 Apr 2025</string>
+    <string name="add_event_time_placeholder">9:41 VM</string>
+    <string name="add_event_end_date_placeholder">1 Apr 2025</string>
+    <string name="add_event_end_time_placeholder">10:41 VM</string>
+    <string name="add_event_location_hint">Voer die ligging in</string>
     <string name="add_event_description_hint">Voer \'n beskrywing vir die gebeurtenis in.</string>
     <string name="add_event_add_location">Voeg Ligging By</string>
     <string name="add_event_attach_document">Heg \'n Google-dokument Aan</string>
@@ -104,4 +109,14 @@
 
     <!-- Calendar Screen -->
     <string name="calendar_title">Calendar</string>
+
+    <string name="get_started">Kom Begin</string>
+    <string name="dashboard">Dashbord</string>
+    <string name="tasks">Take</string>
+    <string name="calendar">Kalender</string>
+    <string name="events">Gebeure</string>
+    <string name="simple_list">Eenvoudige Lys</string>
+    <string name="account">Rekening</string>
+    <string name="settings">Instellings</string>
+    <string name="instructions">Instruksies</string>
 </resources>

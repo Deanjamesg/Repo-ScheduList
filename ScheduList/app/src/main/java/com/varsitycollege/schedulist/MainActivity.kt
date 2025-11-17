@@ -26,6 +26,7 @@ import com.varsitycollege.schedulist.services.CalendarApiClient
 import com.varsitycollege.schedulist.services.TasksApiClient
 import com.varsitycollege.schedulist.ui.auth.AuthActivity
 import kotlinx.coroutines.launch
+import com.varsitycollege.schedulist.data.preferences.SettingsPreferencesManager
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,6 +40,8 @@ class MainActivity : AppCompatActivity() {
     private val TAG : String = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val settingsManager = SettingsPreferencesManager(this)
+        settingsManager.applyLanguage(this)
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge(SystemBarStyle.dark(1))

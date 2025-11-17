@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="primary_color">#6200EE</color>
+    <color name="primary_dark">#3700B3</color>
+    <color name="accent_color">#03DAC5</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="light_gray_background">#E5E5E5</color>
@@ -35,5 +38,6 @@
     <color name="energy_low">#FFE969</color>
     <color name="energy_medium">#FFBB6E</color>
     <color name="energy_high">#FF8989</color>
+
 
 </resources>
