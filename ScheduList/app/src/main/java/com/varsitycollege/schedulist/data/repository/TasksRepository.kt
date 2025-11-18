@@ -2,6 +2,7 @@ package com.varsitycollege.schedulist.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.type.DateTime
 import com.varsitycollege.schedulist.data.model.Task
 import com.varsitycollege.schedulist.data.model.TaskList
 import com.varsitycollege.schedulist.services.TasksApiClient
@@ -36,6 +37,34 @@ class TasksRepository (private val tasksApiClient: TasksApiClient) {
 //            }
 //        }
 //    }
+
+    suspend fun addTask(title: String, notes: String?, dueDate: Date): Task? {
+        return withContext(Dispatchers.IO) {
+            val taskLists = tasksApiClient.getAllTaskLists()
+            val scheduList = taskLists.find { it.title == "ScheduList Tasks" }
+
+            if (scheduList != null) {
+                val googleTask = tasksApiClient.insertTask(
+                    taskListId = scheduList.id,
+                    title = title,
+                    notes = notes,
+                    dueDate = com.google.api.client.util.DateTime(dueDate)
+                )
+
+                return@withContext googleTask?.let {
+                    Task(
+                        id = it.id,
+                        title = it.title ?: "No Title",
+                        description = it.notes ?: "",
+                        isCompleted = it.status == "completed",
+                        dueDate = it.due?.let { d -> Date(com.google.api.client.util.DateTime(d).value) } ?: Date()
+                    )
+                }
+            } else {
+                return@withContext null
+            }
+        }
+    }
 
     suspend fun getTasks(): LiveData<List<Task>> {
         val liveData = MutableLiveData<List<Task>>()

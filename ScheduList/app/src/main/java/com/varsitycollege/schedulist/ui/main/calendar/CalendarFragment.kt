@@ -1,20 +1,27 @@
 package com.varsitycollege.schedulist.ui.main.calendar
 
+import android.app.AlertDialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.varsitycollege.schedulist.R
 import com.varsitycollege.schedulist.data.repository.CalendarRepository
 import com.varsitycollege.schedulist.databinding.FragmentCalendarBinding
+import com.varsitycollege.schedulist.ui.adapter.MonthDay
 import com.varsitycollege.schedulist.ui.adapter.MonthGridAdapter
+import com.varsitycollege.schedulist.ui.adapter.SimpleListAdapter
+import com.varsitycollege.schedulist.ui.adapter.SimpleListItem
 import com.varsitycollege.schedulist.util.GridSpacingItemDecoration
-
-// This is our Fragment for the Calendar screen. It sets up the view and
-// observes the ViewModel for the list of days to display in our grid.
 
 class CalendarFragment : Fragment() {
 
@@ -41,26 +48,85 @@ class CalendarFragment : Fragment() {
 
         setupRecyclerView()
 
-        // We start observing the 'monthList' from our ViewModel.
+        // Updating the grid when data changes
         calendarViewModel.monthList.observe(viewLifecycleOwner) { monthDayList ->
-            // When we get the new list, we give it to our adapter to display.
             monthAdapter.submitList(monthDayList)
         }
 
-        // Now we tell the ViewModel to start loading the data.
+        // Updating the Month Name (e.g. November 2025)
+        calendarViewModel.currentMonthText.observe(viewLifecycleOwner) { text ->
+            binding.tvMonthName.text = text
+        }
+
+        // Navigation buttons
+        binding.btnNextMonth.setOnClickListener {
+            calendarViewModel.nextMonth()
+        }
+
+        binding.btnPrevMonth.setOnClickListener {
+            calendarViewModel.previousMonth()
+        }
+
         calendarViewModel.loadCalendarData("sampleUserId")
     }
 
     private fun setupRecyclerView() {
-        monthAdapter = MonthGridAdapter()
-        binding.calendarRecyclerView.apply {
-            // We set the layout manager to a grid with 7 columns for our calendar.
-            layoutManager = GridLayoutManager(context, 7)
-            adapter = monthAdapter
-            // This adds a small gap between all the calendar cells.
-            val spacingInPixels = resources.getDimensionPixelSize(R.dimen.grid_spacing)
-            addItemDecoration(GridSpacingItemDecoration(7, spacingInPixels, true))
+        // Passing the click function to the adapter
+        monthAdapter = MonthGridAdapter { monthDay ->
+            showDayDetailsPopup(monthDay)
         }
+
+        binding.calendarRecyclerView.apply {
+            // Using 3 columns to make the cards wider and readable
+            layoutManager = GridLayoutManager(context, 3)
+            adapter = monthAdapter
+
+            // Adding spacing between the cards
+            val spacingInPixels = resources.getDimensionPixelSize(R.dimen.grid_spacing)
+            addItemDecoration(GridSpacingItemDecoration(3, spacingInPixels, true))
+        }
+    }
+
+    // Logic to show the popup window with the specific day's tasks
+    private fun showDayDetailsPopup(day: MonthDay) {
+        if (day.dayOfMonth.isEmpty()) return
+
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_day_details, null)
+
+        val tvDateTitle = dialogView.findViewById<TextView>(R.id.tvDateTitle)
+        val rvDayTasks = dialogView.findViewById<RecyclerView>(R.id.rvDayTasks)
+        val btnClose = dialogView.findViewById<MaterialButton>(R.id.btnClose)
+
+        tvDateTitle.text = "${binding.tvMonthName.text} ${day.dayOfMonth}"
+
+        // We reuse the SimpleListAdapter here because it looks good for a list
+        val dayListAdapter = SimpleListAdapter { _, _ -> }
+
+        rvDayTasks.layoutManager = LinearLayoutManager(requireContext())
+        rvDayTasks.adapter = dayListAdapter
+
+        // Convert the data so the SimpleListAdapter can understand it
+        val simpleListItems = day.tasks.map { task ->
+            SimpleListItem(
+                id = task.id ?: "",
+                title = task.title,
+                date = task.dueDate,
+                isCompleted = task.isCompleted
+            )
+        }
+        dayListAdapter.submitList(simpleListItems)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     override fun onDestroyView() {
