@@ -1,112 +1,73 @@
+name: Android CI - Unit tests
 
-  name: Generate and publish Dokka docs
-  on:
-    push:
-      branches:
-        - main
-        - githubworkflow
-    workflow_dispatch:
-      inputs:
-        debug:
-          description: 'Run additional debug/diagnostic steps (true/false)'
-          required: false
-          default: 'false'
+on:
+  push:
+    branches:
+      - main
+      - githubworkflow
+  pull_request:
+  workflow_dispatch:
 
-  permissions:
-    contents: read
-    pages: write
+permissions:
+  contents: read
 
-  concurrency:
-    group: dokka-${{ github.ref }}
-    cancel-in-progress: true
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    env:
+      GRADLE_USER_HOME: ${{ runner.temp }}/.gradle
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-  jobs:
-    dokka:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v4
-          with:
-            fetch-depth: 0
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
 
-        - name: Show repo root and module layout
-          run: |
-            pwd
-            echo "Top-level:"
-            ls -la
-            echo "ScheduList contents (if present):"
-            ls -la ScheduList || true
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
-        - name: Make gradlew executable (root or ScheduList)
-          run: |
-            [ -f ./ScheduList/gradlew ] && chmod +x ./ScheduList/gradlew || true
-            [ -f ./gradlew ] && chmod +x ./gradlew || true
+      - name: Make gradlew executable
+        run: chmod +x ./ScheduList/gradlew
 
-        - name: Dump Gradle tasks (for debugging)
-          run: |
-            if [ -f ./ScheduList/gradlew ]; then
-              ./ScheduList/gradlew tasks --all --no-daemon --no-build-cache --quiet > tasks.txt || true
-            elif [ -f ./gradlew ]; then
-              ./gradlew tasks --all --no-daemon --no-build-cache --quiet > tasks.txt || true
-            else
-              echo "no gradlew found" > tasks.txt
-            fi
-        - name: Run Dokka (capture logs)
-          env:
-            GRADLE_USER_HOME: ${{ runner.temp }}/.gradle
-          run: |
-            set -o pipefail
-            if [ -f ./ScheduList/gradlew ]; then
-              ./ScheduList/gradlew --no-daemon dokkaHtml --no-build-cache --stacktrace --info 2>&1 | tee dokka.log || true
-            elif [ -f ./gradlew ]; then
-              ./gradlew --no-daemon dokkaHtml --no-build-cache --stacktrace --info 2>&1 | tee dokka.log || true
-            else
-              echo "gradlew not found" | tee dokka.log
-            fi
+      - name: Run unit tests (all modules)
+        run: |
+          set -o pipefail
+          ./ScheduList/gradlew --no-daemon test --no-build-cache --stacktrace --info 2>&1 | tee gradle-test.log
+        continue-on-error: true
 
-        - name: Find Dokka HTML output (set output `dir`)
-          id: find
-          run: |
-            candidates=(
-              "./ScheduList/app/build/dokka/html"
-              "./ScheduList/build/dokka/html"
-              "./app/build/dokka/html"
-              "./build/dokka/html"
-              "./ScheduList/**/build/dokka/html"
-              "./**/build/dokka/html"
-            )
-            found_dir=""
-            for p in "${candidates[@]}"; do
-              for f in $(shopt -s nullglob; echo $p); do
-                if [ -d "$f" ]; then
-                  found_dir="$f"
-                  break 2
-                fi
-              done
-            done
-            if [ -n "$found_dir" ]; then
-              echo "dir=$found_dir" >> $GITHUB_OUTPUT
-              echo "Found Dokka HTML at: $found_dir"
-            else
-              echo "dir=" >> $GITHUB_OUTPUT
-              echo "No Dokka HTML output found."
-            fi
+      - name: Collect test reports
+        run: |
+          echo "List built test result dirs:"
+          find ScheduList -type d -name "test-results" -maxdepth 6 -print || true
+          mkdir -p artifacts/test-results
+          cp -r ScheduList/**/build/test-results/ artifacts/test-results/ || true
+          cp -r ScheduList/**/build/reports/tests/ artifacts/test-reports/ || true
+          ls -la artifacts || true
 
-        - name: Upload diagnostics if Dokka output missing
-          if: ${{ steps.find.outputs.dir == '' }}
-          uses: actions/upload-artifact@v4
-          with:
-            name: dokka-debug
-            path: |
-              ./dokka.log
-              ./tasks.txt
-              ScheduList/**/build/**
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts
+          path: |
+            gradle-test.log
+            artifacts/
 
-        - name: Publish to GitHub Pages
-          if: ${{ steps.find.outputs.dir != '' }}
-          uses: peaceiris/actions-gh-pages@v3
-          with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            publish_dir: ${{ steps.find.outputs.dir }}
-            publish_branch: gh-pages
-            allow_empty_commit: true
+      - name: Publish JUnit results to Checks
+        uses: dorny/test-reporter@v1
+        with:
+          name: Unit tests
+          path: ScheduList/**/build/test-results/**/*.xml
+          reporter: junit
+          upload: true
