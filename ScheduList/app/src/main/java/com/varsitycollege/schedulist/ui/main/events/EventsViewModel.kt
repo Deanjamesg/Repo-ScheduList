@@ -153,10 +153,8 @@ class EventsViewModel(private val repository: EventsRepository) : ViewModel() {
         }
     }
 
-    fun deleteEvent(eventId: String) {
-        viewModelScope.launch {
-            repository.deleteEvent(eventId)
-        }
+    suspend fun deleteEvent(eventId: String): Boolean {
+        return repository.deleteEvent(eventId)
     }
 
     suspend fun getEventById(eventId: String): Event? {
