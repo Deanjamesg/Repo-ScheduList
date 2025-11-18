@@ -6,6 +6,7 @@ import android.util.Log
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
+import com.google.api.client.util.DateTime
 import com.google.api.services.tasks.Tasks
 import com.google.api.services.tasks.TasksScopes
 import com.google.api.services.tasks.model.Task
@@ -76,7 +77,7 @@ class TasksApiClient(
         }
     }
 
-    suspend fun insertTask(taskListId: String, title: String, notes: String? = null): Task? {
+    suspend fun insertTask(taskListId: String, title: String, notes: String? = null, dueDate: DateTime): Task? {
         return withContext(Dispatchers.IO) {
             try {
                 val task = Task().apply {
@@ -84,6 +85,7 @@ class TasksApiClient(
                     if (notes != null) {
                         this.notes = notes
                     }
+                    this.due = dueDate.toStringRfc3339()
                 }
                 tasksService.tasks().insert(taskListId, task).execute()
             } catch (e: Exception) {
