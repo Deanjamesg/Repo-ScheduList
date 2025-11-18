@@ -71,8 +71,31 @@ class EventsFragment : Fragment() {
             eventsAdapter.submitList(eventList)
         }
 
-        eventsViewModel.displayList.observe(viewLifecycleOwner) { eventList ->
-            eventsAdapter.submitList(eventList)
+        // Set up filter spinner
+        val filterAdapter = android.widget.ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.event_filter_array,
+            android.R.layout.simple_spinner_item
+        )
+        filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.filterSpinner.adapter = filterAdapter
+
+        // Set default selection to "All" (position 0)
+        binding.filterSpinner.setSelection(0)
+
+        binding.filterSpinner.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+                when (position) {
+                    0 -> eventsViewModel.setFilter(EventFilter.ALL)
+                    1 -> eventsViewModel.setFilter(EventFilter.TODAY)
+                    2 -> eventsViewModel.setFilter(EventFilter.THIS_WEEK)
+                    3 -> eventsViewModel.setFilter(EventFilter.THIS_MONTH)
+                }
+            }
+
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {
+                // Do nothing
+            }
         }
 
         // Overlay logic for Add Event
@@ -328,11 +351,12 @@ class EventsFragment : Fragment() {
     private fun setupRecyclerView() {
         eventsAdapter = EventsAdapter(onDayEventClick = { event ->
             val bundle = Bundle().apply {
+                putString("eventId", event.id)
                 putString("title", event.title)
                 putString("description", event.description)
                 putString("location", event.location)
-                putLong("date", event.startTime?.time ?: 0L)
-                putLong("time", event.startTime?.time ?: 0L)
+                putLong("date", event.startTime.time)
+                putLong("time", event.startTime.time)
                 putLong("endTime", event.endTime?.time ?: 0L)
             }
             try {
