@@ -1,0 +1,35 @@
+# File: .github/workflows/dokka.yml
+name: Generate and publish Dokka docs
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Make gradlew executable
+        run: chmod +x ./ScheduList/gradlew
+
+      - name: Build and generate Dokka
+        run: cd ScheduList && ./gradlew dokkaHtml --no-daemon
+
+      - name: Publish to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./ScheduList/app/build/dokka/html
+          publish_branch: gh-pages
