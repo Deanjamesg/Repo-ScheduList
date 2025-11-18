@@ -57,6 +57,8 @@
     <string name="event_card_title_placeholder">Title of Event</string>
     <string name="event_card_description_placeholder">This is a description of the event and can be more length than a task.</string>
     <string name="event_view_button">View</string>
+    <string name="icon_location_desc" translatable="false">Event location</string>
+    <string name="event_card_location_placeholder" translatable="false">Varsity College, Cape Town</string>
 
     <!-- Time frame spinner -->
     <string-array name="time_frame_array">

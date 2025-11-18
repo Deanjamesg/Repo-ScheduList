@@ -34,7 +34,7 @@ class AuthActivity : AppCompatActivity() {
         super.onStart()
         // If user is already signed in, require biometric auth or force setup
         if (googleAuthClient.isSignedIn()) {
-            continueToMain()
+//            continueToMain()
 //            lifecycleScope.launch {
 //                googleAuthClient.signOut()
 //            }
