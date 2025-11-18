@@ -149,6 +149,57 @@ Options for:
   - Google Tasks API  
 
 ---
+📦 **Release Notes**
+🧪 **Prototype – Part 2**
+
+The early prototype established the core foundation of Schedulist, introducing the initial UI and basic functionality needed for testing and validation.
+
+✔️ **Key Highlights**
+
+Initial UI completed and fully functional for core navigation.
+
+Event Management working, allowing users to create and view events.
+
+Task Management functional with basic task creation and editing.
+
+Seeded data used to simulate real user interactions.
+
+Connected to Firebase for storing early test data and validating backend connectivity
+
+⚙️ 🚀 **Official Release – Part 3**
+
+The full release delivers complete functionality, enhanced UI/UX, real API integration, and improved reliability. This version is designed for real-world daily productivity across devices.
+
+✨ New & Improved Features
+
+🔐 Biometric Authentication
+Added fingerprint/biometric login for seamless and secure access.
+
+🌐 Google API Integration
+
+Google Calendar API for event syncing.
+
+Google Tasks API for task syncing.
+Provides real-time connectivity with the user's Google ecosystem that they have set up.
+
+🎨 Preferences & Personalisation
+
+Dark/Light mode
+
+Multi-language support (English & Afrikaans)
+
+Configurable notification and display settings
+
+📴 Offline Functionality
+App now works offline with automatic resync when connectivity returns.
+
+🔔 Real-Time Notifications
+Smart reminders for tasks and events.
+
+🖥️ UI & UX Enhancements
+Polished layout, updated components, smoother transitions, and improved card-based design for easier navigation.
+
+---
 
 ## ⚙️ Setup
 
