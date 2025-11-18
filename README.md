@@ -149,12 +149,12 @@ Options for:
   - Google Tasks API  
 
 ---
-📦 **Release Notes**
-🧪 **Prototype – Part 2**
+# 📦 **Release Notes**
+## 🧪 **Prototype – Part 2**
 
 The early prototype established the core foundation of Schedulist, introducing the initial UI and basic functionality needed for testing and validation.
 
-✔️ **Key Highlights**
+## ✔️ **Key Highlights**
 
 Initial UI completed and fully functional for core navigation.
 
@@ -166,23 +166,23 @@ Seeded data used to simulate real user interactions.
 
 Connected to Firebase for storing early test data and validating backend connectivity
 
-⚙️ 🚀 **Official Release – Part 3**
+## ⚙️ 🚀 **Official Release – Part 3**
 
 The full release delivers complete functionality, enhanced UI/UX, real API integration, and improved reliability. This version is designed for real-world daily productivity across devices.
 
-✨ New & Improved Features
+## ✨ New & Improved Features
 
-🔐 Biometric Authentication
+## 🔐 Biometric Authentication
 Added fingerprint/biometric login for seamless and secure access.
 
-🌐 Google API Integration
+##🌐 Google API Integration
 
 Google Calendar API for event syncing.
 
 Google Tasks API for task syncing.
 Provides real-time connectivity with the user's Google ecosystem that they have set up.
 
-🎨 Preferences & Personalisation
+## 🎨 Preferences & Personalisation
 
 Dark/Light mode
 
@@ -190,14 +190,62 @@ Multi-language support (English & Afrikaans)
 
 Configurable notification and display settings
 
-📴 Offline Functionality
+## 📴 Offline Functionality
 App now works offline with automatic resync when connectivity returns.
 
-🔔 Real-Time Notifications
+## 🔔 Real-Time Notifications
 Smart reminders for tasks and events.
 
-🖥️ UI & UX Enhancements
+## 🖥️ UI & UX Enhancements
 Polished layout, updated components, smoother transitions, and improved card-based design for easier navigation.
+
+Changed the colour scheme of the applicaiton to be something more friendly on the eyes.
+<div align="center"> <img width="260" src="https://github.com/user-attachments/assets/0873c944-f1a8-4749-b6d1-e62f5f798d5b" /> <img width="260" src="https://github.com/user-attachments/assets/3d2097d6-6848-4bf5-a5ad-01386c910aa0" /> <img width="260" src="https://github.com/user-attachments/assets/037ab150-393d-42c2-acff-1308ff0ae796" /> <br/> <img width="260" src="https://github.com/user-attachments/assets/deeeb03e-d74d-45e7-abd4-db2435ceb4bd" /> <img width="260" src="https://github.com/user-attachments/assets/f688faf1-858c-4233-9ccf-e25a7a47584c" /> <img width="260" src="https://github.com/user-attachments/assets/a12b3a7d-c00c-40b7-ab7c-b9116c760790" /> <br/> <img width="260" src="https://github.com/user-attachments/assets/7fe9fe8f-8893-493f-b79c-ecda846d0bee" /> <img width="260" src="https://github.com/user-attachments/assets/1cd64163-a882-49e2-8856-1753c09f9e92" /> </div>
+
+
+
+
+
+AI Tool Usage and Contribution Report: ScheduList
+
+1. Introduction and Context
+
+During the development of the ScheduList mobile application, specific generative AI tools were utilized to enhance debugging efficiency, confirm architectural best practices, and automate repetitive code structures. These tools were primarily employed as sophisticated research assistants, accelerating complex problem-solving without replacing original coding effort. All outputs were subject to rigorous validation by the developer before integration.
+
+2. Specific Scenarios and Contribution
+
+The following key areas benefited from AI assistance, focusing on reducing debugging time and ensuring adherence to professional Android architectural standards (MVVM—Model-View-ViewModel):
+
+A. Multi-Language Support (Localization)
+
+The project required multi-language support (English and Afrikaans). While the developer wrote all the UI logic, AI was used to confirm that the resource keys were applied consistently across multiple files and to perform initial translation drafts.
+
+Prompt Example: "Please cross-check this list of hardcoded strings against my strings.xml and suggest the equivalent Afrikaans translations for 'Travel Time Alerts', 'Task Reminders', and 'Productivity Alerts' for the Notification screen."
+
+Contribution: AI provided validated string resource keys (@string/notification_travel_time, @string/notification_productivity_alerts) and supplied the initial Afrikaans translation drafts, which were then reviewed and finalized by a human collaborator.
+
+B. Architectural Boilerplate (MVVM)
+
+Implementing the MVVM pattern requires creating boilerplate classes (Repository, ViewModel, Factory, and Adapter) for every feature (Tasks, Events, Calendar). AI was instrumental in scaffolding these classes quickly.
+
+Prompt Example: "Write the full Kotlin class for EventsViewModelFactory that accepts an EventsRepository in its constructor, following the ViewModelProvider.Factory pattern."
+
+Contribution: AI generated the necessary template code for the Factory classes, ensuring dependency injection was set up correctly. This saved several hours that would have been spent writing repetitive constructor and type-checking logic, allowing the focus to shift immediately to the complex database queries.
+
+C. Complex Logic Integration (The SimpleList Feature)
+
+A core challenge was the SimpleListRepository.kt, which needed to combine asynchronous data from two separate repositories (TasksRepository and EventsRepository) into a single, chronologically sorted list.
+
+Prompt Example: "In SimpleListRepository.kt, how can I safely combine the results of two different suspend functions (getTasks() and getEvents()) and map the resulting objects (Task and Event) into one common SimpleListItem format, ensuring the final list is sorted by date?"
+
+Contribution: AI provided the model for safely handling and mapping disparate data types, offering solutions like the whenAllSuccess pattern (or equivalent structured concurrency) and the correct use of Kotlin's map and sortedBy functions, which were then adapted to the project's specific data models.
+
+All generative AI assistance used in this project was provided by the Google Gemini model.
+
+Reference:
+
+Google. (2025). Gemini (Version 2.5) [Large Language Model]. Retrieved from [The specific URL where you accessed the Gemini interface].
+
 
 ---
 
