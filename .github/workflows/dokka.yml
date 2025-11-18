@@ -1,0 +1,70 @@
+name: Generate and publish Dokka docs
+
+
+permissions:
+  contents: read
+  pages: write
+
+
+concurrency:
+  group: dokka-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+      - githubworkflow
+  workflow_dispatch:
+
+jobs:
+  dokka:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Make gradlew executable (root or ScheduList)
+        run: |
+          [ -f ./ScheduList/gradlew ] && chmod +x ./ScheduList/gradlew || true
+          [ -f ./gradlew ] && chmod +x ./gradlew || true
+
+      - name: Build and generate Dokka
+        run: |
+          if [ -f ./ScheduList/gradlew ]; then
+            ./ScheduList/gradlew dokkaHtml --no-daemon
+          elif [ -f ./gradlew ]; then
+            ./gradlew dokkaHtml --no-daemon
+          else
+            echo "gradlew not found in repo root or ./ScheduList"; exit 1
+          fi
+
+      - name: Find Dokka HTML output
+        id: find
+        run: |
+          # try common locations; set output 'dir' for the publish step
+          if [ -d "./ScheduList/app/build/dokka/html" ]; then
+            echo "dir=./ScheduList/app/build/dokka/html" >> $GITHUB_OUTPUT
+          elif [ -d "./app/build/dokka/html" ]; then
+            echo "dir=./app/build/dokka/html" >> $GITHUB_OUTPUT
+          elif [ -d "./build/dokka/html" ]; then
+            echo "dir=./build/dokka/html" >> $GITHUB_OUTPUT
+          else
+            echo "No Dokka HTML output found"; exit 1
+          fi
+
+      - name: Publish to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ steps.find.outputs.dir }}
+          publish_branch: gh-pages
+          allow_empty_commit: true
