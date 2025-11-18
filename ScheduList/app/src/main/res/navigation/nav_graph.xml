@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
+    android:label ="@string/get_started"
     app:startDestination="@id/getStartFragment">
 
     <fragment
         android:id="@+id/dashboardFragment"
         android:name="com.varsitycollege.schedulist.ui.main.dashboard.DashboardFragment"
-        android:label="Dashboard"
+        android:label="@string/bottom_nav_dashboard"
         tools:layout="@layout/fragment_dashboard" >
         <action
             android:id="@+id/action_dashboardFragment_to_tasksFragment"
@@ -33,7 +34,7 @@
     <fragment
         android:id="@+id/eventsFragment"
         android:name="com.varsitycollege.schedulist.ui.main.events.EventsFragment"
-        android:label="Events"
+        android:label="@string/events_title"
         tools:layout="@layout/fragment_events">
         <action
             android:id="@+id/action_eventsFragment_to_eventViewFragment"
@@ -49,13 +50,13 @@
     <fragment
         android:id="@+id/tasksFragment"
         android:name="com.varsitycollege.schedulist.ui.main.tasks.TasksFragment"
-        android:label="Tasks"
+        android:label="@string/tasks_title"
         tools:layout="@layout/fragment_tasks" />
 
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.varsitycollege.schedulist.ui.main.settings.SettingsFragment"
-        android:label="Settings"
+        android:label="@string/settings_title"
         tools:layout="@layout/fragment_settings">
         <action
             android:id="@+id/action_settingsFragment_to_languageFragment"
@@ -77,37 +78,37 @@
     <fragment
         android:id="@+id/languageFragment"
         android:name="com.varsitycollege.schedulist.ui.main.settings.LanguageFragment"
-        android:label="Language"
+        android:label="@string/language_select"
         tools:layout="@layout/fragment_language" />
 
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.varsitycollege.schedulist.ui.main.settings.NotificationsFragment"
-        android:label="Notifications"
+        android:label="@string/notification_header"
         tools:layout="@layout/fragment_notifications" />
 
     <fragment
         android:id="@+id/darkLightModeFragment"
         android:name="com.varsitycollege.schedulist.ui.main.settings.DarkLightModeFragment"
-        android:label="Dark Mode"
+        android:label="@string/dark_mode_title"
         tools:layout="@layout/fragment_dark_light_mode" />
 
     <fragment
         android:id="@+id/offlineFragment"
         android:name="com.varsitycollege.schedulist.ui.main.settings.OfflineFragment"
-        android:label="Offline Mode"
+        android:label="@string/offline_mode_title"
         tools:layout="@layout/fragment_offline" />
 
     <fragment
         android:id="@+id/simpleListFragment"
         android:name="com.varsitycollege.schedulist.ui.main.simplelist.SimpleListFragment"
-        android:label="Simple List"
+        android:label="@string/simple_list"
         tools:layout="@layout/fragment_simple_list" />
 
     <fragment
         android:id="@+id/getStartFragment"
         android:name="com.varsitycollege.schedulist.ui.main.GetStartFragment"
-        android:label="Get Started"
+        android:label ="@string/get_started"
         tools:layout="@layout/fragment_get_started" >
         <action
             android:id="@+id/action_getStartFragment_to_dashboardFragment"
@@ -117,13 +118,13 @@
     <fragment
         android:id="@+id/accountFragment"
         android:name="com.varsitycollege.schedulist.ui.main.account.AccountFragment"
-        android:label="Account"
+        android:label="@string/account"
         tools:layout="@layout/fragment_account" />
 
     <fragment
         android:id="@+id/calendarFragment"
         android:name="com.varsitycollege.schedulist.ui.main.calendar.CalendarFragment"
-        android:label="Calendar"
+        android:label="@string/calendar_title"
         tools:layout="@layout/fragment_calendar" />
 
 </navigation>
