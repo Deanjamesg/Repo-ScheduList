@@ -100,7 +100,7 @@ class TasksFragment : Fragment() {
 
             tasksViewModel.toggleTaskCompletion(task.id)
         }
-        monthAdapter = MonthGridAdapter()
+
         binding.tasksRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.tasksRecyclerView.adapter = tasksAdapter
     }
@@ -128,7 +128,6 @@ class TasksFragment : Fragment() {
                         tasksViewModel.setViewType(selectedView)
                     }
                 }
-
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
     }

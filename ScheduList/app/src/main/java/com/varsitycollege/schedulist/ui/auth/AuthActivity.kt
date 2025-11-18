@@ -52,7 +52,40 @@ class AuthActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        checkExistingSession()
+        // If user is already signed in, require biometric auth or force setup
+        if (googleAuthClient.isSignedIn()) {
+//            continueToMain()
+//            lifecycleScope.launch {
+//                googleAuthClient.signOut()
+//            }
+
+            if (biometricPreferences.isBiometricEnabled()) {
+                // Require biometric authentication before continuing
+                binding.progressBar.visibility = View.VISIBLE
+                biometricHelper.authenticate(
+                    title = "Unlock ScheduList",
+                    subtitle = "Confirm with fingerprint to continue",
+                    negativeButtonText = "Cancel",
+                    onSuccess = {
+                        binding.progressBar.visibility = View.GONE
+                        continueToMain()
+                    },
+                    onError = { _, errorMessage ->
+                        binding.progressBar.visibility = View.GONE
+                        Log.e(TAG, "Biometric auth error onStart: $errorMessage")
+                        showAuthFailedDialog(errorMessage)
+                    },
+                    onFailed = {
+                        binding.progressBar.visibility = View.GONE
+                        Log.d(TAG, "Biometric auth failed onStart")
+                        showAuthFailedDialog("Authentication failed. Try again or sign out.")
+                    }
+                )
+            } else {
+                // Signed in but biometric not configured yet -> force setup
+                offerBiometricSetup()
+            }
+        }
     }
 
     override fun onResume() {
@@ -354,7 +387,6 @@ class AuthActivity : AppCompatActivity() {
         SyncManager.performInitialSync(this)
         Log.d(TAG, "Sync initiated")
     }
-
     // BIOMETRIC AUTHENTICATION
 
     // Authenticate with biometric for returning users
@@ -370,6 +402,12 @@ class AuthActivity : AppCompatActivity() {
                 Log.d(TAG, "Biometric authentication successful")
                 hideProgress()
                 continueToMain()
+
+                // Force biometric setup and authentication for all sign-ins
+                offerBiometricSetup()
+            },
+                // Force biometric setup and authentication for all sign-ins
+                offerBiometricSetup()
             },
             onError = { _, errorMessage ->
                 Log.e(TAG, "Biometric auth error: $errorMessage")
@@ -386,11 +424,14 @@ class AuthActivity : AppCompatActivity() {
 
     // Offer biometric setup for new users
     private fun offerBiometricSetup() {
+        // Always require biometric authentication before proceeding
         if (biometricPreferences.isBiometricEnabled()) {
-            continueToMain()
+            // Already set up - require authentication
+            requireBiometricAuthentication()
             return
         }
 
+        // Not set up yet - force setup based on availability
         when (biometricHelper.isBiometricAvailable()) {
             BiometricHelper.BiometricStatus.AVAILABLE -> {
                 showBiometricSetupDialog()
@@ -404,8 +445,44 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-    // Test biometric and enable if successful
-    private fun testBiometricSetup() {
+    private fun requireBiometricAuthentication() {
+        binding.progressBar.visibility = View.VISIBLE
+        biometricHelper.authenticate(
+            title = "Verify Identity",
+            subtitle = "Confirm with fingerprint to continue",
+            negativeButtonText = "Cancel",
+            onSuccess = {
+                binding.progressBar.visibility = View.GONE
+                Log.d(TAG, "Biometric authentication successful")
+                continueToMain()
+            },
+            onError = { _, errorMessage ->
+                binding.progressBar.visibility = View.GONE
+                Log.e(TAG, "Biometric auth error: $errorMessage")
+                showAuthFailedDialog(errorMessage)
+            },
+            onFailed = {
+                binding.progressBar.visibility = View.GONE
+                Log.d(TAG, "Biometric auth failed")
+                showAuthFailedDialog("Authentication failed. Try again or sign out.")
+            }
+        )
+    }
+
+    private fun showBiometricSetupDialog() {
+        binding.progressBar.visibility = View.GONE
+
+        AlertDialog.Builder(this)
+            .setTitle("Enable Fingerprint")
+            .setMessage("To continue you must enable fingerprint login for this app. Touch enable to set it up now.")
+            .setPositiveButton("Enable") { _, _ ->
+                testBiometric()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun testBiometric() {
         biometricHelper.authenticate(
             title = "Setup Fingerprint",
             subtitle = "Touch sensor to enable fingerprint login",

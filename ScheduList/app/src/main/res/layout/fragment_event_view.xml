@@ -151,7 +151,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Apr 1, 2025"
+                android:text="@string/add_event_date_placeholder"
                 app:chipBackgroundColor="@color/tertiary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/labelDateTime" />
@@ -161,20 +161,53 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="9:41 AM"
+                android:text="@string/add_event_time_placeholder"
                 app:chipBackgroundColor="@color/tertiary"
                 app:layout_constraintStart_toEndOf="@id/chipDate"
                 app:layout_constraintTop_toTopOf="@id/chipDate" />
 
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipEndDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_event_end_date_placeholder"
+                app:chipBackgroundColor="@color/tertiary"
+                app:layout_constraintStart_toStartOf="@id/chipDate"
+                app:layout_constraintTop_toBottomOf="@id/chipDate" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipEndTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/add_event_end_time_placeholder"
+                app:chipBackgroundColor="@color/tertiary"
+                app:layout_constraintStart_toEndOf="@id/chipEndDate"
+                app:layout_constraintTop_toTopOf="@id/chipEndDate" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEdit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:text="@string/event_view_button_edit"
                 app:cornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/chipEndDate" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDelete"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/event_view_button_delete"
+                android:textColor="@color/error"
+                app:cornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnEdit"
+                app:strokeColor="@color/error" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

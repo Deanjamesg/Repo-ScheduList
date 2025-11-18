@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 import com.varsitycollege.schedulist.data.preferences.SettingsPreferencesManager
 import com.varsitycollege.schedulist.data.repository.TasksRepository
 import com.varsitycollege.schedulist.services.SyncManager
+import com.varsitycollege.schedulist.notifications.NotificationPermissionHelper
 
 class MainActivity : AppCompatActivity() {
 
@@ -119,6 +120,22 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavBar.isItemActiveIndicatorEnabled = false
 
+        // Request notification permission for Android 13+
+        if (!NotificationPermissionHelper.hasNotificationPermission(this)) {
+            NotificationPermissionHelper.requestNotificationPermission(this)
+        }
+
+        // Request exact alarm permission for Android 12+
+        if (!NotificationPermissionHelper.canScheduleExactAlarms(this)) {
+            Log.w(TAG, "⚠️ EXACT ALARM PERMISSION NOT GRANTED - Notifications will not work!")
+            Log.w(TAG, "Please enable: Settings → Apps → ScheduList → Alarms & reminders")
+            NotificationPermissionHelper.requestExactAlarmPermission(this)
+        } else {
+            Log.d(TAG, "✓ Exact alarm permission granted")
+        }
+
+        // Debug: Check notification status
+        com.varsitycollege.schedulist.notifications.NotificationDebugHelper.checkNotificationStatus(this)
     }
 
     private fun onRefreshClicked() {

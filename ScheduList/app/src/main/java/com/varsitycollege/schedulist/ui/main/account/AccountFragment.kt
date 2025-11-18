@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.varsitycollege.schedulist.R
 import com.varsitycollege.schedulist.ui.auth.AuthActivity
 import com.varsitycollege.schedulist.databinding.FragmentAccountBinding
 import com.varsitycollege.schedulist.ui.auth.GoogleAuthClient
@@ -46,13 +47,13 @@ class AccountFragment : Fragment() {
                 val firstName = nameParts.firstOrNull() ?: ""
                 val lastName = if (nameParts.size > 1) nameParts.drop(1).joinToString(" ") else ""
 
-                binding.tvNameValue.text = firstName.ifEmpty { "Not set" }
-                binding.tvSurnameValue.text = lastName.ifEmpty { "Not set" }
-                binding.tvEmailValue.text = user.email ?: "No email"
+                binding.tvNameValue.text = firstName.ifEmpty { getString(R.string.profile_no_name_set) }
+                binding.tvSurnameValue.text = lastName.ifEmpty { getString(R.string.profile_no_surname_set) }
+                binding.tvEmailValue.text = user.email ?: getString(R.string.profile_no_email_set)
             } else {
-                binding.tvNameValue.text = "Not set"
-                binding.tvSurnameValue.text = "Not set"
-                binding.tvEmailValue.text = "No email"
+                binding.tvNameValue.text = getString(R.string.profile_no_name_set)
+                binding.tvSurnameValue.text = getString(R.string.profile_no_surname_set)
+                binding.tvEmailValue.text = getString(R.string.profile_no_email_set)
             }
         }
     }

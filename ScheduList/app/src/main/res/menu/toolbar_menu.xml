@@ -2,27 +2,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="Tasks"
+    <item android:title="@string/tasks_title"
         android:id="@+id/tasks"
         app:showAsAction="never"/>
 
-    <item android:title="Events"
+    <item android:title="@string/events_title"
         android:id="@+id/events"
         app:showAsAction="never"/>
 
-    <item android:title="Simple List"
+    <item android:title="@string/simple_list"
         android:id="@+id/simpleList"
         app:showAsAction="never"/>
 
-    <item android:title="Calendar"
+    <item android:title="@string/calendar_title"
         android:id="@+id/calendar"
         app:showAsAction="never"/>
 
-    <item android:title="Settings"
+    <item android:title="@string/settings_title"
         android:id="@+id/settings"
         app:showAsAction="never"/>
 
-    <item android:title="Account"
+    <item android:title="@string/account"
         android:id="@+id/account"
         app:showAsAction="never"/>
 </menu>

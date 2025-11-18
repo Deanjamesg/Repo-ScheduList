@@ -11,5 +11,13 @@ data class Event(
     val location: String = "",
     val startTime: Date = Date(),
     val endTime: Date? = null,
-    val userId: String = "" 
+    val userId: String = "",
+    val reminderType: ReminderType = ReminderType.NONE
 )
+
+enum class ReminderType {
+    NONE,
+    DAY_OF,
+    SEVEN_DAYS_BEFORE
+}
+

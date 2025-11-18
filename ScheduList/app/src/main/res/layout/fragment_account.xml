@@ -14,19 +14,17 @@
         android:padding="20dp"
         tools:context=".ui.main.account.AccountFragment">
 
-        <!-- Title -->
         <TextView
             android:id="@+id/tvProfileHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profile"
+            android:text="@string/profile_title"
             android:textColor="@android:color/black"
             android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Profile Picture -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cvProfilePicture"
             android:layout_width="120dp"
@@ -42,26 +40,24 @@
                 android:id="@+id/ivProfilePicture"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:contentDescription="Profile Picture"
+                android:contentDescription="@string/profile_picture"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_user" />
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Camera Button -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabEditPicture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
-            android:contentDescription="Change Picture"
+            android:contentDescription="@string/profile_change_picture"
             android:src="@android:drawable/ic_menu_camera"
             app:fabSize="mini"
             app:layout_constraintBottom_toBottomOf="@id/cvProfilePicture"
             app:layout_constraintEnd_toEndOf="@id/cvProfilePicture" />
 
-        <!-- Name Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardName"
             android:layout_width="0dp"
@@ -85,7 +81,7 @@
                     android:id="@+id/tvNameLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Name"
+                    android:text="@string/profile_first_name"
                     android:textColor="#757575"
                     android:textSize="12sp"
                     android:textStyle="bold"
@@ -97,7 +93,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:hint="No name set"
+                    android:hint="@string/profile_no_name_set"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -108,7 +104,6 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Surname Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardSurname"
             android:layout_width="0dp"
@@ -132,7 +127,7 @@
                     android:id="@+id/tvSurnameLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Surname"
+                    android:text="@string/profile_last_name"
                     android:textColor="#757575"
                     android:textSize="12sp"
                     android:textStyle="bold"
@@ -144,7 +139,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:hint="No surname set"
+                    android:hint="@string/profile_no_surname_set"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -155,7 +150,6 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Username Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardUsername"
             android:layout_width="0dp"
@@ -179,7 +173,7 @@
                     android:id="@+id/tvUsernameLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Username"
+                    android:text="@string/profile_username"
                     android:textColor="#757575"
                     android:textSize="12sp"
                     android:textStyle="bold"
@@ -192,7 +186,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:background="@android:color/transparent"
-                    android:hint="Enter username"
+                    android:hint="@string/profile_enter_username"
                     android:inputType="textPersonName"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
@@ -204,7 +198,6 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Email Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardEmail"
             android:layout_width="0dp"
@@ -228,7 +221,7 @@
                     android:id="@+id/tvEmailLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Email"
+                    android:text="@string/profile_email"
                     android:textColor="#757575"
                     android:textSize="12sp"
                     android:textStyle="bold"
@@ -240,7 +233,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:hint="No email set"
+                    android:hint="@string/profile_no_email_set"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -251,20 +244,18 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Save Changes Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSaveProfile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Save Changes"
+            android:text="@string/profile_save_changes"
             android:textSize="16sp"
             app:cornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cardEmail" />
 
-        <!-- Sign Out Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSignOut"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -272,7 +263,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="20dp"
-            android:text="Sign Out"
+            android:text="@string/profile_sign_out"
             android:textSize="16sp"
             app:cornerRadius="8dp"
             app:layout_constraintBottom_toBottomOf="parent"

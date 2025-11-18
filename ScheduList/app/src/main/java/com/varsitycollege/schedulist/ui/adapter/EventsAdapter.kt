@@ -1,6 +1,7 @@
 package com.varsitycollege.schedulist.ui.adapter // Correct package name
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -39,14 +40,21 @@ class EventsAdapter(
             binding.tvEventTitle.text = event.title
             binding.tvEventDescription.text = event.description
             binding.tvEventLocation.text = event.location
+            // Start date/time
             binding.chipDate.text = dateFormatter.format(event.startTime)
-            // Show start time or a start-end range if endTime is available
-            val timeText = if (event.endTime != null && event.endTime.time > event.startTime.time) {
-                "${timeFormatter.format(event.startTime)} - ${timeFormatter.format(event.endTime)}"
+            binding.chipTime.text = timeFormatter.format(event.startTime)
+
+            // End date/time: show on its own row (chips below start date/time)
+            if (event.endTime != null) {
+                binding.chipEndDate.visibility = View.VISIBLE
+                binding.chipEndTime.visibility = View.VISIBLE
+                binding.chipEndDate.text = dateFormatter.format(event.endTime)
+                binding.chipEndTime.text = timeFormatter.format(event.endTime)
             } else {
-                timeFormatter.format(event.startTime)
+                // Hide end chips when there's no end time
+                binding.chipEndDate.visibility = View.GONE
+                binding.chipEndTime.visibility = View.GONE
             }
-            binding.chipTime.text = timeText
             binding.btnViewEventDay.setOnClickListener {
                 onDayEventClick?.invoke(event)
             }
