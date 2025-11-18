@@ -241,7 +241,7 @@ class TasksApiClient(
                     if (due != null) {
                         this.due = due.toStringRfc3339()
                     }
-                    this.due = dueDate.toStringRfc3339()
+                    this.due = null;
                 }
 
                 val insertedTask = tasksService.tasks().insert(taskListId, task).execute()

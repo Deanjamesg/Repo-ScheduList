@@ -17,7 +17,7 @@ private val simpleListDateFormatter = SimpleDateFormat("MMM d, h:mm a", Locale.g
 data class SimpleListItem(
     val id: String,
     val title: String,
-    val date: Date,
+    val date: Date?,
     val isCompleted: Boolean
 )
 
