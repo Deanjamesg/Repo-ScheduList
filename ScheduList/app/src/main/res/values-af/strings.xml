@@ -105,10 +105,10 @@
 
     <string name="event_view_button_cancel">Cancel</string>
     <string name="event_view_button_save">Save changes</string>
-    <string name="save">Save</string>
+    <string name="save">Stoor</string>
 
     <!-- Calendar Screen -->
-    <string name="calendar_title">Calendar</string>
+    <string name="calendar_title">Kalender</string>
 
     <string name="get_started">Kom Begin</string>
     <string name="dashboard">Dashbord</string>
@@ -119,4 +119,40 @@
     <string name="account">Rekening</string>
     <string name="settings">Instellings</string>
     <string name="instructions">Instruksies</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Instellings</string>
+    <string name="settings_language_preferences">Taalvoorkeure</string>
+    <string name="settings_notifications">Kennisgewings</string>
+    <string name="settings_dark_light_mode">Donker/Lig Modus</string>
+    <string name="settings_offline_mode">Aflyn Modus</string>
+    <string name="profile_save_changes">Stoor Veranderinge</string>
+
+    <string name="settings_manage_tasks">Bestuur Taaklyste</string>
+    <string name="settings_account_settings">Rekeninginstellings</string>
+
+    <string name="profile_username">Gebruikersnaam</string>
+    <string name="profile_enter_username">Voer gebruikersnaam in</string>
+    <string name="profile_no_name_set">Geen naam gestel</string>
+    <string name="profile_no_surname_set">Geen van gestel</string>
+    <string name="profile_no_email_set">Geen e-pos gestel</string>
+    <string name="profile_picture">Profielfoto</string>
+    <string name="profile_change_picture">Verander Foto</string>
+
+    <string name="language_select">Kies Taal</string>
+
+    <string name="notification_header">Kennisgewings</string>
+    <string name="notification_travel_time">Reistydwaarskuwings</string>
+    <string name="notification_task_reminders">Taakherinneringe</string>
+    <string name="notification_event_reminders">Gebeurtenisherinneringe</string>
+    <string name="notification_productivity_alerts">Produktiwiteitswaarskuwings</string>
+
+    <string name="dark_mode_title">Donker Modus</string>
+    <string name="dark_mode_enable">Aktiveer Donker Modus</string>
+    <string name="dark_mode_desc">Skakel tussen ligte en donker tema</string>
+
+    <string name="offline_mode_enable">Aktiveer Aflyn Modus</string>
+    <string name="offline_mode_title">Aflyn Modus</string>
+    <string name="offline_mode_desc">Werk sonder \'n internetverbinding. Data sal sinkroniseer wanneer jy weer aanlyn is</string>
+
 </resources>
