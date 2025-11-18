@@ -107,6 +107,19 @@ object EventNotificationScheduler {
         scheduledTimes.forEachIndexed { index, time ->
             Log.d(TAG, "  ${index + 1}. ${timeFormat.format(time)}")
         }
+
+        // Centralized logging helper
+        try {
+            NotificationDebugHelper.logEventScheduling(
+                event.title,
+                event.startTime,
+                event.reminderType.name,
+                scheduledTimes
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to call NotificationDebugHelper.logEventScheduling: ${e.message}", e)
+        }
+
         Log.d(TAG, "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
     }
 
@@ -138,12 +151,17 @@ object EventNotificationScheduler {
         val requestCode = (event.id.hashCode() + daysAway * 1000)
         Log.d(TAG, "     Request Code: $requestCode")
 
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            requestCode,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
+        val pendingIntent = try {
+            PendingIntent.getBroadcast(
+                context,
+                requestCode,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            ).also { Log.d(TAG, "     PendingIntent prepared for requestCode=$requestCode") }
+        } catch (e: Exception) {
+            Log.e(TAG, "     Failed to create PendingIntent: ${e.message}", e)
+            return null
+        }
 
         try {
             alarmManager.setExactAndAllowWhileIdle(
@@ -154,7 +172,10 @@ object EventNotificationScheduler {
             Log.d(TAG, "     ✅ Scheduled successfully")
             return notificationTime
         } catch (e: SecurityException) {
-            Log.e(TAG, "     ❌ Failed to schedule: ${e.message}")
+            Log.e(TAG, "     ❌ Failed to schedule: ${e.message}", e)
+            return null
+        } catch (e: Exception) {
+            Log.e(TAG, "     Unexpected error scheduling alarm: ${e.message}", e)
             return null
         }
     }
@@ -207,12 +228,17 @@ object EventNotificationScheduler {
         val requestCode = (event.id.hashCode() + 9000) // Different offset for immediate notification
         Log.d(TAG, "     Request Code: $requestCode")
 
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            requestCode,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
+        val pendingIntent = try {
+            PendingIntent.getBroadcast(
+                context,
+                requestCode,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            ).also { Log.d(TAG, "     Immediate PendingIntent created for requestCode=$requestCode") }
+        } catch (e: Exception) {
+            Log.e(TAG, "     Failed to create immediate PendingIntent: ${e.message}", e)
+            return null
+        }
 
         try {
             alarmManager.setExactAndAllowWhileIdle(
@@ -223,7 +249,10 @@ object EventNotificationScheduler {
             Log.d(TAG, "     ✅ Immediate notification scheduled successfully")
             return immediate.time
         } catch (e: SecurityException) {
-            Log.e(TAG, "     ❌ Failed to schedule immediate notification: ${e.message}")
+            Log.e(TAG, "     ❌ Failed to schedule immediate notification: ${e.message}", e)
+            return null
+        } catch (e: Exception) {
+            Log.e(TAG, "     Unexpected error scheduling immediate alarm: ${e.message}", e)
             return null
         }
     }
@@ -251,22 +280,31 @@ object EventNotificationScheduler {
                     putExtra(EventNotificationReceiver.EXTRA_DAYS_UNTIL_EVENT, -1) // -1 indicates ongoing event notification
                 }
 
-                val pendingIntent = PendingIntent.getBroadcast(
-                    context,
-                    (event.id.hashCode() + 10000 + dayCount), // Different offset to avoid conflicts with countdown notifications
-                    intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
+                val pendingIntent = try {
+                    PendingIntent.getBroadcast(
+                        context,
+                        (event.id.hashCode() + 10000 + dayCount),
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                    ).also { Log.d(TAG, "Ongoing PendingIntent created (day=$dayCount)") }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to create ongoing PendingIntent day $dayCount: ${e.message}", e)
+                    null
+                }
 
-                try {
-                    alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        calendar.timeInMillis,
-                        pendingIntent
-                    )
-                    Log.d(TAG, "Ongoing event notification scheduled for day $dayCount at ${calendar.time}")
-                } catch (e: SecurityException) {
-                    Log.e(TAG, "Failed to schedule ongoing event notification: ${e.message}")
+                if (pendingIntent != null) {
+                    try {
+                        alarmManager.setExactAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.timeInMillis,
+                            pendingIntent
+                        )
+                        Log.d(TAG, "Ongoing event notification scheduled for day $dayCount at ${calendar.time}")
+                    } catch (e: SecurityException) {
+                        Log.e(TAG, "Failed to schedule ongoing event notification: ${e.message}", e)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Unexpected error scheduling ongoing notification: ${e.message}", e)
+                    }
                 }
             }
 
@@ -314,4 +352,3 @@ object EventNotificationScheduler {
         Log.d(TAG, "All notifications cancelled for event: $eventId")
     }
 }
-
