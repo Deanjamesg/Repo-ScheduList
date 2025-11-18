@@ -178,16 +178,13 @@ class AuthActivity : AppCompatActivity() {
                         Log.e(TAG, "ERROR in setup flow:", e)
                         e.printStackTrace()
                         Toast.makeText(this@AuthActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
-                    } finally {
-                        Log.d(TAG, "Navigating to MainActivity...")
-                        continueToMain()
                     }
                 }
 
                 // Mark user as logged in
                 biometricPreferences.setUserLoggedIn(true)
 
-                // Force biometric setup for first-time users
+                // Force biometric setup and authentication for all sign-ins
                 offerBiometricSetup()
             },
             onAuthorizationFailure = { exception ->
@@ -207,13 +204,14 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun offerBiometricSetup() {
-        // Do not allow skipping biometric setup. Decide flow based on availability.
+        // Always require biometric authentication before proceeding
         if (biometricPreferences.isBiometricEnabled()) {
-            // Already set up
-            continueToMain()
+            // Already set up - require authentication
+            requireBiometricAuthentication()
             return
         }
 
+        // Not set up yet - force setup based on availability
         when (biometricHelper.isBiometricAvailable()) {
             BiometricHelper.BiometricStatus.AVAILABLE -> {
                 // Offer only to enable (no skip)
@@ -229,6 +227,30 @@ class AuthActivity : AppCompatActivity() {
                 showBiometricUnavailableDialog()
             }
         }
+    }
+
+    private fun requireBiometricAuthentication() {
+        binding.progressBar.visibility = View.VISIBLE
+        biometricHelper.authenticate(
+            title = "Verify Identity",
+            subtitle = "Confirm with fingerprint to continue",
+            negativeButtonText = "Cancel",
+            onSuccess = {
+                binding.progressBar.visibility = View.GONE
+                Log.d(TAG, "Biometric authentication successful")
+                continueToMain()
+            },
+            onError = { _, errorMessage ->
+                binding.progressBar.visibility = View.GONE
+                Log.e(TAG, "Biometric auth error: $errorMessage")
+                showAuthFailedDialog(errorMessage)
+            },
+            onFailed = {
+                binding.progressBar.visibility = View.GONE
+                Log.d(TAG, "Biometric auth failed")
+                showAuthFailedDialog("Authentication failed. Try again or sign out.")
+            }
+        )
     }
 
     private fun showBiometricSetupDialog() {
