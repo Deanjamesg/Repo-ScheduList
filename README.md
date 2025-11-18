@@ -206,7 +206,7 @@ Changed the colour scheme of the applicaiton to be something more friendly on th
 
 
 
-AI Tool Usage and Contribution Report: ScheduList
+# AI Tool Usage and Contribution Report: ScheduList
 
 1. Introduction and Context
 
