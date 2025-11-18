@@ -1,10 +1,12 @@
-# File: .github/workflows/dokka.yml
+# yaml
 name: Generate and publish Dokka docs
 
 on:
   push:
     branches:
       - main
+      - githubworkflow
+  workflow_dispatch:
 
 jobs:
   docs:
