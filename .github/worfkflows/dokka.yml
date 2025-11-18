@@ -1,37 +1,25 @@
-# yaml
-name: Generate and publish Dokka docs
-
-on:
-  push:
-    branches:
-      - main
-      - githubworkflow
-  workflow_dispatch:
-
-jobs:
-  docs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Make gradlew executable
-        run: chmod +x ./ScheduList/gradlew
-
-      - name: Build and generate Dokka
-        run: cd ScheduList && ./gradlew dokkaHtml --no-daemon
-
-      - name: Publish to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./ScheduList/app/build/dokka/html
-          publish_branch: gh-pages
+#!/usr/bin/env bash
+  set -e
+  
+  # run from repo root
+  git rev-parse --show-toplevel >/dev/null || { echo "Not a git repo"; exit 1; }
+  
+  BRANCH=$(git branch --show-current || echo "unknown")
+echo "Current branch: $BRANCH"
+  
+  mkdir -p .github/workflows
+  
+  if [ -f .github/worfkflows/dokka.yml ]; then
+  git mv .github/worfkflows/dokka.yml .github/workflows/dokka.yml
+  elif [ -f .github/workflows/dokka.yml ]; then
+  echo ".github/workflows/dokka.yml already in correct location"
+  else
+  echo "No dokka.yml found in either path. Place the workflow at .github/workflows/dokka.yml and try again."
+  exit 1
+  fi
+  
+  git add .github/workflows/dokka.yml
+  git commit -m "Fix workflow path" || echo "Nothing to commit"
+  git push origin "$BRANCH"
+  
+  echo "Pushed. Wait ~30s and check the Actions tab (ensure filters show all workflows and the branch). If you added 'workflow_dispatch' you can Run workflow manually."
