@@ -1,7 +1,9 @@
 package com.varsitycollege.schedulist.services
 
+import android.annotation.SuppressLint
 import android.content.Context
 
+@SuppressLint("StaticFieldLeak")
 object ApiClients {
     var calendarApi: CalendarApiClient? = null
     var tasksApi: TasksApiClient? = null
@@ -13,7 +15,11 @@ object ApiClients {
 
     fun clear() {
         calendarApi?.clearCache()
+        tasksApi?.clearCache()
         calendarApi = null
         tasksApi = null
+
+        // Reset sync manager on logout
+        SyncManager.reset()
     }
 }

@@ -9,47 +9,39 @@ import com.varsitycollege.schedulist.ui.adapter.MonthDay
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-
-// This is the ViewModel for our Calendar screen. It gets the raw tasks
-// from the repository and then does the logic to build our list of days for the grid.
+import android.util.Log
 
 class CalendarViewModel(private val repository: CalendarRepository) : ViewModel() {
 
-    // Holds the current month we are viewing (defaults to today)
     private val currentCalendar = Calendar.getInstance()
 
-    // LiveData for the Header Text (e.g., "October 2025")
+    private val TAG = "CALENDAR_VM" // For logging purposes
+
     private val _currentMonthText = MutableLiveData<String>()
     val currentMonthText: LiveData<String> = _currentMonthText
 
-    // Store raw tasks to re-filter when month changes
+    // We store the raw tasks here so we can use them when generating the grid
     private var rawTasksList: List<Task> = emptyList()
 
-    // This is the final list of Day objects for our MonthGridAdapter.
     private val _monthList = MutableLiveData<List<MonthDay>>()
     val monthList: LiveData<List<MonthDay>> = _monthList
 
     fun loadCalendarData(userId: String) {
-        // Initial load of the month title
+        Log.d(TAG, "Request received. Starting data fetch for user $userId") // Log point 1
         updateMonthText()
-
-        // We get the raw tasks from the repository.
         repository.getCalendarTasks(userId).observeForever { tasks ->
-            // Save the tasks so we can reuse them when changing months
+            Log.d(TAG, "Repository returned ${tasks.size} raw task items.") // Log point 2
             rawTasksList = tasks
-            // Once we have the tasks, we format them for the grid view.
             generateMonthGrid()
         }
     }
 
-    // Go to the next month
     fun nextMonth() {
         currentCalendar.add(Calendar.MONTH, 1)
         updateMonthText()
         generateMonthGrid()
     }
 
-    // Go to the previous month
     fun previousMonth() {
         currentCalendar.add(Calendar.MONTH, -1)
         updateMonthText()
@@ -61,18 +53,15 @@ class CalendarViewModel(private val repository: CalendarRepository) : ViewModel(
         _currentMonthText.value = formatter.format(currentCalendar.time)
     }
 
-    // This function prepares the data for the calendar grid.
     private fun generateMonthGrid() {
-        // We use the saved list of tasks
         val tasks = rawTasksList
         val daysInMonth = currentCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)
         val monthDays = mutableListOf<MonthDay>()
 
-        // A simple loop to create cells for each day of the month.
+        // Start directly from day 1 (List View style)
         for (i in 1..daysInMonth) {
             val tasksForDay = tasks.filter {
                 val taskCalendar = Calendar.getInstance().apply { time = it.dueDate }
-                // Check if Year, Month, and Day match the current view
                 taskCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
                         taskCalendar.get(Calendar.MONTH) == currentCalendar.get(Calendar.MONTH) &&
                         taskCalendar.get(Calendar.DAY_OF_MONTH) == i
@@ -80,5 +69,6 @@ class CalendarViewModel(private val repository: CalendarRepository) : ViewModel(
             monthDays.add(MonthDay(dayOfMonth = i.toString(), tasks = tasksForDay))
         }
         _monthList.value = monthDays
+        Log.d(TAG, "Grid generated with ${monthDays.size} cells. Ready for adapter.") // Log point 3
     }
 }

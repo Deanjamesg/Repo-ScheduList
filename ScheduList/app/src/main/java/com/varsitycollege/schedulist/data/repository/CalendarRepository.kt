@@ -2,7 +2,7 @@ package com.varsitycollege.schedulist.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.varsitycollege.schedulist.data.model.EnergyLevel
+import com.varsitycollege.schedulist.data.model.Event
 import com.varsitycollege.schedulist.data.model.Task
 import java.util.Date
 

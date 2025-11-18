@@ -31,7 +31,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilTaskListName"
+                android:id="@+id/tilNewTaskListName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -46,26 +46,29 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSaveList"
+                android:id="@+id/btnSaveNewList"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="@string/button_save_list"
+                app:cornerRadius="7dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btnCancel"
-                app:layout_constraintTop_toTopOf="@id/btnCancel" />
+                app:layout_constraintStart_toEndOf="@id/btnCancelNewList"
+                app:layout_constraintTop_toTopOf="@id/btnCancelNewList" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCancel"
+                android:id="@+id/btnCancelNewList"
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/button_cancel"
-                app:layout_constraintEnd_toStartOf="@id/btnSaveList"
+                app:backgroundTint="@color/tertiaryContainer"
+                app:cornerRadius="7dp"
+                app:layout_constraintEnd_toStartOf="@id/btnSaveNewList"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tilTaskListName" />
+                app:layout_constraintTop_toBottomOf="@id/tilNewTaskListName" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
