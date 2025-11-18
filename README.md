@@ -270,5 +270,5 @@ Google. (2025). Gemini (Version 2.5) [Large Language Model]. Retrieved from [The
 
 ### Video Link
 
-https://youtu.be/5Kmdqez9nB8
+[https://youtu.be/5Kmdqez9nB8](https://youtu.be/sG0ouu82lYI)
 
