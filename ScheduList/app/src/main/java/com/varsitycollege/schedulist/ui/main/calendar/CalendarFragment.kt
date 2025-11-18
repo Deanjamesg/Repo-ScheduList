@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
-import com.varsitycollege.schedulist.R
+import com.varsitycollege.schedulist.R // For accessing resource IDs like R.dimen
 import com.varsitycollege.schedulist.data.repository.CalendarRepository
 import com.varsitycollege.schedulist.databinding.FragmentCalendarBinding
 import com.varsitycollege.schedulist.ui.adapter.MonthDay
@@ -42,23 +42,24 @@ class CalendarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Setting up the repo and factory so I can get the viewmodel working
         val repository = CalendarRepository()
         val factory = CalendarViewModelFactory(repository)
         calendarViewModel = ViewModelProvider(this, factory).get(CalendarViewModel::class.java)
 
         setupRecyclerView()
 
-        // Updating the grid when data changes
+        // Watching the list from the viewmodel, if it changes I update the adapter
         calendarViewModel.monthList.observe(viewLifecycleOwner) { monthDayList ->
             monthAdapter.submitList(monthDayList)
         }
 
-        // Updating the Month Name (e.g. November 2025)
+        // Watching the month title text so it changes when I click next/prev
         calendarViewModel.currentMonthText.observe(viewLifecycleOwner) { text ->
             binding.tvMonthName.text = text
         }
 
-        // Navigation buttons
+        // Simple button clicks to change the month
         binding.btnNextMonth.setOnClickListener {
             calendarViewModel.nextMonth()
         }
@@ -67,17 +68,18 @@ class CalendarFragment : Fragment() {
             calendarViewModel.previousMonth()
         }
 
+        // Just loading sample data for now to test
         calendarViewModel.loadCalendarData("sampleUserId")
     }
 
     private fun setupRecyclerView() {
-        // Passing the click function to the adapter
+        // This is the line that caused the error. We must pass the click function.
         monthAdapter = MonthGridAdapter { monthDay ->
             showDayDetailsPopup(monthDay)
         }
 
         binding.calendarRecyclerView.apply {
-            // Using 3 columns to make the cards wider and readable
+            // Using a grid with 3 columns to make the cards wider and readable
             layoutManager = GridLayoutManager(context, 3)
             adapter = monthAdapter
 
@@ -87,16 +89,18 @@ class CalendarFragment : Fragment() {
         }
     }
 
-    // Logic to show the popup window with the specific day's tasks
+    // This function handles the popup when clicking a day in the month view
     private fun showDayDetailsPopup(day: MonthDay) {
         if (day.dayOfMonth.isEmpty()) return
 
+        // Inflating the layout for the popup dialog
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_day_details, null)
 
         val tvDateTitle = dialogView.findViewById<TextView>(R.id.tvDateTitle)
         val rvDayTasks = dialogView.findViewById<RecyclerView>(R.id.rvDayTasks)
         val btnClose = dialogView.findViewById<MaterialButton>(R.id.btnClose)
 
+        // Setting the title of the popup
         tvDateTitle.text = "${binding.tvMonthName.text} ${day.dayOfMonth}"
 
         // We reuse the SimpleListAdapter here because it looks good for a list
@@ -105,7 +109,7 @@ class CalendarFragment : Fragment() {
         rvDayTasks.layoutManager = LinearLayoutManager(requireContext())
         rvDayTasks.adapter = dayListAdapter
 
-        // Convert the data so the SimpleListAdapter can understand it
+        // Converting tasks to simple items for the list
         val simpleListItems = day.tasks.map { task ->
             SimpleListItem(
                 id = task.id ?: "",
@@ -116,10 +120,12 @@ class CalendarFragment : Fragment() {
         }
         dayListAdapter.submitList(simpleListItems)
 
+        // Building and showing the dialog
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
 
+        // Making the background transparent for the custom card look
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         btnClose.setOnClickListener {
