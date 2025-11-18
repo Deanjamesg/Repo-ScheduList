@@ -55,7 +55,7 @@ class EventsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // We create our Repository and the Factory first.
-        val repository = EventsRepository()
+        val repository = EventsRepository(requireContext())
         val factory = EventsViewModelFactory(repository)
 
         // Then, we use the Factory to get our ViewModel.
@@ -305,6 +305,9 @@ class EventsFragment : Fragment() {
                 timePicker.show()
             }
 
+            // Get reminder spinner
+            val spinnerReminder = addEventView.findViewById<android.widget.Spinner>(R.id.spinnerReminder)
+
             val btnCancel = addEventView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
             val btnSave = addEventView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSaveEvent)
             btnCancel.setOnClickListener {
@@ -328,18 +331,31 @@ class EventsFragment : Fragment() {
                     return@setOnClickListener
                 }
                 val endTime = endCalendar.time
-                if (endTime.before(startTime)) {
-                    // ensure end is after start
+                if (endTime.before(startTime) || endTime == startTime) {
+                    // Ensure end time is after start time
                     btnEndDatePicker.setTextColor(android.graphics.Color.RED)
                     btnEndTimePicker.setTextColor(android.graphics.Color.RED)
                     btnEndDatePicker.postDelayed({
                         btnEndDatePicker.setTextColor(android.graphics.Color.BLACK)
                         btnEndTimePicker.setTextColor(android.graphics.Color.BLACK)
                     }, 1200)
+                    android.widget.Toast.makeText(
+                        requireContext(),
+                        "End time must be after start time",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
                     return@setOnClickListener
                 }
+
+                // Get reminder selection
+                val reminderType = when (spinnerReminder.selectedItemPosition) {
+                    0 -> com.varsitycollege.schedulist.data.model.ReminderType.DAY_OF
+                    1 -> com.varsitycollege.schedulist.data.model.ReminderType.SEVEN_DAYS_BEFORE
+                    else -> com.varsitycollege.schedulist.data.model.ReminderType.DAY_OF
+                }
+
                 lifecycleScope.launch {
-                    eventsViewModel.addEvent(title, description, startTime, endTime, location)
+                    eventsViewModel.addEvent(title, description, startTime, endTime, location, reminderType)
                 }
 
                 addEventOverlay.visibility = View.GONE
