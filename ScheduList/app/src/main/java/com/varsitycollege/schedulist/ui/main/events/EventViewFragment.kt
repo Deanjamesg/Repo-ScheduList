@@ -8,11 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.varsitycollege.schedulist.R
-import com.varsitycollege.schedulist.data.model.Event
 import com.varsitycollege.schedulist.data.repository.EventsRepository
 import com.varsitycollege.schedulist.databinding.FragmentEventViewBinding
 import EventsViewModelFactory
@@ -89,6 +87,35 @@ class EventViewFragment : Fragment() {
         }
 
         setEditMode(false)
+
+        binding.btnDelete.setOnClickListener {
+            // Show confirmation dialog
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Delete Event")
+                .setMessage("Are you sure you want to delete this event?")
+                .setPositiveButton("Delete") { _, _ ->
+                    lifecycleScope.launch {
+                        val success = eventsViewModel.deleteEvent(eventId)
+                        if (success) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Event deleted successfully",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            // Navigate back
+                            requireActivity().supportFragmentManager.popBackStack()
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "Failed to delete event",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
 
         binding.btnEdit.setOnClickListener {
             val isEditing = binding.etEventTitle.isEnabled
