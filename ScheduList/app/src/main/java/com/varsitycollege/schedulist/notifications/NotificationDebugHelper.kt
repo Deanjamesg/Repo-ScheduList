@@ -112,14 +112,19 @@ object NotificationDebugHelper {
 
         // Create notification channel for Android O and above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                "test_channel",
-                "Test Notifications",
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                description = "Test notifications to verify functionality"
+            try {
+                val channel = NotificationChannel(
+                    "test_channel",
+                    "Test Notifications",
+                    NotificationManager.IMPORTANCE_HIGH
+                ).apply {
+                    description = "Test notifications to verify functionality"
+                }
+                notificationManager.createNotificationChannel(channel)
+                Log.d(TAG, "Test notification channel created")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to create test channel: ${e.message}", e)
             }
-            notificationManager.createNotificationChannel(channel)
         }
 
         // Build and show test notification
@@ -133,8 +138,12 @@ object NotificationDebugHelper {
             .setAutoCancel(true)
             .build()
 
-        notificationManager.notify(99999, notification)
-        Log.d(TAG, "✅ Test notification sent! Check your notification panel.")
+        try {
+            notificationManager.notify(99999, notification)
+            Log.d(TAG, "✅ Test notification sent! Check your notification panel.")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to post test notification: ${e.message}", e)
+        }
     }
 
     /**
@@ -159,4 +168,3 @@ object NotificationDebugHelper {
         Log.d(TAG, "===================================")
     }
 }
-
