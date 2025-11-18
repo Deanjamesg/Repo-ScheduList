@@ -22,27 +22,35 @@ class EventNotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Log.d(TAG, "Notification received!")
 
-        val eventId = intent.getStringExtra(EXTRA_EVENT_ID) ?: return
+        val eventId = intent.getStringExtra(EXTRA_EVENT_ID) ?: run {
+            Log.e(TAG, "Missing event id in intent - aborting")
+            return
+        }
         val eventTitle = intent.getStringExtra(EXTRA_EVENT_TITLE) ?: "Event"
         val eventStartTime = intent.getLongExtra(EXTRA_EVENT_START_TIME, 0L)
         val eventEndTime = intent.getLongExtra(EXTRA_EVENT_END_TIME, 0L)
         val daysUntilEvent = intent.getIntExtra(EXTRA_DAYS_UNTIL_EVENT, -1)
 
-        Log.d(TAG, "Event: $eventTitle, ID: $eventId, Days until: $daysUntilEvent")
+        Log.d(TAG, "Event: $eventTitle, ID: $eventId, Days until: $daysUntilEvent, start:$eventStartTime end:$eventEndTime")
 
         // Check if event reminders are enabled
         val sharedPreferences = context.getSharedPreferences("settings_preferences", Context.MODE_PRIVATE)
         val eventRemindersEnabled = sharedPreferences.getBoolean("event_reminders", true)
 
         if (!eventRemindersEnabled) {
-            Log.d(TAG, "Event reminders disabled in settings")
+            Log.i(TAG, "Event reminders disabled in settings - skipping notification for $eventId")
             return
         }
 
         val notificationMessage = buildNotificationMessage(eventStartTime, eventEndTime, daysUntilEvent)
-        Log.d(TAG, "Showing notification: $notificationMessage")
+        Log.d(TAG, "Composed notification message: $notificationMessage")
 
-        showNotification(context, eventId, eventTitle, notificationMessage)
+        try {
+            showNotification(context, eventId, eventTitle, notificationMessage)
+            Log.d(TAG, "Notification show attempted for eventId=$eventId")
+        } catch (ex: Exception) {
+            Log.e(TAG, "Failed to show notification for $eventId: ${ex.message}", ex)
+        }
     }
 
     private fun buildNotificationMessage(startTime: Long, endTime: Long, daysUntilEvent: Int): String {
@@ -99,14 +107,24 @@ class EventNotificationReceiver : BroadcastReceiver() {
 
         // Create notification channel for Android O and above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Event Reminders",
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                description = "Notifications for upcoming and ongoing events"
+            try {
+                val existing = notificationManager.getNotificationChannel(CHANNEL_ID)
+                if (existing == null) {
+                    val channel = NotificationChannel(
+                        CHANNEL_ID,
+                        "Event Reminders",
+                        NotificationManager.IMPORTANCE_HIGH
+                    ).apply {
+                        description = "Notifications for upcoming and ongoing events"
+                    }
+                    notificationManager.createNotificationChannel(channel)
+                    Log.d(TAG, "Notification channel created: ${channel.id}")
+                } else {
+                    Log.d(TAG, "Notification channel already exists: ${existing.id}")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error creating/checking notification channel: ${e.message}", e)
             }
-            notificationManager.createNotificationChannel(channel)
         }
 
         // Create intent to open the app when notification is clicked
@@ -115,25 +133,36 @@ class EventNotificationReceiver : BroadcastReceiver() {
             putExtra("eventId", eventId)
         }
 
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            eventId.hashCode(),
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
+        val pendingIntent = try {
+            PendingIntent.getActivity(
+                context,
+                eventId.hashCode(),
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            ).also { Log.d(TAG, "PendingIntent created for eventId=$eventId (request=${eventId.hashCode()})") }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to create PendingIntent for eventId=$eventId: ${e.message}", e)
+            null
+        }
 
         // Build notification
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_calendar)
             .setContentTitle(title)
             .setContentText(message)
             .setStyle(NotificationCompat.BigTextStyle().bigText(message))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
-            .build()
 
-        notificationManager.notify(eventId.hashCode(), notification)
+        pendingIntent?.let { builder.setContentIntent(it) }
+
+        try {
+            val notification = builder.build()
+            notificationManager.notify(eventId.hashCode(), notification)
+            Log.d(TAG, "Notification posted (id=${eventId.hashCode()}) for event: $title")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error posting notification for eventId=$eventId: ${e.message}", e)
+        }
     }
 
     companion object {
@@ -145,4 +174,3 @@ class EventNotificationReceiver : BroadcastReceiver() {
         const val EXTRA_DAYS_UNTIL_EVENT = "extra_days_until_event"
     }
 }
-
