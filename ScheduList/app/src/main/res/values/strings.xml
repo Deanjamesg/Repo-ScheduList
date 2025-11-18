@@ -54,6 +54,10 @@
 
     <string name="events_title">Events</string>
     <string name="events_new_event_button">New Event</string>
+    <string name="filter_today">Today</string>
+    <string name="filter_this_week">Next 7 Days</string>
+    <string name="filter_this_month">Next 30 Days</string>
+    <string name="filter_all">All</string>
     <string name="event_card_title_placeholder">Title of Event</string>
     <string name="event_card_description_placeholder">This is a description of the event and can be more length than a task.</string>
     <string name="event_view_button">View</string>
@@ -65,6 +69,14 @@
         <item>Day</item>
         <item>Week</item>
         <item>Month</item>
+    </string-array>
+
+    <!-- Event filter spinner -->
+    <string-array name="event_filter_array">
+        <item>@string/filter_all</item>
+        <item>@string/filter_today</item>
+        <item>@string/filter_this_week</item>
+        <item>@string/filter_this_month</item>
     </string-array>
 
     <!-- addNewTask, addNewEvent, createNewTaskList -->

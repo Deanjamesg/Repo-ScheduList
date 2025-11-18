@@ -45,6 +45,14 @@
         <item>Maand</item>
     </string-array>
 
+    <!-- Event filter spinner -->
+    <string-array name="event_filter_array">
+        <item>@string/filter_all</item>
+        <item>@string/filter_today</item>
+        <item>@string/filter_this_week</item>
+        <item>@string/filter_this_month</item>
+    </string-array>
+
     <!--Profile -->
     <string name="profile_title">Profiel</string>
     <string name="profile_sign_out">Teken uit</string>
@@ -63,6 +71,10 @@
 
     <string name="events_title">Gebeure</string>
     <string name="events_new_event_button">Nuwe Gebeurtenis</string>
+    <string name="filter_today">Vandag</string>
+    <string name="filter_this_week">Volgende 7 Dae</string>
+    <string name="filter_this_month">Volgende 30 Dae</string>
+    <string name="filter_all">Alles</string>
     <string name="event_card_title_placeholder">Titel van Gebeurtenis</string>
     <string name="event_card_description_placeholder">Hierdie is \'n beskrywing van die gebeurtenis en kan langer as \'n taak wees.</string>
     <string name="event_view_button">Besigtig</string>
