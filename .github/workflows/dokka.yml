@@ -61,15 +61,34 @@ jobs:
           [ -f ./ScheduList/gradlew ] && echo "Found ./ScheduList/gradlew" || true
           [ -f ./gradlew ] && echo "Found ./gradlew" || true
 
+      - name: Stop Gradle daemons and show versions
+        run: |
+          # prefer the wrapper if present
+          if [ -f ./ScheduList/gradlew ]; then
+            echo "Using ./ScheduList/gradlew"
+            ./ScheduList/gradlew --stop || true
+            ./ScheduList/gradlew --version || true
+          elif [ -f ./gradlew ]; then
+            echo "Using ./gradlew"
+            ./gradlew --stop || true
+            ./gradlew --version || true
+          else
+            echo "gradlew not found in repo root or ./ScheduList"; ls -la; exit 1
+          fi
+
       - name: Build and generate Dokka (with diagnostics)
+        # isolate Gradle state and disable daemon to avoid daemon/socket issues
+        env:
+          GRADLE_USER_HOME: ${{ runner.temp }}/.gradle
+          GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx1g
         run: |
           set -o pipefail
           if [ -f ./ScheduList/gradlew ]; then
-            echo "Running ./ScheduList/gradlew dokkaHtml"
-            ./ScheduList/gradlew dokkaHtml --no-daemon --stacktrace --info
+            echo "Running ./ScheduList/gradlew dokkaHtml (no-daemon, isolated GRADLE_USER_HOME)"
+            ./ScheduList/gradlew --no-daemon dokkaHtml --no-build-cache --stacktrace --info
           elif [ -f ./gradlew ]; then
-            echo "Running ./gradlew dokkaHtml"
-            ./gradlew dokkaHtml --no-daemon --stacktrace --info
+            echo "Running ./gradlew dokkaHtml (no-daemon, isolated GRADLE_USER_HOME)"
+            ./gradlew --no-daemon dokkaHtml --no-build-cache --stacktrace --info
           else
             echo "gradlew not found in repo root or ./ScheduList"; ls -la; exit 1
           fi
