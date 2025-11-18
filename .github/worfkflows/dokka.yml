@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # This file is a leftover/mistyped location ('.github/worfkflows'). GitHub Actions reads .github/workflows/.
-# The real workflow has been added at: .github/workflows/dokka.yml
+# The real workflow is: .github/workflows/dokka.yml
 # You can remove this file to avoid confusion.
 
 echo "Deprecated: .github/worfkflows/dokka.yml. Use .github/workflows/dokka.yml"
+echo "To run diagnostics: Actions → Generate and publish Dokka docs → Run workflow → set input 'debug' = 'true'."
+echo "Or with gh CLI: gh workflow run dokka.yml --ref main -f debug=true"
 exit 0

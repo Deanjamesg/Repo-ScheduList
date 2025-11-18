@@ -1,3 +1,8 @@
+# How to run this workflow manually:
+# - GitHub UI: Actions → Generate and publish Dokka docs → Run workflow → choose branch → set input 'debug' = 'true' (optional) → Run workflow
+# - gh CLI: gh workflow run dokka.yml --ref main -f debug=true
+#   or: gh workflow run "Generate and publish Dokka docs" --ref main -f debug=true
+
 name: Generate and publish Dokka docs
 
 
@@ -16,6 +21,11 @@ on:
       - main
       - githubworkflow
   workflow_dispatch:
+    inputs:
+      debug:
+        description: 'Run additional debug/diagnostic steps (true/false)'
+        required: false
+        default: 'false'
 
 jobs:
   dokka:
@@ -25,6 +35,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Quick diagnostics (workspace & Java)
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug == 'true' }}
+        run: |
+          pwd
+          echo "Listing top-level files:"
+          ls -la
+          echo "java version:"
+          java -version || true
+          echo "env vars (filtered):"
+          env | egrep 'GITHUB|JAVA|WORKSPACE' || true
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -36,29 +57,52 @@ jobs:
         run: |
           [ -f ./ScheduList/gradlew ] && chmod +x ./ScheduList/gradlew || true
           [ -f ./gradlew ] && chmod +x ./gradlew || true
+          echo "gradlew status:"
+          [ -f ./ScheduList/gradlew ] && echo "Found ./ScheduList/gradlew" || true
+          [ -f ./gradlew ] && echo "Found ./gradlew" || true
 
-      - name: Build and generate Dokka
+      - name: Build and generate Dokka (with diagnostics)
         run: |
+          set -o pipefail
           if [ -f ./ScheduList/gradlew ]; then
-            ./ScheduList/gradlew dokkaHtml --no-daemon
+            echo "Running ./ScheduList/gradlew dokkaHtml"
+            ./ScheduList/gradlew dokkaHtml --no-daemon --stacktrace --info
           elif [ -f ./gradlew ]; then
-            ./gradlew dokkaHtml --no-daemon
+            echo "Running ./gradlew dokkaHtml"
+            ./gradlew dokkaHtml --no-daemon --stacktrace --info
           else
-            echo "gradlew not found in repo root or ./ScheduList"; exit 1
+            echo "gradlew not found in repo root or ./ScheduList"; ls -la; exit 1
           fi
 
       - name: Find Dokka HTML output
         id: find
         run: |
-          # try common locations; set output 'dir' for the publish step
-          if [ -d "./ScheduList/app/build/dokka/html" ]; then
-            echo "dir=./ScheduList/app/build/dokka/html" >> $GITHUB_OUTPUT
-          elif [ -d "./app/build/dokka/html" ]; then
-            echo "dir=./app/build/dokka/html" >> $GITHUB_OUTPUT
-          elif [ -d "./build/dokka/html" ]; then
-            echo "dir=./build/dokka/html" >> $GITHUB_OUTPUT
-          else
-            echo "No Dokka HTML output found"; exit 1
+          # try common locations; print helpful diagnostics if none found
+          candidates=(
+            "./ScheduList/app/build/dokka/html"
+            "./ScheduList/build/dokka/html"
+            "./app/build/dokka/html"
+            "./build/dokka/html"
+            "./ScheduList/**/build/dokka/html"
+            "./**/build/dokka/html"
+          )
+          found=
+          for p in "${candidates[@]}"; do
+            # use globbing carefully
+            for f in $(shopt -s nullglob; echo $p); do
+              if [ -d "$f" ]; then
+                echo "dir=$f" >> $GITHUB_OUTPUT
+                found=1
+                break 2
+              fi
+            done
+          done
+          if [ -z "$found" ]; then
+            echo "No Dokka HTML output found in expected places."
+            echo "Listing build directories for inspection:"
+            find . -type d -name build -maxdepth 5 -print || true
+            echo "You may need to adjust the workflow's search paths (publish_dir) to match your module layout."
+            exit 1
           fi
 
       - name: Publish to GitHub Pages
@@ -68,3 +112,9 @@ jobs:
           publish_dir: ${{ steps.find.outputs.dir }}
           publish_branch: gh-pages
           allow_empty_commit: true
+
+# Tip: To run diagnostics, go to Actions → Generate and publish Dokka docs → Run workflow → set input 'debug' = 'true'.
+# Local quick test (from repo root):
+#   ./gradlew dokkaHtml
+# or if wrapper is in ScheduList:
+#   ./ScheduList/gradlew dokkaHtml
