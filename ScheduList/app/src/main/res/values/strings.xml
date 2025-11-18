@@ -157,6 +157,8 @@
     <string name="notification_task_reminders">Task Reminders</string>
     <string name="notification_event_reminders">Event Reminders</string>
     <string name="notification_productivity_alerts">Productivity Alerts</string>
+    <string name="notification_channel_name">Event Reminders</string>
+    <string name="notification_channel_description">Notifications for upcoming events</string>
 
     <string name="dark_mode_title">Dark Mode</string>
     <string name="dark_mode_enable">Enable Dark Mode</string>
@@ -165,5 +167,12 @@
     <string name="offline_mode_enable">Enable Offline Mode</string>
     <string name="offline_mode_title">Offline Mode</string>
     <string name="offline_mode_desc">Work without an internet connection. Data will sync when you\'re back online</string>
+
+    <string name="add_event_reminder_label">Set Reminder</string>
+
+    <string-array name="reminder_options">
+        <item>Day of</item>
+        <item>7 days away</item>
+    </string-array>
 
 </resources>

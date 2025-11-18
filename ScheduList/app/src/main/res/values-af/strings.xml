@@ -167,4 +167,11 @@
     <string name="offline_mode_title">Aflyn Modus</string>
     <string name="offline_mode_desc">Werk sonder \'n internetverbinding. Data sal sinkroniseer wanneer jy weer aanlyn is</string>
 
+    <string name="add_event_reminder_label">Stel Herinnering</string>
+
+    <string-array name="reminder_options">
+        <item>Dag van</item>
+        <item>7 dae weg</item>
+    </string-array>
+
 </resources>

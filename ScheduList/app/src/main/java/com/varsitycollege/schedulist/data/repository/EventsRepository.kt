@@ -1,5 +1,6 @@
 package com.varsitycollege.schedulist.data.repository
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +10,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.varsitycollege.schedulist.services.ApiClients
 import com.varsitycollege.schedulist.data.model.Event
+import com.varsitycollege.schedulist.data.model.ReminderType
+import com.varsitycollege.schedulist.notifications.EventNotificationScheduler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -17,7 +20,7 @@ import java.util.TimeZone
 
 typealias GoogleEvent = com.google.api.services.calendar.model.Event
 
-class EventsRepository {
+class EventsRepository(private val context: Context? = null) {
 
     private val calendarApiClient = ApiClients.calendarApi!!
     private val firestore = FirebaseFirestore.getInstance()
@@ -129,7 +132,8 @@ class EventsRepository {
         description: String?,
         startTime: Date,
         endTime: Date,
-        location: String?
+        location: String?,
+        reminderType: ReminderType = ReminderType.NONE
     ): Event? {
         return withContext(Dispatchers.IO) {
             try {
@@ -145,7 +149,8 @@ class EventsRepository {
                     location = location ?: "",
                     startTime = startTime,
                     endTime = endTime,
-                    userId = userId
+                    userId = userId,
+                    reminderType = reminderType
                 )
 
                 Log.d(TAG, "Saving event to Firebase: $tempEventId")
@@ -155,6 +160,12 @@ class EventsRepository {
                     .await()
 
                 Log.d(TAG, "✓ Event saved to Firebase")
+
+                // Schedule notification if reminder is set and context is available
+                if (reminderType != ReminderType.NONE && context != null) {
+                    EventNotificationScheduler.scheduleNotification(context, appEvent)
+                    Log.d(TAG, "✓ Notification scheduled for event")
+                }
 
                 try {
                     Log.d(TAG, "Syncing to Google Calendar...")
@@ -197,6 +208,15 @@ class EventsRepository {
                     .await()
 
                 Log.d(TAG, "✓ Event updated in Firebase")
+
+                // Cancel old notifications and reschedule if reminder is set and context is available
+                if (context != null) {
+                    EventNotificationScheduler.cancelNotification(context, event.id)
+                    if (event.reminderType != ReminderType.NONE) {
+                        EventNotificationScheduler.scheduleNotification(context, event)
+                        Log.d(TAG, "✓ Notification rescheduled for updated event")
+                    }
+                }
 
                 try {
                     if (event.googleCalendarEventId.isNotEmpty()) {
@@ -304,7 +324,8 @@ class EventsRepository {
             location = this.location ?: "",
             startTime = Date(startTimeMillis),
             endTime = this.end?.dateTime?.value?.let { Date(it) },
-            userId = userId
+            userId = userId,
+            reminderType = ReminderType.NONE
         )
     }
 

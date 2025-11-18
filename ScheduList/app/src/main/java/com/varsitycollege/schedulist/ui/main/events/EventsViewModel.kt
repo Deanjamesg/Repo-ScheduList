@@ -139,10 +139,11 @@ class EventsViewModel(private val repository: EventsRepository) : ViewModel() {
         description: String?,
         startTime: Date,
         endTime: Date,
-        location: String?
+        location: String?,
+        reminderType: com.varsitycollege.schedulist.data.model.ReminderType = com.varsitycollege.schedulist.data.model.ReminderType.NONE
     ) {
         viewModelScope.launch {
-            repository.addEvent(title, description, startTime, endTime, location)
+            repository.addEvent(title, description, startTime, endTime, location, reminderType)
         }
     }
 
