@@ -1,10 +1,13 @@
 package com.varsitycollege.schedulist.ui.main.tasks
 
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.varsitycollege.schedulist.data.model.Task
+import com.varsitycollege.schedulist.data.model.TaskList
 import com.varsitycollege.schedulist.data.repository.TasksRepository
 import com.varsitycollege.schedulist.ui.adapter.MonthDay
 import com.varsitycollege.schedulist.ui.adapter.TaskListItem
@@ -12,121 +15,207 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
-// This is the ViewModel for the tasks screen. It gets the raw data from the
-// repository and then transforms it into the specific list that our adapter needs
-// (like adding date headers for the week view).
-
 class TasksViewModel(private val repository: TasksRepository) : ViewModel() {
 
-    private lateinit var rawTasks: LiveData<List<Task>>
+    private val TAG = "TasksViewModel"
 
-    // This is the final formatted list for our Day/Week adapter.
-    private val _displayList = MutableLiveData<List<TaskListItem>>()
+    // Source data from Firebase
+    private val allTasksLiveData = repository.getTasksLiveData()
+
+    // LiveData for tasks with due dates
+    private val _displayList = MediatorLiveData<List<TaskListItem>>()
     val displayList: LiveData<List<TaskListItem>> = _displayList
 
-    // This is the new list specifically for our MonthGridAdapter.
-    private val _monthList = MutableLiveData<List<MonthDay>>()
+    // LiveData for month view
+    private val _monthList = MediatorLiveData<List<MonthDay>>()
     val monthList: LiveData<List<MonthDay>> = _monthList
 
-    private val currentTasks = mutableListOf<Task>()
+    // LiveData for task lists
+    private val _taskLists = repository.getTaskListsLiveData()
+    val taskLists: LiveData<List<TaskList>> = _taskLists
 
-    fun loadTasks() {
-        viewModelScope.launch {
-            val tasks = repository.getTasks()
-            currentTasks.clear()
-            currentTasks.addAll(tasks as Collection<Task>)
-            formatListForDayView(currentTasks)
+    private var currentViewType = "Day"
+    private var selectedTaskListId: String? = null // null = show all
+
+    init {
+        Log.d(TAG, "TasksViewModel initialized")
+
+        // Set up mediator to react to data changes
+        _displayList.addSource(allTasksLiveData) { tasks ->
+            Log.d(TAG, "Tasks updated in ViewModel: ${tasks.size} tasks")
+            updateDisplayList(tasks)
+        }
+
+        _monthList.addSource(allTasksLiveData) { tasks ->
+            updateMonthList(tasks)
+        }
+
+        // Log when task lists change
+        _taskLists.observeForever { lists ->
+            Log.d(TAG, "Task lists updated in ViewModel: ${lists.size} lists")
         }
     }
 
-//    fun addTask(
-//        title: String,
-//        description: String?,
-//        dueDate: Date,
-//
-//    ) {
-//        viewModelScope.launch {
-//            // We call the repository to add the task via the API.
-////            val newTask = repository.addTask(title, description, dueDate)
-//            // title, description, dueDate
-//            if (newTask != null) {
-//                // If it's successful, we add the new task to our local list and refresh the UI.
-//                currentTasks.add(newTask)
-//                formatListForDayView(currentTasks)
-//            }
-//        }
-//    }
+    // Add a new task
+    fun addTask(
+        title: String,
+        description: String?,
+        dueDate: Date,
+        taskListId: String
+    ) {
+        viewModelScope.launch {
+            repository.addTask(title, description, dueDate, taskListId)
+            // LiveData observer updates automatically
+        }
+    }
 
-    suspend fun startListeningForTasks() {
-        rawTasks = repository.getTasks()
-        rawTasks.observeForever { tasks ->
-            formatListForDayView(tasks)
-            formatListForWeekView(tasks)
-            formatListForMonthView(tasks)
+
+    fun toggleTaskCompletion(taskId: String) {
+        Log.d(TAG, "toggleTaskCompletion called for taskId: $taskId")
+
+        viewModelScope.launch {
+            try {
+                val success = repository.toggleTaskCompletion(taskId)
+                Log.d(TAG, "Toggle result: ${if (success) "SUCCESS" else "FAILED"}")
+
+                if (!success) {
+                    Log.e(TAG, "Failed to toggle task completion")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error toggling task completion", e)
+            }
+        }
+    }
+
+    fun addTaskList(name: String) {
+        viewModelScope.launch {
+            repository.addTaskList(name)
         }
     }
 
     fun setViewType(viewType: String) {
-        val tasks = rawTasks.value ?: return
-        when (viewType) {
-            "Day" -> formatListForDayView(tasks)
-            "Week" -> formatListForWeekView(tasks)
+        Log.d(TAG, "Setting view type to: $viewType")
+        currentViewType = viewType
+
+        // Re-trigger formatting
+        val tasks = allTasksLiveData.value ?: return
+        updateDisplayList(tasks)
+        updateMonthList(tasks)
+    }
+
+    fun filterByTaskList(taskListId: String?) {
+        Log.d(TAG, "Filtering by task list: ${taskListId ?: "All Tasks"}")
+        selectedTaskListId = taskListId
+
+        // Re-trigger formatting
+        val tasks = allTasksLiveData.value ?: return
+        updateDisplayList(tasks)
+        updateMonthList(tasks)
+    }
+
+    private fun updateDisplayList(allTasks: List<Task>) {
+        Log.d(TAG, "updateDisplayList: ${allTasks.size} tasks, viewType=$currentViewType")
+
+        // Apply task list filter
+        val filteredTasks = if (selectedTaskListId != null) {
+            allTasks.filter { it.taskListId == selectedTaskListId }
+        } else {
+            allTasks
+        }
+
+        Log.d(TAG, "After list filter: ${filteredTasks.size} tasks")
+
+        // Format based on view type
+        when (currentViewType) {
+            "Day" -> {
+                // Day view can show all tasks
+                formatListForDayView(filteredTasks)
+            }
+            "Week", "Month" -> {
+                // Week and Month views need due dates
+                val tasksWithDates = filteredTasks.filter { it.dueDate != null }
+                Log.d(TAG, "Tasks with due dates: ${tasksWithDates.size}")
+
+                when (currentViewType) {
+                    "Week" -> formatListForWeekView(tasksWithDates)
+                    "Month" -> formatListForMonthView(tasksWithDates)
+                }
+            }
         }
     }
 
+    private fun updateMonthList(allTasks: List<Task>) {
+        // Only process if in month view
+        if (currentViewType != "Month") return
+
+        // Apply task list filter
+        val filteredTasks = if (selectedTaskListId != null) {
+            allTasks.filter { it.taskListId == selectedTaskListId }
+        } else {
+            allTasks
+        }
+
+        // Only include tasks with due dates
+        val tasksWithDates = filteredTasks.filter { it.dueDate != null }
+
+        formatListForMonthView(tasksWithDates)
+    }
+
     private fun formatListForDayView(tasks: List<Task>) {
-        // This just maps our raw tasks to the DayTaskItem for the adapter.
         _displayList.value = tasks
             .sortedBy { it.isCompleted }
             .map { task -> TaskListItem.DayTaskItem(task) }
     }
 
     private fun formatListForWeekView(tasks: List<Task>) {
-        // This logic would group tasks by date and add headers.
+        // Only include tasks with due dates
+        val tasksWithDates = tasks.filter { it.dueDate != null }
+
+        if (tasksWithDates.isEmpty()) {
+            Log.d(TAG, "No tasks with due dates for week view")
+            _displayList.value = emptyList()
+            return
+        }
+
+        val grouped = tasksWithDates
+            .sortedBy { it.dueDate }
+            .groupBy { task ->
+                val calendar = Calendar.getInstance().apply { time = task.dueDate!! }
+                "${calendar.get(Calendar.DAY_OF_MONTH)} ${calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, java.util.Locale.getDefault())}"
+            }
+
+        val itemList = mutableListOf<TaskListItem>()
+        grouped.forEach { (date, tasksForDay) ->
+            // Add header
+            itemList.add(TaskListItem.HeaderItem(date))
+            // Add tasks
+            tasksForDay.forEach { task ->
+                itemList.add(TaskListItem.WeekTaskItem(task))
+            }
+        }
+        _displayList.value = itemList
     }
 
-    // This is the new function to prepare data for the calendar grid.
     private fun formatListForMonthView(tasks: List<Task>) {
+        // Only include tasks with due dates
+        val tasksWithDates = tasks.filter { it.dueDate != null }
+
         val calendar = Calendar.getInstance()
         val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+        val currentMonth = calendar.get(Calendar.MONTH)
+        val currentYear = calendar.get(Calendar.YEAR)
         val monthDays = mutableListOf<MonthDay>()
 
-        // A simple loop to create 31 days for our grid.
-        // A real implementation would be more complex to handle empty start days.
         for (i in 1..daysInMonth) {
-            // Find all the tasks that happen on this specific day.
-            val tasksForDay = tasks.filter {
-                val taskCalendar = Calendar.getInstance().apply { time = it.dueDate }
-                taskCalendar.get(Calendar.DAY_OF_MONTH) == i
+            val tasksForDay = tasksWithDates.filter { task ->
+                val taskCalendar = Calendar.getInstance().apply { time = task.dueDate!! }
+                taskCalendar.get(Calendar.DAY_OF_MONTH) == i &&
+                        taskCalendar.get(Calendar.MONTH) == currentMonth &&
+                        taskCalendar.get(Calendar.YEAR) == currentYear
             }
-            // Add a new MonthDay object to our list.
             monthDays.add(MonthDay(dayOfMonth = i.toString(), tasks = tasksForDay))
         }
         _monthList.value = monthDays
     }
 
-
-    // This gets called from our "Add New Task" fragment.
-//    fun addTask(newTask: Task) {
-//        // Just add the new task object to the "tasks" collection in Firestore.
-//        // The snapshot listener will automatically pick up the change and update the UI.
-//        tasksCollection.add(newTask)
-//    }
-
-    // Call this to update the spinner's list
-//    fun updateTaskListNames(newList: List<String>) {
-//        _taskListNames.value = newList
-//    }
-
-//    // Update an existing task in Firestore
-//    fun updateTask(taskId: String, updatedTask: Task) {
-//        tasksCollection.document(taskId).set(updatedTask)
-//    }
-//
-//    // Delete a task from Firestore
-//    fun deleteTask(taskId: String) {
-//        tasksCollection.document(taskId).delete()
-//    }
-
-    // Note: For week view grouping, you should extract the date part from dueDate (e.g., using OffsetDateTime.toLocalDate())
 }

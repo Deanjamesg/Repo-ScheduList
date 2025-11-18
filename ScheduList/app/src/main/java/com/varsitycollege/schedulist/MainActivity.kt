@@ -3,6 +3,7 @@ package com.varsitycollege.schedulist
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +28,8 @@ import com.varsitycollege.schedulist.services.TasksApiClient
 import com.varsitycollege.schedulist.ui.auth.AuthActivity
 import kotlinx.coroutines.launch
 import com.varsitycollege.schedulist.data.preferences.SettingsPreferencesManager
+import com.varsitycollege.schedulist.data.repository.TasksRepository
+import com.varsitycollege.schedulist.services.SyncManager
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,15 +37,40 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var auth: FirebaseAuth
-    private lateinit var tasksApi : TasksApiClient
-    private lateinit var calendarApi: CalendarApiClient
 
     private val TAG : String = "MainActivity"
+
+    private val syncCallback = object : SyncManager.SyncCallback {
+        override fun onSyncStarted() {
+            runOnUiThread {
+                Log.d("MainActivity", "Sync started")
+            }
+        }
+
+        override fun onSyncProgress(message: String) {
+            runOnUiThread {
+                Log.d("MainActivity", "Sync progress: $message")
+            }
+        }
+
+        override fun onSyncComplete(success: Boolean, message: String) {
+            runOnUiThread {
+                if (success) {
+                    Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+                }
+                Log.d("MainActivity", "Sync complete: $message")
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val settingsManager = SettingsPreferencesManager(this)
         settingsManager.applyLanguage(this)
         super.onCreate(savedInstanceState)
+
+        SyncManager.registerCallback(syncCallback)
 
         enableEdgeToEdge(SystemBarStyle.dark(1))
 
@@ -59,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-        // Initialize API clients if needed (handles app restart)
+        // Initialize API clients if needed
         auth.currentUser?.let { user ->
             if (ApiClients.calendarApi == null) {
                 ApiClients.initialize(this, user.email!!)
@@ -70,6 +98,9 @@ class MainActivity : AppCompatActivity() {
             finish()
             return
         }
+
+        SyncManager.performManualSync(this@MainActivity)
+
 
         setSupportActionBar(binding.toolBar)
 
@@ -90,6 +121,19 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun onRefreshClicked() {
+        if (SyncManager.isSyncing()) {
+            Toast.makeText(this@MainActivity, "Sync already in progress", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this@MainActivity, "Refreshing...", Toast.LENGTH_SHORT).show()
+            SyncManager.performManualSync(this@MainActivity)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        SyncManager.unregisterCallback(syncCallback)
+    }
 
 
     override fun onSupportNavigateUp(): Boolean {

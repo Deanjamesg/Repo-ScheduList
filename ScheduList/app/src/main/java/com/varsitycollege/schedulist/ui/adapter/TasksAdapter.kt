@@ -1,5 +1,6 @@
 package com.varsitycollege.schedulist.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -15,12 +16,10 @@ import java.util.Locale
 private val dateFormatter = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
 private val timeFormatter = SimpleDateFormat("h:mm a", Locale.getDefault())
 
-// Define integer constants for each of our layout types
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_DAY = 1
 private const val ITEM_VIEW_TYPE_WEEK = 2
 
-// A sealed class to represent the different kinds of items our list can show
 sealed class TaskListItem {
     data class DayTaskItem(val task: Task) : TaskListItem()
     data class WeekTaskItem(val task: Task) : TaskListItem()
@@ -36,36 +35,53 @@ class TasksAdapter(
             val task = item.task
             binding.tvTaskTitle.text = task.title
             binding.tvTaskDescription.text = task.description
-            binding.tvTaskDate.text = dateFormatter.format(task.dueDate)
-            binding.tvTaskTime.text = timeFormatter.format(task.dueDate)
+
+            // Handle null dueDate
+            task.dueDate?.let {
+                binding.tvTaskDate.text = dateFormatter.format(it)
+                binding.tvTaskTime.text = timeFormatter.format(it)
+            } ?: run {
+                binding.tvTaskDate.text = "No due date"
+                binding.tvTaskTime.text = ""
+            }
+
             binding.cbTaskCompleted.isChecked = task.isCompleted
 
-            // We set a click listener on the checkbox.
             binding.cbTaskCompleted.setOnClickListener {
-                // When clicked, we call the function we passed in from the Fragment.
+                Log.d("TasksAdapter", "Checkbox clicked for task: ${task.title} (ID: ${task.id})")
+                Log.d("TasksAdapter", "New state: ${binding.cbTaskCompleted.isChecked}")
+
+                if (binding.cbTaskCompleted.isChecked) {
+                    binding.tvTaskTitle.alpha = 0.5f
+                    binding.tvTaskDescription.alpha = 0.5f
+                } else {
+                    binding.tvTaskTitle.alpha = 1.0f
+                    binding.tvTaskDescription.alpha = 1.0f
+                }
                 onTaskChecked(task)
             }
         }
     }
 
-    // This class holds the logic for a "Week" view item
     inner class WeekTaskViewHolder(private val binding: ItemTaskWeekBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: TaskListItem.WeekTaskItem) {
             binding.tvTaskTitle.text = item.task.title
 
-            // --- NEW: Format the Time and set the text ---
-            binding.tvTaskTime.text = timeFormatter.format(item.task.dueDate)
+            // Handle null dueDate
+            item.task.dueDate?.let {
+                binding.tvTaskTime.text = timeFormatter.format(it)
+            } ?: run {
+                binding.tvTaskTime.text = "No time"
+            }
         }
     }
 
-    // This class holds the logic for a date header (e.g., "1 April")
     inner class DateHeaderViewHolder(private val binding: ItemDateHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: TaskListItem.HeaderItem) {
             binding.tvDateHeader.text = item.date
         }
     }
 
-    // This function tells the adapter which layout to use for a given item
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is TaskListItem.HeaderItem -> ITEM_VIEW_TYPE_HEADER
@@ -74,7 +90,6 @@ class TasksAdapter(
         }
     }
 
-    // This function creates the correct ViewHolder for the given view type
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
@@ -85,7 +100,6 @@ class TasksAdapter(
         }
     }
 
-    // This function connects the data from an item to its ViewHolder
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val currentItem = getItem(position)) {
             is TaskListItem.HeaderItem -> (holder as DateHeaderViewHolder).bind(currentItem)
@@ -95,14 +109,36 @@ class TasksAdapter(
     }
 }
 
-// The DiffUtil.ItemCallback that efficiently calculates list updates
 class TaskDiffCallback : DiffUtil.ItemCallback<TaskListItem>() {
     override fun areItemsTheSame(oldItem: TaskListItem, newItem: TaskListItem): Boolean {
-        // You would typically compare unique IDs here
-        return oldItem == newItem
+        return when {
+            oldItem is TaskListItem.DayTaskItem && newItem is TaskListItem.DayTaskItem ->
+                oldItem.task.id == newItem.task.id
+            oldItem is TaskListItem.WeekTaskItem && newItem is TaskListItem.WeekTaskItem ->
+                oldItem.task.id == newItem.task.id
+            oldItem is TaskListItem.HeaderItem && newItem is TaskListItem.HeaderItem ->
+                oldItem.date == newItem.date
+            else -> false
+        }
     }
 
     override fun areContentsTheSame(oldItem: TaskListItem, newItem: TaskListItem): Boolean {
-        return oldItem == newItem
+        // Checks if the content changed
+        return when {
+            oldItem is TaskListItem.DayTaskItem && newItem is TaskListItem.DayTaskItem -> {
+                // Check if completion status changed
+                oldItem.task.isCompleted == newItem.task.isCompleted &&
+                        oldItem.task.title == newItem.task.title &&
+                        oldItem.task.description == newItem.task.description
+            }
+            oldItem is TaskListItem.WeekTaskItem && newItem is TaskListItem.WeekTaskItem -> {
+                oldItem.task.isCompleted == newItem.task.isCompleted &&
+                        oldItem.task.title == newItem.task.title
+            }
+            oldItem is TaskListItem.HeaderItem && newItem is TaskListItem.HeaderItem -> {
+                oldItem.date == newItem.date
+            }
+            else -> false
+        }
     }
 }
